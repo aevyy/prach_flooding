@@ -55,7 +55,8 @@ bool ssb_sync::init(const cell_config& cfg, double rx_srate_hz) {
 bool ssb_sync::search(const cf_t* in, uint32_t nof_samples, uint32_t* out_pci,
                       uint32_t* out_sfn, uint32_t* out_ssb_idx,
                       uint32_t* out_t_offset, float* out_snr_db,
-                      srsran_mib_nr_t* out_mib, bool* out_hrf) {
+                      srsran_mib_nr_t* out_mib, bool* out_hrf,
+                      float* out_cfo_hz) {
     if (!m_initialized) {
         fprintf(stderr, "ERROR: ssb_sync not initialized\n");
         return false;
@@ -111,6 +112,7 @@ bool ssb_sync::search(const cf_t* in, uint32_t nof_samples, uint32_t* out_pci,
     if (out_snr_db) *out_snr_db = m_snr_db;
     if (out_mib)    *out_mib    = m_mib;
     if (out_hrf)    *out_hrf    = hrf;
+    if (out_cfo_hz) *out_cfo_hz = result.measurements.cfo_hz;
     
     char info_str[256];
     srsran_pbch_msg_info(&result.pbch_msg, info_str, sizeof(info_str));

@@ -32,8 +32,8 @@ struct cell_config {
     uint32_t prach_config_idx   = 1;
     uint32_t prach_root_seq_idx = 1;
     uint32_t prach_zcz          = 0;
-    uint32_t prach_freq_offset  = 8;
-    uint32_t num_ra_preambles   = 1;
+    uint32_t prach_freq_offset  = 8;  // matches live gNB (from SIB1 via InfluxDB)
+    uint32_t num_ra_preambles   = 1;  // matches live gNB
     uint32_t prach_format       = 0; // format 0
     uint32_t prach_x            = 16; // SFN period
     uint32_t prach_y            = 1;  // SFN offset
@@ -80,6 +80,11 @@ struct cell_config {
         carrier->start                  = 0;
         carrier->max_mimo_layers        = 1;
     }
+
+    // Populate prach_x, prach_y, prach_subframe, prach_format from
+    // prach_config_idx using TS 38.211 Table 6.3.3.2-2 (FR1 paired).
+    // Must be called after prach_config_idx is set.
+    void resolve_prach_ro();
 };
 
 // Parse the gNB config file (gnb.yaml) to populate cell_config.

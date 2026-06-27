@@ -22,7 +22,8 @@ public:
     bool search(const cf_t* in, uint32_t nof_samples, uint32_t* out_pci,
                 uint32_t* out_sfn, uint32_t* out_ssb_idx,
                 uint32_t* out_t_offset, float* out_snr_db,
-                srsran_mib_nr_t* out_mib, bool* out_hrf = nullptr);
+                srsran_mib_nr_t* out_mib, bool* out_hrf = nullptr,
+                float* out_cfo_hz = nullptr);
     // Track SSB (when we already know PCI and approximate timing).
     bool track(const cf_t* sf_buffer, uint32_t N_id, uint32_t ssb_idx, uint32_t n_hf,
                srsran_mib_nr_t* out_mib, float* out_snr_db);

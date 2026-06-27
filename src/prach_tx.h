@@ -10,6 +10,7 @@
 
 #include "cell_config.h"
 #include "ssb_sync.h"
+#include "tool_config.h"
 extern "C" {
 #include "srsran/phy/phch/prach.h"
 #include "srsran/phy/rf/rf.h"
@@ -30,6 +31,8 @@ struct prach_tx_cfg {
     uint32_t zcz         = 0;
     uint32_t freq_offset = 8;        // msg1-FrequencyStart in PRBs
     bool     dry_run     = false;
+    bool     cfo_correct = true;     // enable CFO correction
+    int      cfo_sign    = +1;       // CFO correction sign (+1 or -1)
 };
 
 class prach_tx {
@@ -37,8 +40,8 @@ public:
     prach_tx()  = default;
     ~prach_tx();
 
-    // Initialize from cell_config. tx_gain_db overrides default.
-    bool init(const cell_config& cfg, double tx_gain_db, bool dry_run);
+    // Initialize from cell_config + tool_config (dry_run is in tool_config.run).
+    bool init(const cell_config& cfg, const tool_config& tc, bool dry_run);
 
     // Open RF device (device_args = "" or "type=b200" for B210)
     bool open_rf(const std::string& device_args = "type=b200");
@@ -52,7 +55,8 @@ public:
     // Used when direct RF RX-based SSB sync is not possible (e.g. device busy).
     // unix_time: UTC timestamp when SFN was observed by the sniffer
     // sfn: SFN (4 LSBs) at that time, ssb_slot: slot index of the detected SSB
-    void set_sync_fallback(double unix_time, uint32_t sfn, uint32_t ssb_slot);
+    // ssb_idx: SSB index (0-7), needed to compute intra-slot symbol offset
+    void set_sync_fallback(double unix_time, uint32_t sfn, uint32_t ssb_slot, uint32_t ssb_idx);
 
     // Generate + transmit ONE preamble at the given PRACH occasion (sfn, slot).
     // Uses the SSB sync timing to schedule TX at the correct device time.
@@ -90,6 +94,7 @@ private:
     uint32_t       m_sync_sfn         = 0;    // SFN of detected SSB
     uint32_t       m_sync_slot        = 0;    // Slot of detected SSB
     uint32_t       m_sync_t_offset    = 0;    // Sample offset of SSB within buffer
+    uint32_t       m_sync_ssb_idx     = 0;    // SSB index (0-7), for intra-slot offset
 
     // Sniffer-based fallback timing (used when direct RF RX is unavailable)
     bool           m_has_fallback     = false;
@@ -97,6 +102,7 @@ private:
     double         m_fallback_unix_time = 0.0;
     uint32_t       m_fallback_sfn     = 0;
     uint32_t       m_fallback_ssb_slot = 0;
+    uint32_t       m_fallback_ssb_idx = 0;
 
     // Epoch offset: unix_time = device_time + m_dev_epoch_offset
     // Calibrated at sync time so we can convert between device time and Unix time.
@@ -106,6 +112,14 @@ private:
     // Positive value means TX arrives this many seconds AFTER the requested time
     double         m_tx_rx_offset_s   = 0.0;
     double         m_last_tx_time     = 0.0;  // device time of last TX
+
+    // CFO correction (measured from DL SSB, scaled to UL)
+    float          m_cfo_dl_hz        = 0.0f;  // DL CFO from SSB
+    float          m_cfo_ul_hz        = 0.0f;  // UL CFO (scaled by freq ratio)
+    bool           m_cfo_correct      = true;  // enable CFO correction
+    int            m_cfo_sign         = +1;    // CFO correction sign
+    int32_t        m_ssb_first_symbol_override = -1;  // >=0 forces intra-slot symbol
+    double         m_tx_offset_us     = 0.0;   // manual timing nudge
 
     std::vector<std::complex<float>> m_tx_buf;
     std::vector<std::complex<float>> m_rx_buf;  // For SSB sync
