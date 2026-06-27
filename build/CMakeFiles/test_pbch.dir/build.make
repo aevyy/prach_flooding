@@ -97,11 +97,11 @@ test_pbch: CMakeFiles/test_pbch.dir/tests/test_pbch.cpp.o
 test_pbch: CMakeFiles/test_pbch.dir/build.make
 test_pbch: CMakeFiles/test_pbch.dir/compiler_depend.ts
 test_pbch: libra_spoof_lib.a
-test_pbch: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a
-test_pbch: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a
-test_pbch: /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a
+test_pbch: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a
+test_pbch: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a
+test_pbch: /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a
 test_pbch: /usr/lib64/libboost_system.so.1.83.0
-test_pbch: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
+test_pbch: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
 test_pbch: CMakeFiles/test_pbch.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_pbch"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_pbch.dir/link.txt --verbose=$(VERBOSE)

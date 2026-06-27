@@ -22,7 +22,7 @@ if(NOT EXISTS "/usr/local/include/srsran/srsran.h")
   message(FATAL_ERROR "srsRAN headers not found at /usr/local/include/srsran/")
 endif()
 
-set(SNIFFER_BUILD "/home/avi/wireless/ssb_Spoofer/build")
+set(SNIFFER_BUILD "/home/avi/wireless/SSB-Spoofer/build")
 set(SRSRAN_BUILD  "/home/avi/wireless/srsRAN_Project/build")
 
 # PHY library (monolithic, from ssb_Spoofer)
@@ -82,18 +82,19 @@ endif()
 
 # Common sources for library
 set(LIB_SOURCES
-  src/cell_config.cpp
-  src/ro.cpp
-  src/ra_rnti.cpp
-  src/log_csv.cpp
-  src/ssb_sync.cpp
-  src/ul_rx.cpp
-  src/dl_grid.cpp
-  src/rar.cpp
-  src/msg4.cpp
-  src/inject.cpp
-  src/influx_reader.cpp
-  src/prach_tx.cpp
+    src/cell_config.cpp
+    src/ro.cpp
+    src/ra_rnti.cpp
+    src/log_csv.cpp
+    src/ssb_sync.cpp
+    src/ul_rx.cpp
+    src/dl_grid.cpp
+    src/rar.cpp
+    src/msg4.cpp
+    src/inject.cpp
+    src/influx_reader.cpp
+    src/prach_tx.cpp
+    src/tool_config.cpp
   # NOTE: rt-recon-sdk used header-only (influxdb.hpp flux_query + local parse logic)
   # SDK .cc files are NOT compiled here — they drag in srslog/fmt7 which breaks GCC 15
 )

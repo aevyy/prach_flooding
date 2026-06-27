@@ -1,10 +1,6 @@
 // ra-spoof main — Msg1 PRACH preamble injection
 //
-// Phase 1 (M1): Pull PRACH config from InfluxDB (sniffer live feed),
-// compute the RACH occasion, and transmit ONE preamble at the UL center freq.
-// Expected outcome: gNB logs "PRACH detected" + emits RAR on the computed RA-RNTI.
-//
-// Safety: TX requires --confirm-rf-isolated; use --dry-run for offline testing.
+// Config precedence: default < ra-spoof.yaml < CLI
 
 #include "cell_config.h"
 #include "influx_reader.h"
@@ -12,6 +8,7 @@
 #include "ra_rnti.h"
 #include "ro.h"
 #include "log_csv.h"
+#include "tool_config.h"
 
 #include <cstdio>
 #include <cstring>
@@ -34,22 +31,31 @@ static void sig_handler(int sig) {
 static void print_usage(const char* prog) {
     printf("Usage: %s [options]\n", prog);
     printf("Options:\n");
-    printf("  -c, --config PATH         Path to ra-spoof.yaml (default: configs/ra-spoof.yaml)\n");
-    printf("  -g, --gnb-config PATH     Path to gnb.yaml (fallback only, default: /home/avi/Downloads/gnb.yaml)\n");
-    printf("  --influx-host HOST        InfluxDB host (default: localhost)\n");
-    printf("  --influx-port PORT        InfluxDB port (default: 8086)\n");
-    printf("  --influx-org ORG          InfluxDB org (default: rtu)\n");
-    printf("  --influx-bucket BUCKET    InfluxDB bucket (default: rtusystem)\n");
-    printf("  --influx-data-id ID       Sniffer data_id tag (default: test)\n");
-    printf("  --no-influx               Skip InfluxDB; use gnb.yaml only\n");
-    printf("  --dry-run                 Run pipeline without RF TX\n");
-    printf("  --confirm-rf-isolated     Required flag: confirms Faraday cage isolation\n");
-    printf("  --tx-gain DB              TX gain in dB (default: 30, max: 70)\n");
-    printf("  --device-args ARGS        UHD device args (default: type=b200)\n");
-    printf("  --continuous              Transmit continuously on every RO (Ctrl-C to stop)\n");
-    printf("  -h, --help                Print this help\n");
+    printf("  -c, --config PATH          ra-spoof.yaml path (default: configs/ra-spoof.yaml)\n");
+    printf("  -g, --gnb-config PATH      gnb.yaml path (default: /home/avi/Downloads/gnb.yaml)\n");
+    printf("  --influx-host HOST         InfluxDB host (default: localhost)\n");
+    printf("  --influx-port PORT         InfluxDB port (default: 8086)\n");
+    printf("  --influx-org ORG           InfluxDB org (default: rtu)\n");
+    printf("  --influx-bucket BUCKET     InfluxDB bucket (default: rtusystem)\n");
+    printf("  --influx-data-id ID        Sniffer data_id tag (default: test)\n");
+    printf("  --no-influx                Skip InfluxDB; use gnb.yaml only\n");
+    printf("  --dry-run                  Run pipeline without RF TX\n");
+    printf("  --confirm-rf-isolated      Required for RF TX\n");
+    printf("  --tx-gain DB               TX gain in dB\n");
+    printf("  --device-args ARGS         UHD device args\n");
+    printf("  --preamble-index N         RAPID (default: 0)\n");
+    printf("  --continuous               Transmit on every RO\n");
+    printf("  --cfo-correct / --no-cfo-correct\n");
+    printf("  --cfo-sign {+1|-1}         CFO correction sign\n");
+    printf("  --cfo-hz F                 Manual DL CFO (Hz)\n");
+    printf("  --tx-offset-us F           Manual timing nudge (us)\n");
+    printf("  --ssb-first-symbol N       Override SSB intra-slot first symbol\n");
+    printf("  --freq-start N             Override msg1-FrequencyStart (PRB)\n");
+    printf("  --resync-every N           Re-sync SSB every N TX\n");
+    printf("  --max-tx N                 Stop after N TX (0 = unlimited)\n");
+    printf("  -h, --help                 Print this help\n");
     printf("\nEnvironment:\n");
-    printf("  INFLUX_TOKEN              InfluxDB auth token (required unless --no-influx)\n");
+    printf("  INFLUX_TOKEN               InfluxDB auth token\n");
 }
 
 static void print_banner() {
@@ -63,15 +69,12 @@ static void print_banner() {
 int main(int argc, char* argv[]) {
     print_banner();
 
-    // --- CLI parsing ---
-    std::string gnb_config_path = "/home/avi/Downloads/gnb.yaml";
+    // --- Defaults / CLI variables ---
     std::string config_path     = "configs/ra-spoof.yaml";
+    std::string gnb_config_path = "/home/avi/Downloads/gnb.yaml";
     bool        dry_run         = false;
     bool        rf_isolated     = false;
     bool        no_influx       = false;
-    bool        continuous      = false;
-    double      tx_gain         = 30.0;
-    std::string device_args     = "type=b200";
 
     influx_cfg icfg;
     icfg.host    = "localhost";
@@ -79,6 +82,22 @@ int main(int argc, char* argv[]) {
     icfg.org     = "rtu";
     icfg.bucket  = "rtusystem";
     icfg.data_id = "test";
+
+    // CLI-override flags (null/negative sentinel means "not set from CLI")
+    struct cli_overrides {
+        bool     has_gain       = false;   double   tx_gain = 0;
+        bool     has_devargs    = false;   std::string device_args;
+        bool     has_preamble   = false;   uint32_t preamble_index = 0;
+        bool     has_continuous = false;   bool continuous = false;
+        bool     has_cfo_correct= false;   bool cfo_correct = false;
+        bool     has_cfo_sign   = false;   int  cfo_sign = 0;
+        bool     has_cfo_hz     = false;   double cfo_hz = 0;
+        bool     has_tx_offset  = false;   double tx_offset_us = 0;
+        bool     has_ssb_sym    = false;   int32_t ssb_first_symbol = 0;
+        bool     has_freq_start = false;   int32_t msg1_freq_start = 0;
+        bool     has_resync     = false;   uint32_t resync_every = 0;
+        bool     has_max_tx     = false;   uint32_t max_tx = 0;
+    } cli;
 
     static struct option long_opts[] = {
         {"config",              required_argument, 0, 'c'},
@@ -93,7 +112,17 @@ int main(int argc, char* argv[]) {
         {"confirm-rf-isolated", no_argument,       0, 'R'},
         {"tx-gain",             required_argument, 0, 'G'},
         {"device-args",         required_argument, 0, 'A'},
+        {"preamble-index",      required_argument, 0, 'E'},
         {"continuous",          no_argument,       0, 'T'},
+        {"cfo-correct",         no_argument,       0, 'C'},
+        {"no-cfo-correct",      no_argument,       0, 'F'},
+        {"cfo-sign",            required_argument, 0, 'S'},
+        {"cfo-hz",              required_argument, 0, 'Z'},
+        {"tx-offset-us",        required_argument, 0, 'U'},
+        {"ssb-first-symbol",    required_argument, 0, 'L'},
+        {"freq-start",          required_argument, 0, 'Q'},
+        {"resync-every",        required_argument, 0, 'Y'},
+        {"max-tx",              required_argument, 0, 'M'},
         {"help",                no_argument,       0, 'h'},
         {0, 0, 0, 0}
     };
@@ -101,27 +130,55 @@ int main(int argc, char* argv[]) {
     int c;
     while ((c = getopt_long(argc, argv, "c:g:h", long_opts, nullptr)) != -1) {
         switch (c) {
-            case 'c': config_path     = optarg; break;
-            case 'g': gnb_config_path = optarg; break;
-            case 'H': icfg.host       = optarg; break;
-            case 'P': icfg.port       = atoi(optarg); break;
-            case 'O': icfg.org        = optarg; break;
-            case 'B': icfg.bucket     = optarg; break;
-            case 'I': icfg.data_id    = optarg; break;
-            case 'N': no_influx       = true; break;
-            case 'D': dry_run         = true; break;
-            case 'R': rf_isolated     = true; break;
-            case 'G': tx_gain         = atof(optarg); break;
-            case 'A': device_args     = optarg; break;
-            case 'T': continuous      = true; break;
+            case 'c': config_path        = optarg; break;
+            case 'g': gnb_config_path    = optarg; break;
+            case 'H': icfg.host          = optarg; break;
+            case 'P': icfg.port          = atoi(optarg); break;
+            case 'O': icfg.org           = optarg; break;
+            case 'B': icfg.bucket        = optarg; break;
+            case 'I': icfg.data_id       = optarg; break;
+            case 'N': no_influx          = true; break;
+            case 'D': dry_run            = true; break;
+            case 'R': rf_isolated        = true; break;
+            case 'G': cli.tx_gain        = atof(optarg); cli.has_gain = true; break;
+            case 'A': cli.device_args    = optarg; cli.has_devargs = true; break;
+            case 'E': cli.preamble_index = (uint32_t)atoi(optarg); cli.has_preamble = true; break;
+            case 'T': cli.continuous     = true; cli.has_continuous = true; break;
+            case 'C': cli.cfo_correct    = true; cli.has_cfo_correct = true; break;
+            case 'F': cli.cfo_correct    = false; cli.has_cfo_correct = true; break;
+            case 'S': cli.cfo_sign       = atoi(optarg); cli.has_cfo_sign = true; break;
+            case 'Z': cli.cfo_hz         = atof(optarg); cli.has_cfo_hz = true; break;
+            case 'U': cli.tx_offset_us   = atof(optarg); cli.has_tx_offset = true; break;
+            case 'L': cli.ssb_first_symbol = (int32_t)atoi(optarg); cli.has_ssb_sym = true; break;
+            case 'Q': cli.msg1_freq_start = (int32_t)atoi(optarg); cli.has_freq_start = true; break;
+            case 'Y': cli.resync_every   = (uint32_t)atoi(optarg); cli.has_resync = true; break;
+            case 'M': cli.max_tx         = (uint32_t)atoi(optarg); cli.has_max_tx = true; break;
             case 'h': print_usage(argv[0]); return 0;
             default:  print_usage(argv[0]); return 1;
         }
     }
 
+    // --- Load tool_config from YAML ---
+    tool_config tc;
+    parse_tool_config(config_path, tc);
+
+    // --- Apply CLI overrides on top (CLI always wins) ---
+    if (cli.has_gain)        { tc.tx.gain_db        = cli.tx_gain;        tc.tx.src_gain      = tool_config::SRC_CLI; }
+    if (cli.has_devargs)     { tc.tx.device_args     = cli.device_args;    tc.tx.src_devargs   = tool_config::SRC_CLI; }
+    if (cli.has_preamble)    { tc.tx.preamble_index  = cli.preamble_index; tc.tx.src_preamble  = tool_config::SRC_CLI; }
+    if (cli.has_continuous)  { tc.run.continuous     = cli.continuous;     tc.run.src_cont     = tool_config::SRC_CLI; }
+    if (cli.has_cfo_correct) { tc.cfo.correct        = cli.cfo_correct;    tc.cfo.src_correct  = tool_config::SRC_CLI; }
+    if (cli.has_cfo_sign)    { tc.cfo.sign           = cli.cfo_sign;       tc.cfo.src_sign     = tool_config::SRC_CLI; }
+    if (cli.has_cfo_hz)      { tc.cfo.manual_hz      = cli.cfo_hz;         tc.cfo.src_manual_hz = tool_config::SRC_CLI; }
+    if (cli.has_tx_offset)   { tc.timing.tx_offset_us = cli.tx_offset_us;  tc.timing.src_tx_offset = tool_config::SRC_CLI; }
+    if (cli.has_ssb_sym)     { tc.timing.ssb_first_symbol_override = cli.ssb_first_symbol; tc.timing.src_ssb_sym = tool_config::SRC_CLI; }
+    if (cli.has_freq_start)  { tc.freq.msg1_freq_start_override = cli.msg1_freq_start; tc.freq.src_freq_start = tool_config::SRC_CLI; }
+    if (cli.has_resync)      { tc.run.resync_every  = cli.resync_every;    tc.run.src_resync   = tool_config::SRC_CLI; }
+    if (cli.has_max_tx)      { tc.run.max_tx        = cli.max_tx;          tc.run.src_max_tx   = tool_config::SRC_CLI; }
+
     // Safety checks
-    if (tx_gain > 70.0) {
-        fprintf(stderr, "FATAL: TX gain %.1f dB exceeds safety cap (70 dB). Refusing.\n", tx_gain);
+    if (tc.tx.gain_db > 70.0) {
+        fprintf(stderr, "FATAL: TX gain %.1f dB exceeds safety cap (70 dB). Refusing.\n", tc.tx.gain_db);
         return 1;
     }
     if (!rf_isolated && !dry_run) {
@@ -129,14 +186,22 @@ int main(int argc, char* argv[]) {
                         "       Use --dry-run for offline testing.\n");
         return 1;
     }
+    if (tc.cfo.sign != +1 && tc.cfo.sign != -1) {
+        fprintf(stderr, "FATAL: cfo.sign must be +1 or -1 (got %d)\n", tc.cfo.sign);
+        return 1;
+    }
 
     signal(SIGINT, sig_handler);
     signal(SIGTERM, sig_handler);
 
+    // --- Dry-run: print resolved config and exit ---
+    if (dry_run) {
+        printf("[main] DRY RUN -- resolved configuration:\n");
+        print_tool_config(tc);
+    }
+
     // -----------------------------------------------------------------------
     // Step 1: Load cell config
-    // Primary source: InfluxDB (live from sniffer).
-    // Fallback (--no-influx): gnb.yaml.
     // -----------------------------------------------------------------------
     cell_config cfg;
     bool influx_ok = false;
@@ -144,17 +209,11 @@ int main(int argc, char* argv[]) {
     if (!no_influx) {
         printf("[main] Step 1: Pulling cell config from InfluxDB...\n");
         influx_ok = influx_pull_cell_config(icfg, cfg);
-
         if (!influx_ok) {
-            fprintf(stderr, "[main] FATAL: InfluxDB pull failed.\n"
-                            "       Ensure the sniffer is running and has received SIB1.\n"
-                            "       Use --no-influx to fall back to gnb.yaml (stale data).\n");
+            fprintf(stderr, "[main] FATAL: InfluxDB pull failed.\n");
             return 1;
         }
-
-        // Sanity-check against lab ground truth (logs warnings but does not abort)
         influx_sanity_check(cfg);
-
     } else {
         printf("[main] Step 1: --no-influx: loading cell config from gnb.yaml...\n");
         if (!parse_gnb_config(gnb_config_path, cfg)) {
@@ -164,33 +223,21 @@ int main(int argc, char* argv[]) {
         printf("[main] WARNING: Using static gnb.yaml config — PRACH params may be stale.\n");
     }
 
+    // Populate prach_x/y/subframe/format from prach_config_idx
+    cfg.resolve_prach_ro();
     print_cell_config(cfg);
 
     // -----------------------------------------------------------------------
     // Step 2: Compute RA-RNTI
-    // t_id = prach_subframe (= slot index of the PRACH occasion within SFN)
-    // For config_idx=1: subframe 4 → t_id=4
-    // RA-RNTI = 1 + 0 + 14*4 + 0 + 0 = 57 = 0x39
     // -----------------------------------------------------------------------
-    uint32_t s_id         = 0;                  // first symbol of PRACH in slot
-    uint32_t t_id         = cfg.prach_subframe;  // slot index within SFN (=4 for config_idx=1)
-    uint32_t f_id         = 0;                  // msg1-FDM=1 → single frequency domain occasion
-    uint32_t ul_carrier   = 0;                  // NUL carrier
+    uint32_t s_id       = 0;
+    uint32_t t_id       = cfg.prach_subframe;
+    uint32_t f_id       = 0;
+    uint32_t ul_carrier = 0;
 
     uint16_t ra_rnti = compute_ra_rnti(s_id, t_id, f_id, ul_carrier);
-
-    printf("\n[main] Step 2: RA-RNTI computation:\n");
-    printf("  RA-RNTI = 1 + s_id(%u) + 14*t_id(%u) + 14*80*f_id(%u) + 14*80*8*ul_carrier(%u)\n",
-           s_id, t_id, f_id, ul_carrier);
-    printf("  RA-RNTI = 0x%04x (%u)\n", ra_rnti, ra_rnti);
-
-    // Sanity: for this lab setup we expect 57
-    if (ra_rnti != 57) {
-        fprintf(stderr, "[main] WARNING: computed RA-RNTI=%u, expected 57 for this config\n", ra_rnti);
-        fprintf(stderr, "               Check prach_subframe value in cell_config\n");
-    } else {
-        printf("  [OK] RA-RNTI matches expected value 57\n");
-    }
+    printf("\n[main] Step 2: RA-RNTI = 1 + %u + 14*%u = 0x%04x (%u)\n",
+           s_id, t_id, ra_rnti, ra_rnti);
 
     // -----------------------------------------------------------------------
     // Step 3: Find next PRACH occasion
@@ -199,14 +246,11 @@ int main(int argc, char* argv[]) {
     printf("  config_idx=%u → subframe %u, SFN %% %u == %u\n",
            cfg.prach_config_idx, cfg.prach_subframe, cfg.prach_x, cfg.prach_y);
 
-    // Print a few upcoming occasions for reference
-    ro::print_occasions_in_range(cfg, 0, 200); // first 200 system slots
+    ro::print_occasions_in_range(cfg, 0, 200);
 
-    // Pick the first occasion after slot 0 (we'll transmit at the first one)
     uint32_t ro_sys_slot = ro::next_occasion_slot(cfg, 0);
     uint32_t ro_sfn, ro_slot_in_frame;
     ro::from_system_slot(ro_sys_slot, ro_sfn, ro_slot_in_frame);
-
     printf("\n[main] Target RO: SFN=%u, slot=%u (system_slot=%u)\n",
            ro_sfn, ro_slot_in_frame, ro_sys_slot);
 
@@ -214,8 +258,10 @@ int main(int argc, char* argv[]) {
     // Step 4: Initialize PRACH TX
     // -----------------------------------------------------------------------
     printf("\n[main] Step 4: Initializing PRACH TX...\n");
+    printf("[main] CFO correction: %s (sign=%+d manual_hz=%.0f)\n",
+           tc.cfo.correct ? "enabled" : "disabled", tc.cfo.sign, tc.cfo.manual_hz);
     prach_tx ptx;
-    if (!ptx.init(cfg, tx_gain, dry_run)) {
+    if (!ptx.init(cfg, tc, dry_run)) {
         fprintf(stderr, "[main] FATAL: prach_tx::init failed\n");
         return 1;
     }
@@ -223,8 +269,8 @@ int main(int argc, char* argv[]) {
     // -----------------------------------------------------------------------
     // Step 5: Open USRP
     // -----------------------------------------------------------------------
-    printf("\n[main] Step 5: Opening USRP (B210)...\n");
-    if (!ptx.open_rf(device_args)) {
+    printf("\n[main] Step 5: Opening USRP...\n");
+    if (!ptx.open_rf(tc.tx.device_args)) {
         fprintf(stderr, "[main] FATAL: Failed to open USRP\n");
         return 1;
     }
@@ -235,39 +281,32 @@ int main(int argc, char* argv[]) {
     log_csv::init("ra-spoof_msg1.csv");
 
     // -----------------------------------------------------------------------
-    // Step 6.5: Synchronize to SSB for device-time ↔ SFN/slot mapping
+    // Step 6.5: SSB sync
     // -----------------------------------------------------------------------
     printf("\n[main] Step 6.5: Synchronizing to gNB SSB (PCI=%u)...\n", cfg.pci);
 
-    // Pre-load sniffer MIB timing as fallback (for when B210 RX is unavailable)
     if (!no_influx) {
         uint32_t fb_sfn=0, fb_ssb_idx=0, fb_ssb_slot=0, fb_scs=0;
         bool fb_hrf=false;
         double fb_unix_time=0.0;
         if (influx_pull_mib_timing(icfg, &fb_sfn, &fb_ssb_idx, &fb_hrf,
                                    &fb_ssb_slot, &fb_scs, &fb_unix_time)) {
-            ptx.set_sync_fallback(fb_unix_time, fb_sfn, fb_ssb_slot);
+            ptx.set_sync_fallback(fb_unix_time, fb_sfn, fb_ssb_slot, fb_ssb_idx);
         } else {
-            printf("[main] WARNING: Could not pull MIB timing from sniffer "
-                   "(no fallback available)\n");
+            printf("[main] WARNING: Could not pull MIB timing from sniffer\n");
         }
     }
 
     if (!ptx.sync_to_ssb()) {
-        fprintf(stderr, "[main] FATAL: SSB sync failed — cannot align TX to gNB timing.\n"
-                        "       Check: USRP connected, antenna attached, DL freq correct.\n");
+        fprintf(stderr, "[main] FATAL: SSB sync failed.\n");
         log_csv::close();
         return 1;
     }
     printf("[main] SSB sync OK. Recomputing RO from live timing...\n");
 
-    // Recompute the first RO using the actual sync SFN/slot as the base,
-    // so we target a genuinely upcoming occasion.
     uint32_t sync_sys_slot = ro::system_slot(ptx.get_sync_sfn(), ptx.get_sync_slot());
     ro_sys_slot = ro::next_occasion_slot(cfg, sync_sys_slot);
     ro::from_system_slot(ro_sys_slot, ro_sfn, ro_slot_in_frame);
-
-    // Also update the Step 3-printed target:
     printf("[main] Updated Target RO: SFN=%u, slot=%u (system_slot=%u)\n",
            ro_sfn, ro_slot_in_frame, ro_sys_slot);
 
@@ -276,9 +315,8 @@ int main(int argc, char* argv[]) {
     // -----------------------------------------------------------------------
     printf("\n[main] Step 7: Transmitting PRACH preamble (Msg1)...\n");
 
-    if (continuous) {
+    if (tc.run.continuous) {
         printf("[main] Continuous mode: transmitting on every RO (Ctrl-C to stop).\n");
-        printf("[main] RO interval: 16 frames = 160 ms.\n");
     }
 
     uint32_t  tx_ro_sys_slot = ro_sys_slot;
@@ -286,17 +324,24 @@ int main(int argc, char* argv[]) {
     uint32_t  tx_ro_slot     = ro_slot_in_frame;
     uint32_t  tx_count       = 0;
     uint32_t  tx_ok_count    = 0;
-    double    last_tx_time    = 0.0;  // device time of last TX
-    const double ro_interval_s = 0.160; // 16 frames at 10ms each
+    double    last_tx_time    = 0.0;
+    const double ro_interval_s = 0.160;
 
     do {
-        if (continuous && tx_count > 0) {
+        if (tc.run.continuous && tx_count > 0) {
             printf("\n--- Transmission %u (loop) ---\n", tx_count + 1);
         }
 
+        // Optional re-sync every N TX
+        if (tc.run.resync_every > 0 && tx_count > 0 && tx_count % tc.run.resync_every == 0) {
+            printf("[main] Re-syncing to SSB (every %u TX)...\n", tc.run.resync_every);
+            if (!ptx.sync_to_ssb()) {
+                fprintf(stderr, "[main] WARNING: re-sync failed, continuing with old timing\n");
+            }
+        }
+
         bool tx_ok;
-        if (continuous && tx_count > 0 && last_tx_time > 0.0) {
-            // Continuous mode after 1st TX: add 160ms to previous TX time
+        if (tc.run.continuous && tx_count > 0 && last_tx_time > 0.0) {
             last_tx_time += ro_interval_s;
             tx_ok = ptx.transmit_at_time(last_tx_time, tx_ro_sfn, tx_ro_slot);
         } else {
@@ -306,45 +351,35 @@ int main(int argc, char* argv[]) {
 
         if (tx_ok) {
             tx_ok_count++;
-            if (!continuous) {
-                printf("\n[main] ========== SUCCESS ==========\n");
-            }
-            printf("[main] PRACH preamble transmitted [%u/%u OK]\n", tx_ok_count, tx_count + 1);
-
             log_csv::log_event("Msg1_PRACH",
                                tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot,
-                               ra_rnti, 0 /* RAPID */, tx_gain,
-                               0 /* on_air_time */,
-                               "transmitted");
+                               ra_rnti, tc.tx.preamble_index, tc.tx.gain_db,
+                               0, "transmitted");
         } else {
             fprintf(stderr, "[main] PRACH transmission %u failed\n", tx_count + 1);
             log_csv::log_event("Msg1_PRACH",
                                tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot,
-                               ra_rnti, 0, tx_gain, 0, "failed");
+                               ra_rnti, tc.tx.preamble_index, tc.tx.gain_db, 0, "failed");
         }
 
-        if (!continuous) break;
+        if (!tc.run.continuous) break;
 
         tx_count++;
+        if (tc.run.max_tx > 0 && tx_count >= tc.run.max_tx) {
+            printf("[main] max_tx=%u reached, stopping\n", tc.run.max_tx);
+            break;
+        }
 
-        // Compute the next RO
         tx_ro_sys_slot = ro::next_occasion_slot(cfg, tx_ro_sys_slot);
         ro::from_system_slot(tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot);
-
         printf("[main] Next RO: SFN=%u slot=%u (system_slot=%u)\n",
                tx_ro_sfn, tx_ro_slot, tx_ro_sys_slot);
 
-        // The transmit_preamble call schedules TX ~100ms ahead and blocks
-        // until the burst completes. The RO interval is 160ms, so after
-        // the block returns we only need ~60ms of slack.
-        // Sleep a minimal interval to avoid spinning, letting the next
-        // call's 100ms lookahead hit the upcoming RO window.
         std::this_thread::sleep_for(std::chrono::milliseconds(30));
 
     } while (g_running);
 
-    // Print summary for continuous mode
-    if (continuous) {
+    if (tc.run.continuous) {
         printf("\n[main] ========== SUMMARY ==========\n");
         printf("[main] Total transmissions: %u\n", tx_count);
         printf("[main] Successful:          %u\n", tx_ok_count);
@@ -352,23 +387,16 @@ int main(int argc, char* argv[]) {
     }
 
     printf("[main] Expected gNB behavior:\n");
-    printf("  1. gNB log: 'PRACH detected preamble=0 TA=...' \n");
-    printf("  2. gNB emits RAR (Msg2) in PDCCH/PDSCH with RA-RNTI=0x%04x (%u)\n",
-           ra_rnti, ra_rnti);
-    printf("  3. Sniffer may capture RAR in the pcap or InfluxDB\n");
-    printf("[main] Check gNB log: tail -f /tmp/gnb.log | grep -E 'PRACH|preamble|RAR|ra_rnti'\n");
+    printf("  1. gNB log: 'PRACH detected preamble=...' \n");
+    printf("  2. gNB emits RAR on RA-RNTI=0x%04x (%u)\n", ra_rnti, ra_rnti);
+    printf("[main] Check: tail -f /tmp/gnb.log | grep -E 'PRACH|preamble|RAR|ra.rnti'\n");
 
     log_csv::close();
-
-    printf("\n[main] Log written to ra-spoof_msg1.csv\n");
-    printf("[main] Done.\n\n");
+    printf("\n[main] Done.\n\n");
 
     int ret = (tx_ok_count > 0) ? 0 : 1;
 
-    // Flush all stdio buffers before _exit'ing to avoid the srslog
-    // atexit crash on GCC 14+ while still preserving console output.
     fflush(stdout);
     fflush(stderr);
-
     _exit(ret);
 }

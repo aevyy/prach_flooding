@@ -1,28 +1,24 @@
-# Rogue-gNB RA-Message Spoofer Configuration
-# This tool impersonates a 5G NR gNB to inject fake Msg2/Msg4.
+# ra-spoof operational and test knobs
+# Precedence: built-in default < yaml < CLI flag
 
-# Cell configuration source
-gnb_config: "/home/avi/Downloads/gnb.yaml"
+tx:
+  gain_db: 55
+  preamble_index: 0
+  device_args: "type=b200"
 
-# SDR configuration
-radio_a:               # RX radio (1747.5 MHz UL)
-  serial: ""           # Empty = auto-detect
-  rx_gain: 40.0        # RX gain in dB
-  srate_hz: 23.04e6
+cfo:
+  correct: false
+  sign: 1
+  manual_hz: 0.0
 
-radio_b:               # TX radio (1842.5 MHz DL)
-  serial: ""           # Empty = auto-detect
-  tx_gain: 30.0        # TX gain in dB (conservative default)
-  srate_hz: 23.04e6
+timing:
+  tx_offset_us: 0.0
+  ssb_first_symbol_override: -1
 
-# Attack parameters
-attack:
-  mode: "single"       # single (one-shot) or flood
-  tc_rnti_start: 0x4601  # Starting TC-RNTI
-  timing_advance_us: 2.34   # TA for spoofed RAR (use real UE's TA when available)
+freq:
+  msg1_freq_start_override: -1
 
-# Logging
-log_csv: "ra-spoof_log.csv"
-
-# Dry-run mode (no RF)
-dry_run: false
+run:
+  continuous: true
+  max_tx: 9999999
+  resync_every: 0

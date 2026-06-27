@@ -1,0 +1,123 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-RelWithDebInfo-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "ra-spoof",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ra-spoof::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ra-spoof-RelWithDebInfo-547a6cd8d05a6366ae80.json",
+					"name" : "ra-spoof",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ra_spoof_lib::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ra_spoof_lib-RelWithDebInfo-6fa4491cac2d7366e0fe.json",
+					"name" : "ra_spoof_lib",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_pbch::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_pbch-RelWithDebInfo-e6d21537cca35bf38888.json",
+					"name" : "test_pbch",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_pdcch_loopback::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_pdcch_loopback-RelWithDebInfo-8eb5d8e83e5e4e4df74e.json",
+					"name" : "test_pdcch_loopback",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_pdsch_loopback::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_pdsch_loopback-RelWithDebInfo-831550574ffba42a4777.json",
+					"name" : "test_pdsch_loopback",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_prach_loopback::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_prach_loopback-RelWithDebInfo-029e05d3399e7bd92ac6.json",
+					"name" : "test_prach_loopback",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_ra_rnti::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_ra_rnti-RelWithDebInfo-0a20aa04fe2c146a9e24.json",
+					"name" : "test_ra_rnti",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_ro::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_ro-RelWithDebInfo-fedce09f5f0443139457.json",
+					"name" : "test_ro",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/avi/wireless/ra-spoof/build",
+		"source" : "/home/avi/wireless/ra-spoof"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

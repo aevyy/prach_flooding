@@ -232,10 +232,10 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o: /home/avi/wireless/ra-spoof/tests/te
   /usr/local/include/srsran/phy/utils/debug.h \
   /usr/local/include/srsran/phy/utils/phy_logger.h
 
-test_ro: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a \
-  /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a \
-  /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
-  /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a \
+test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a \
+  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a \
+  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
+  /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a \
   /lib64/ld-linux-x86-64.so.2 \
   /lib64/libc.so.6 \
   /lib64/libgcc_s.so.1 \
@@ -264,20 +264,28 @@ test_ro: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a 
   /usr/lib64/libboost_serialization.so.1.83.0 \
   /usr/lib64/libboost_system.so.1.83.0 \
   /usr/lib64/libboost_thread.so.1.83.0 \
+  /usr/lib64/libbz2.so.1 \
   /usr/lib64/libc_nonshared.a \
   /usr/lib64/libcap.so.2 \
+  /usr/lib64/libdw.so.1 \
+  /usr/lib64/libelf.so.1 \
+  /usr/lib64/liblzma.so.5 \
   /usr/lib64/libmbedcrypto.so.16 \
   /usr/lib64/libmbedx509.so.7 \
   /usr/lib64/libpython3.14.so.1.0 \
   /usr/lib64/libudev.so.1 \
   /usr/lib64/libusb-1.0.so.0 \
+  /usr/lib64/libz.so.1 \
+  /usr/lib64/libzstd.so.1 \
   CMakeFiles/test_ro.dir/tests/test_ro.cpp.o \
   libra_spoof_lib.a
 
 
-libra_spoof_lib.a:
-
 CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
+
+/usr/lib64/libzstd.so.1:
+
+/usr/lib64/libz.so.1:
 
 /usr/lib64/libusb-1.0.so.0:
 
@@ -287,7 +295,13 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib64/libmbedx509.so.7:
 
+/usr/lib64/liblzma.so.5:
+
+/usr/lib64/libdw.so.1:
+
 /usr/lib64/libcap.so.2:
+
+/usr/lib64/libbz2.so.1:
 
 /usr/lib64/libboost_thread.so.1.83.0:
 
@@ -417,13 +431,9 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/bits/iscanonical.h:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
-
 /usr/local/include/srsran/phy/phch/pbch_msg_nr.h:
 
 /usr/include/bits/flt-eval-method.h:
-
-/home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a:
 
 /usr/include/bits/floatn-common.h:
 
@@ -445,8 +455,6 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/bits/uintn-identity.h:
 
-/usr/include/bits/typesizes.h:
-
 /usr/include/c++/15/bits/stl_algobase.h:
 
 /usr/include/c++/15/clocale:
@@ -454,6 +462,8 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 /usr/lib64/libm.so:
 
 /usr/include/bits/struct_mutex.h:
+
+/usr/lib64/libelf.so.1:
 
 /usr/include/c++/15/bits/char_traits.h:
 
@@ -657,6 +667,8 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/c++/15/stdlib.h:
 
+/usr/include/c++/15/string:
+
 /usr/local/include/srsran/phy/fec/polar/polar_encoder.h:
 
 /usr/include/c++/15/string_view:
@@ -781,15 +793,15 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/local/include/srsran/phy/utils/debug.h:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a:
+/usr/include/bits/typesizes.h:
 
-/usr/include/c++/15/string:
+/home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a:
+/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
 
-/usr/include/c++/15/bits/stl_iterator_base_types.h:
+libra_spoof_lib.a:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
+/home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a:
 
 /lib64/ld-linux-x86-64.so.2:
 
@@ -807,7 +819,13 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib64/libc.so:
 
+/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a:
+
 /usr/lib64/libmbedtls.so:
+
+/usr/include/c++/15/bits/stl_iterator_base_types.h:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
 

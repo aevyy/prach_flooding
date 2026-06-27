@@ -9,6 +9,7 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o: /home/avi/wireless/ra-spoof/src/main.cpp
   /home/avi/wireless/ra-spoof/src/ra_rnti.h \
   /home/avi/wireless/ra-spoof/src/ro.h \
   /home/avi/wireless/ra-spoof/src/ssb_sync.h \
+  /home/avi/wireless/ra-spoof/src/tool_config.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
@@ -324,10 +325,10 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o: /home/avi/wireless/ra-spoof/src/main.cpp
   /usr/local/include/srsran/phy/utils/debug.h \
   /usr/local/include/srsran/phy/utils/phy_logger.h
 
-ra-spoof: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a \
-  /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a \
-  /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
-  /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a \
+ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a \
+  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a \
+  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
+  /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a \
   /lib64/ld-linux-x86-64.so.2 \
   /lib64/libc.so.6 \
   /lib64/libgcc_s.so.1 \
@@ -356,20 +357,28 @@ ra-spoof: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a
   /usr/lib64/libboost_serialization.so.1.83.0 \
   /usr/lib64/libboost_system.so.1.83.0 \
   /usr/lib64/libboost_thread.so.1.83.0 \
+  /usr/lib64/libbz2.so.1 \
   /usr/lib64/libc_nonshared.a \
   /usr/lib64/libcap.so.2 \
+  /usr/lib64/libdw.so.1 \
+  /usr/lib64/libelf.so.1 \
+  /usr/lib64/liblzma.so.5 \
   /usr/lib64/libmbedcrypto.so.16 \
   /usr/lib64/libmbedx509.so.7 \
   /usr/lib64/libpython3.14.so.1.0 \
   /usr/lib64/libudev.so.1 \
   /usr/lib64/libusb-1.0.so.0 \
+  /usr/lib64/libz.so.1 \
+  /usr/lib64/libzstd.so.1 \
   CMakeFiles/ra-spoof.dir/src/main.cpp.o \
   libra_spoof_lib.a
 
 
-libra_spoof_lib.a:
-
 CMakeFiles/ra-spoof.dir/src/main.cpp.o:
+
+/usr/lib64/libzstd.so.1:
+
+/usr/lib64/libz.so.1:
 
 /usr/lib64/libusb-1.0.so.0:
 
@@ -379,7 +388,11 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/lib64/libmbedx509.so.7:
 
+/usr/lib64/libdw.so.1:
+
 /usr/lib64/libcap.so.2:
+
+/usr/lib64/libbz2.so.1:
 
 /usr/lib64/libboost_thread.so.1.83.0:
 
@@ -396,8 +409,6 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o:
 
 /usr/lib64/libpthread.a:
-
-/usr/lib64/libmbedtls.so:
 
 /usr/lib64/libm.so:
 
@@ -419,11 +430,15 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /lib64/ld-linux-x86-64.so.2:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
+libra_spoof_lib.a:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a:
+/home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a:
+/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
+
+/usr/lib64/libmbedtls.so:
+
+/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a:
 
 /usr/local/include/srsran/phy/utils/debug.h:
 
@@ -491,6 +506,8 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/ctype_inline.h:
 
+/usr/include/c++/15/x86_64-redhat-linux/bits/c++locale.h:
+
 /usr/lib64/crti.o:
 
 /usr/include/stdio.h:
@@ -511,10 +528,6 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/include/bits/types/struct_itimerspec.h:
 
-/usr/include/c++/15/bits/basic_ios.h:
-
-/usr/include/c++/15/tr1/modified_bessel_func.tcc:
-
 /usr/include/bits/types/sigset_t.h:
 
 /usr/include/wchar.h:
@@ -526,6 +539,8 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/include/bits/types/sigevent_t.h:
 
 /usr/include/c++/15/tr1/ell_integral.tcc:
+
+/home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a:
 
 /usr/include/bits/typesizes.h:
 
@@ -590,8 +605,6 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/include/bits/unistd_ext.h:
 
 /usr/include/bits/stdio.h:
-
-/usr/include/c++/15/bits/move.h:
 
 /usr/include/c++/15/bits/ostream_insert.h:
 
@@ -659,6 +672,10 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/include/c++/15/math.h:
 
+/usr/include/c++/15/cerrno:
+
+/usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h:
+
 /usr/local/include/srsran/phy/fec/polar/polar_rm.h:
 
 /usr/include/bits/types/__sigset_t.h:
@@ -687,19 +704,13 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /home/avi/wireless/ra-spoof/src/cell_config.h:
 
-/usr/include/bits/types/siginfo_t.h:
-
-/usr/include/asm-generic/int-ll64.h:
-
-/usr/include/c++/15/bits/memoryfwd.h:
-
-/usr/include/c++/15/tr1/beta_function.tcc:
-
 /usr/local/include/srsran/phy/phch/pbch_nr.h:
 
 /usr/include/gnu/stubs-64.h:
 
 /usr/include/bits/types/__sigval_t.h:
+
+/usr/include/asm/types.h:
 
 /usr/local/include/srsran/phy/sync/ssb.h:
 
@@ -715,21 +726,29 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/include/alloca.h:
 
-/usr/include/asm/types.h:
+/usr/include/bits/types/siginfo_t.h:
+
+/usr/include/features.h:
+
+/usr/include/bits/types/__FILE.h:
+
+/usr/include/bits/sched.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/c++/15/bits/memoryfwd.h:
+
+/usr/include/c++/15/tr1/beta_function.tcc:
+
+/usr/include/c++/15/bits/move.h:
+
+/home/avi/wireless/ra-spoof/src/tool_config.h:
+
+/usr/include/c++/15/bits/invoke.h:
 
 /usr/include/asm-generic/errno.h:
 
 /usr/include/bits/fp-logb.h:
-
-/usr/include/c++/15/cerrno:
-
-/usr/include/features.h:
-
-/usr/include/bits/sched.h:
-
-/usr/include/bits/types/__FILE.h:
-
-/usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h:
 
 /usr/include/c++/15/bits/exception_ptr.h:
 
@@ -750,6 +769,8 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/include/bits/long-double.h:
 
 /usr/include/bits/types.h:
+
+/usr/lib64/liblzma.so.5:
 
 /usr/include/c++/15/bits/streambuf_iterator.h:
 
@@ -827,6 +848,8 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/include/bits/setjmp.h:
 
+/usr/lib64/libelf.so.1:
+
 /usr/include/c++/15/bits/char_traits.h:
 
 /usr/lib64/libyaml-cpp.so:
@@ -838,6 +861,10 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/include/c++/15/tr1/poly_laguerre.tcc:
 
 /usr/include/c++/15/bits/charconv.h:
+
+/usr/include/c++/15/bits/basic_ios.h:
+
+/usr/include/c++/15/tr1/modified_bessel_func.tcc:
 
 /usr/include/c++/15/bits/basic_ios.tcc:
 
@@ -882,8 +909,6 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /home/avi/wireless/ra-spoof/src/influx_reader.h:
 
 /usr/include/c++/15/bits/locale_classes.tcc:
-
-/usr/include/c++/15/bits/invoke.h:
 
 /usr/lib64/crtn.o:
 
@@ -1063,8 +1088,6 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/include/c++/15/stdexcept:
 
-/home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a:
-
 /usr/include/c++/15/string:
 
 /usr/include/c++/15/string_view:
@@ -1074,8 +1097,6 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/include/c++/15/system_error:
 
 /usr/include/c++/15/tr1/bessel_function.tcc:
-
-/usr/include/c++/15/x86_64-redhat-linux/bits/c++locale.h:
 
 /usr/include/bits/signum-arch.h:
 

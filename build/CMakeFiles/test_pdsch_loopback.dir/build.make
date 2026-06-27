@@ -97,11 +97,11 @@ test_pdsch_loopback: CMakeFiles/test_pdsch_loopback.dir/tests/test_pdsch_loopbac
 test_pdsch_loopback: CMakeFiles/test_pdsch_loopback.dir/build.make
 test_pdsch_loopback: CMakeFiles/test_pdsch_loopback.dir/compiler_depend.ts
 test_pdsch_loopback: libra_spoof_lib.a
-test_pdsch_loopback: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a
-test_pdsch_loopback: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a
-test_pdsch_loopback: /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a
+test_pdsch_loopback: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a
+test_pdsch_loopback: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a
+test_pdsch_loopback: /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a
 test_pdsch_loopback: /usr/lib64/libboost_system.so.1.83.0
-test_pdsch_loopback: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
+test_pdsch_loopback: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
 test_pdsch_loopback: CMakeFiles/test_pdsch_loopback.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_pdsch_loopback"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_pdsch_loopback.dir/link.txt --verbose=$(VERBOSE)

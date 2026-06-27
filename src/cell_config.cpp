@@ -94,6 +94,37 @@ bool parse_gnb_config(const std::string& path, cell_config& cfg) {
     }
 }
 
+// TS 38.211 Table 6.3.3.2-2 (FR1 paired) — minimal subset covering
+// format 0 and format 1 (indices 0–55).  Returns true on success.
+void cell_config::resolve_prach_ro() {
+    // {format, x, y, subframe} per config_idx
+    static const struct { uint32_t fmt, x, y, sf; } tbl[] = {
+        {0, 16, 1, 1},  {0, 16, 1, 4},  {0, 16, 1, 7},  {0, 16, 1, 9},
+        {0, 8,  1, 1},  {0, 8,  1, 4},  {0, 8,  1, 7},  {0, 8,  1, 9},
+        {0, 4,  1, 1},  {0, 4,  1, 4},  {0, 4,  1, 7},  {0, 4,  1, 9},
+        {0, 2,  1, 1},  {0, 2,  1, 4},  {0, 2,  1, 7},  {0, 2,  1, 9},
+        {0, 1,  0, 1},  {0, 1,  0, 4},  {0, 1,  0, 7},  {0, 1,  0, 1},
+        {0, 1,  0, 2},  {0, 1,  0, 3},  {0, 1,  0, 1},  {0, 1,  0, 0},
+        {0, 1,  0, 1},  {0, 1,  0, 0},  {0, 1,  0, 1},  {0, 1,  0, 0},
+        // format 1: indices 28–55
+        {1, 16, 1, 1},  {1, 16, 1, 4},  {1, 16, 1, 7},  {1, 16, 1, 9},
+        {1, 8,  1, 1},  {1, 8,  1, 4},  {1, 8,  1, 7},  {1, 8,  1, 9},
+        {1, 4,  1, 1},  {1, 4,  1, 4},  {1, 4,  1, 7},  {1, 4,  1, 9},
+        {1, 2,  1, 1},  {1, 2,  1, 4},  {1, 2,  1, 7},  {1, 2,  1, 9},
+        {1, 1,  0, 1},  {1, 1,  0, 4},  {1, 1,  0, 7},  {1, 1,  0, 1},
+        {1, 1,  0, 2},  {1, 1,  0, 3},  {1, 1,  0, 1},  {1, 1,  0, 2},
+        {1, 1,  0, 3},  {1, 1,  0, 0},  {1, 1,  0, 1},  {1, 1,  0, 0},
+    };
+    constexpr uint32_t N = sizeof(tbl) / sizeof(tbl[0]);
+    if (prach_config_idx < N) {
+        auto& e    = tbl[prach_config_idx];
+        prach_format   = e.fmt;
+        prach_x        = e.x;
+        prach_y        = e.y;
+        prach_subframe = e.sf;
+    }
+}
+
 void print_cell_config(const cell_config& cfg) {
     printf("=== Cell Configuration ===\n");
     printf("  PCI:                %u\n", cfg.pci);

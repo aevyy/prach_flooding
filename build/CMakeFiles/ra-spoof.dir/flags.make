@@ -6,5 +6,5 @@ CXX_DEFINES = -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
 
 CXX_INCLUDES = -I/home/avi/wireless/ra-spoof/src -I/home/avi/wireless/rt-recon-sdk/include
 
-CXX_FLAGS = -O3 -DNDEBUG -std=gnu++17 -Wall
+CXX_FLAGS = -O2 -g -DNDEBUG -std=gnu++17 -Wall
 

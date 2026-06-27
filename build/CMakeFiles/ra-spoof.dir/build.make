@@ -97,11 +97,11 @@ ra-spoof: CMakeFiles/ra-spoof.dir/src/main.cpp.o
 ra-spoof: CMakeFiles/ra-spoof.dir/build.make
 ra-spoof: CMakeFiles/ra-spoof.dir/compiler_depend.ts
 ra-spoof: libra_spoof_lib.a
-ra-spoof: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a
-ra-spoof: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a
-ra-spoof: /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a
+ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a
+ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a
+ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a
 ra-spoof: /usr/lib64/libboost_system.so.1.83.0
-ra-spoof: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
+ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
 ra-spoof: CMakeFiles/ra-spoof.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable ra-spoof"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ra-spoof.dir/link.txt --verbose=$(VERBOSE)

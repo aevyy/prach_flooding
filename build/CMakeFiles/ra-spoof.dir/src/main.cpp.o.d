@@ -153,6 +153,7 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o: \
  /home/avi/wireless/ra-spoof/src/influx_reader.h \
  /home/avi/wireless/ra-spoof/src/prach_tx.h \
  /home/avi/wireless/ra-spoof/src/ssb_sync.h \
+ /home/avi/wireless/ra-spoof/src/tool_config.h \
  /usr/local/include/srsran/phy/phch/prach.h /usr/include/c++/15/complex.h \
  /usr/include/c++/15/complex /usr/include/c++/15/sstream \
  /usr/include/c++/15/istream /usr/include/c++/15/ios \

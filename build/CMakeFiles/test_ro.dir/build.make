@@ -97,11 +97,11 @@ test_ro: CMakeFiles/test_ro.dir/tests/test_ro.cpp.o
 test_ro: CMakeFiles/test_ro.dir/build.make
 test_ro: CMakeFiles/test_ro.dir/compiler_depend.ts
 test_ro: libra_spoof_lib.a
-test_ro: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a
-test_ro: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a
-test_ro: /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a
+test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a
+test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a
+test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a
 test_ro: /usr/lib64/libboost_system.so.1.83.0
-test_ro: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
+test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
 test_ro: CMakeFiles/test_ro.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_ro"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_ro.dir/link.txt --verbose=$(VERBOSE)

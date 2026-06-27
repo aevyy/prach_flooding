@@ -21,6 +21,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/ra_spoof_lib.dir/src/ro.cpp.o.d"
   "CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.o"
   "CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.o.d"
+  "CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o"
+  "CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o.d"
   "CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o"
   "CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o.d"
   "libra_spoof_lib.a"

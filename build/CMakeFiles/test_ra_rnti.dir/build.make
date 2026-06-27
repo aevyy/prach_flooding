@@ -97,11 +97,11 @@ test_ra_rnti: CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o
 test_ra_rnti: CMakeFiles/test_ra_rnti.dir/build.make
 test_ra_rnti: CMakeFiles/test_ra_rnti.dir/compiler_depend.ts
 test_ra_rnti: libra_spoof_lib.a
-test_ra_rnti: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/libsrsran_phy.a
-test_ra_rnti: /home/avi/wireless/ssb_Spoofer/build/lib/src/common/libsrsran_common.a
-test_ra_rnti: /home/avi/wireless/ssb_Spoofer/build/lib/src/srslog/libsrslog.a
+test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a
+test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a
+test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a
 test_ra_rnti: /usr/lib64/libboost_system.so.1.83.0
-test_ra_rnti: /home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
+test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so
 test_ra_rnti: CMakeFiles/test_ra_rnti.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking CXX executable test_ra_rnti"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/test_ra_rnti.dir/link.txt --verbose=$(VERBOSE)

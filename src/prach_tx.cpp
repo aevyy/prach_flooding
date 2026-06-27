@@ -12,10 +12,10 @@
 //
 // 2. TIMING
 //    srsran_rf_send_timed: schedules burst with end_of_burst flag.
-//    We get device time via srsran_rf_get_time and add 100ms.
-//    For precise RO alignment, SSB sync (Phase 2) is required.
-//    The gNB PRACH detector runs a sliding correlator covering the full
-//    RACH window so ±1 subframe timing error is tolerated.
+//    The gNB PRACH detector only correlates within the configured RACH occasion.
+//    The usable timing-error budget ≈ CP − round-trip ≈ 103 us for format 0
+//    (co-located → ~full CP). The device-time anchor must therefore be accurate
+//    to well within one OFDM symbol (~71 us at 15 kHz SCS).
 //
 // 3. RA-RNTI LOGGING
 //    Compute per TS 38.321 §5.1.3 and log for gNB correlation.
@@ -50,20 +50,34 @@ prach_tx::~prach_tx() {
 // ---------------------------------------------------------------------------
 // init — configure from cell_config
 // ---------------------------------------------------------------------------
-bool prach_tx::init(const cell_config& cfg, double tx_gain_db, bool dry_run) {
-    m_dry_run = dry_run;
-    m_cell_cfg = cfg;  // Store for SSB sync
+bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run) {
+    m_dry_run     = dry_run;
+    m_cell_cfg    = cfg;
+    m_cfo_correct = tc.cfo.correct;
+    m_cfo_sign    = tc.cfo.sign;
 
-    m_cfg.tx_freq_hz  = cfg.ul_freq_hz;       // SINGLE assignment of TX freq
+    // Apply msg1-FrequencyStart override if set
+    uint32_t freq_offset_raw = cfg.prach_freq_offset;
+    if (tc.freq.msg1_freq_start_override >= 0) {
+        freq_offset_raw = (uint32_t)tc.freq.msg1_freq_start_override;
+        printf("[prach_tx] freq_offset overridden: %u → %u (from yaml/CLI)\n",
+               cfg.prach_freq_offset, freq_offset_raw);
+    }
+
+    m_cfg.tx_freq_hz  = cfg.ul_freq_hz;
     m_cfg.srate_hz    = cfg.srate_hz;
-    m_cfg.rapid       = 0;                    // always 0 with num_ra_preambles=1
+    m_cfg.rapid       = tc.tx.preamble_index;
     m_cfg.nof_prb     = cfg.nof_prb;
     m_cfg.config_idx  = cfg.prach_config_idx;
     m_cfg.root_seq    = cfg.prach_root_seq_idx;
     m_cfg.zcz         = cfg.prach_zcz;
-    m_cfg.freq_offset = cfg.prach_freq_offset;
-    m_cfg.tx_gain_db  = tx_gain_db;
+    m_cfg.freq_offset = freq_offset_raw;
+    m_cfg.tx_gain_db  = tc.tx.gain_db;
     m_cfg.dry_run     = dry_run;
+    m_cfg.cfo_correct = tc.cfo.correct;
+    m_cfg.cfo_sign    = tc.cfo.sign;
+    m_ssb_first_symbol_override = tc.timing.ssb_first_symbol_override;
+    m_tx_offset_us    = tc.timing.tx_offset_us;
 
     // Initialize srsRAN PRACH object
     uint32_t max_N_ifft_ul = srsran_min_symbol_sz_rb(cfg.nof_prb);
@@ -143,13 +157,45 @@ bool prach_tx::generate_preamble() {
 
     cf_t* raw_buf = reinterpret_cast<cf_t*>(m_tx_buf.data());
 
+    // srsran_prach_gen() internally derives N_rb_ul from the FFT size via
+    // srsran_nof_prb(N_ifft_ul), which returns 100 for a 1536-pt FFT even
+    // though the actual cell has 106 PRB.  This shifts the PRACH centre
+    // frequency by (106-100)/2 * 12 * 1.25 kHz = 540 kHz — enough for
+    // the gNB's detector (which uses the true nof_prb) to miss the preamble.
+    //
+    // Compensate by reducing the passed freq_offset so the resulting k_0
+    // lands at the correct physical frequency despite the smaller N_rb_ul.
+    uint32_t freq_offset_corrected = m_cfg.freq_offset;
+    {
+        int delta_prb = (int)m_cell_cfg.nof_prb -
+                        (int)srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb));
+        // k_0 = freq*12 - N_rb*6 + N_fft/2  →  freq must change by ΔN_rb/2
+        freq_offset_corrected = (uint32_t)((int)m_cfg.freq_offset - delta_prb / 2);
+        printf("[prach_tx] freq_offset: raw=%u  srsran_Nrb=%u  actual_Nrb=%u  "
+               "corrected=%u\n",
+               m_cfg.freq_offset,
+               srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb)),
+               m_cell_cfg.nof_prb, freq_offset_corrected);
+    }
+
     // Generate preamble: seq_index=RAPID=0, freq_offset as configured
-    if (srsran_prach_gen(&m_prach, m_cfg.rapid, m_cfg.freq_offset, raw_buf) != SRSRAN_SUCCESS) {
+    if (srsran_prach_gen(&m_prach, m_cfg.rapid, freq_offset_corrected, raw_buf) != SRSRAN_SUCCESS) {
         fprintf(stderr, "[prach_tx] FATAL: srsran_prach_gen failed\n");
         return false;
     }
 
     m_preamble_len_samples = preamble_len;
+
+    // Apply CFO correction (pre-rotate TX buffer before normalization)
+    if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
+        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        for (uint32_t n = 0; n < m_preamble_len_samples; n++) {
+            float ph = (float)(w * (double)n);
+            m_tx_buf[n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
+        }
+        printf("[prach_tx] CFO correction applied: %.1f Hz UL (sign=%+d, w=%.6e rad/sample)\n",
+               m_cfo_ul_hz, m_cfo_sign, w);
+    }
 
     // Compute signal RMS power over the actual preamble (no zero tail)
     float power = 0.0f;
@@ -323,15 +369,33 @@ bool prach_tx::sync_to_ssb() {
     // Capture one frame of samples in chunks to avoid srsRAN's
     // RX trial limit (RF_UHD_IMP_MAX_RX_TRIALS=100, chunk_size~2048,
     // so max per call ≈ 204800 samples).
+    // FIRST chunk uses recv_with_time to get the device timestamp
+    // pinned to the sample boundary — no post-capture jitter.
     cf_t*    rx_data     = reinterpret_cast<cf_t*>(m_rx_buf.data());
     uint32_t chunk_size  = m_cell_cfg.samples_per_slot(); // ~21504
     uint32_t remaining   = samples_per_frame;
     uint32_t total_recv  = 0;
     cf_t*    rx_ptr      = rx_data;
+    time_t   first_full_secs = 0;
+    double   first_frac_secs = 0.0;
+    double   rx_device_time = 0.0;
+    bool     have_timestamp = false;
 
     while (remaining > 0) {
         uint32_t to_recv = (remaining > chunk_size) ? chunk_size : remaining;
-        int n = srsran_rf_recv(&m_rf, rx_ptr, to_recv, true);
+        int n;
+        if (!have_timestamp) {
+            // First chunk: capture WITH device timestamp pinned to sample 0
+            n = srsran_rf_recv_with_time(&m_rf, rx_ptr, to_recv,
+                                          true, &first_full_secs, &first_frac_secs);
+            if (n > 0) {
+                rx_device_time = (double)first_full_secs + first_frac_secs;
+                have_timestamp = true;
+                printf("[prach_tx] First chunk timestamp: %.6f s\n", rx_device_time);
+            }
+        } else {
+            n = srsran_rf_recv(&m_rf, rx_ptr, to_recv, true);
+        }
         if (n < 0) {
             fprintf(stderr, "[prach_tx] WARNING: RX chunk failed (nrecv=%d, "
                     "requested=%u)\n", n, to_recv);
@@ -341,12 +405,6 @@ bool prach_tx::sync_to_ssb() {
         rx_ptr     += (uint32_t)n;
         remaining  -= (uint32_t)n;
     }
-
-    // Get device time immediately after capture
-    time_t full_secs = 0;
-    double frac_secs = 0.0;
-    srsran_rf_get_time(&m_rf, &full_secs, &frac_secs);
-    double rx_device_time = (double)full_secs + frac_secs;
 
     if (total_recv < samples_per_frame) {
         if (total_recv > 0) {
@@ -374,12 +432,12 @@ bool prach_tx::sync_to_ssb() {
 
     // Search for SSB using the captured samples
     uint32_t pci = 0, sfn = 0, ssb_idx = 0, t_offset = 0;
-    float snr_db = 0.0f;
+    float snr_db = 0.0f, cfo_hz = 0.0f;
     srsran_mib_nr_t mib = {};
     bool hrf = false;
 
     if (!m_ssb_sync.search(rx_data, total_recv, &pci, &sfn, &ssb_idx,
-                          &t_offset, &snr_db, &mib, &hrf)) {
+                          &t_offset, &snr_db, &mib, &hrf, &cfo_hz)) {
         fprintf(stderr, "[prach_tx] WARNING: SSB not found or PBCH decode failed\n");
 
         // Try sniffer-based fallback
@@ -400,10 +458,10 @@ bool prach_tx::sync_to_ssb() {
     }
 
     // Compute the device time when the SSB started.
-    // rx_device_time = time when the LAST sample arrived.
-    // Back up from buffer end, then advance to t_offset.
-    double ssb_start_device_time = rx_device_time -
-        ((double)total_recv / m_cfg.srate_hz) +
+    // rx_device_time is the timestamp of the FIRST captured sample
+    // (captured with srsran_rf_recv_with_time on the first chunk).
+    // t_offset is the sample offset of the SSB within the buffer.
+    double ssb_start_device_time = rx_device_time +
         ((double)t_offset / m_cfg.srate_hz);
 
     // Compute the SSB slot from ssb_idx and half-frame flag.
@@ -414,18 +472,40 @@ bool prach_tx::sync_to_ssb() {
     uint32_t hf_offset = hrf ? 5 : 0;  // 5 slots per half-frame at 15 kHz
     uint32_t ssb_slot = hf_offset + half_slot;
 
-    m_sync_device_time = ssb_start_device_time;
+    // SSB PSS is at symbol 2 or 8 within its slot (Pattern A, 15 kHz).
+    // TS 38.213 §4.1 Case A (15 kHz, carrier <=3 GHz): candidate SSB first
+    // symbols are {2, 8, 16, 22}. Within-slot first symbol is 2 (idx 0,2) or
+    // 8 (idx 1,3). ssb_slot already accounts for the slot; this is intra-slot.
+    // ssb_start_device_time marks the PSS, not the slot boundary.
+    // Subtract the intra-slot offset so the anchor aligns to slot start.
+    uint32_t ssb_first_symbol = ((ssb_idx == 0) || (ssb_idx == 2)) ? 2 : 8;
+    if (m_ssb_first_symbol_override >= 0) {
+        ssb_first_symbol = (uint32_t)m_ssb_first_symbol_override;
+        printf("[prach_tx] SSB first symbol OVERRIDE: %u\n", ssb_first_symbol);
+    }
+    double   ssb_intra_slot_s = 1e-3 * (double)ssb_first_symbol / 14.0;
+
+    m_sync_device_time = ssb_start_device_time - ssb_intra_slot_s;
     m_sync_sfn = sfn;
     m_sync_slot = ssb_slot;
     m_sync_t_offset = t_offset;
     m_synced = true;
+    m_sync_ssb_idx = ssb_idx;
+
+    // Store CFO and scale DL→UL (LO ppm error is constant, so Hz offset scales with carrier)
+    m_cfo_dl_hz = cfo_hz;
+    m_cfo_ul_hz = m_cfo_dl_hz * (m_cfg.tx_freq_hz / m_cell_cfg.dl_freq_hz);
 
     printf("[prach_tx] SSB sync acquired:\n");
     printf("  PCI         = %u\n", pci);
     printf("  SFN (4 LSB) = %u\n", sfn);
     printf("  SSB index   = %u\n", ssb_idx);
     printf("  SNR         = %.1f dB\n", snr_db);
-    printf("  Device time = %.6f s\n", ssb_start_device_time);
+    printf("  CFO (DL)    = %.1f Hz\n", m_cfo_dl_hz);
+    printf("  CFO (UL)    = %.1f Hz (scaled by %.3f)\n",
+           m_cfo_ul_hz, m_cfg.tx_freq_hz / m_cell_cfg.dl_freq_hz);
+    printf("  PSS dev_time= %.6f s  (slot-start = %.6f s, -%.0f us)\n",
+           ssb_start_device_time, m_sync_device_time, ssb_intra_slot_s * 1e6);
     printf("  Slot        = %u (from ssb_idx=%u, hrf=%d)\n", ssb_slot, ssb_idx, hrf);
 
     return true;
@@ -434,13 +514,14 @@ bool prach_tx::sync_to_ssb() {
 // ---------------------------------------------------------------------------
 // set_sync_fallback — store sniffer-based timing for fallback use
 // ---------------------------------------------------------------------------
-void prach_tx::set_sync_fallback(double unix_time, uint32_t sfn, uint32_t ssb_slot) {
+void prach_tx::set_sync_fallback(double unix_time, uint32_t sfn, uint32_t ssb_slot, uint32_t ssb_idx) {
     m_has_fallback       = true;
     m_fallback_unix_time = unix_time;
     m_fallback_sfn       = sfn;
     m_fallback_ssb_slot  = ssb_slot;
-    printf("[prach_tx] Sync fallback registered: SFN=%u slot=%u @ unix=%.3f\n",
-           sfn, ssb_slot, unix_time);
+    m_fallback_ssb_idx   = ssb_idx;
+    printf("[prach_tx] Sync fallback registered: SFN=%u slot=%u ssb_idx=%u @ unix=%.3f\n",
+           sfn, ssb_slot, ssb_idx, unix_time);
 }
 
 // ---------------------------------------------------------------------------
@@ -471,19 +552,33 @@ bool prach_tx::attempt_sync_from_fallback() {
     // Convert the sniffer's MIB Unix timestamp to device time
     double dev_at_mib = m_fallback_unix_time - m_dev_epoch_offset;
 
-    // Set sync anchor in device-time coordinates
-    m_sync_device_time = dev_at_mib;
+    // SSB PSS intra-slot offset (Pattern A, 15 kHz, as in sync_to_ssb)
+    // TS 38.213 §4.1 Case A (15 kHz, carrier <=3 GHz): candidate SSB first
+    // symbols are {2, 8, 16, 22}. Within-slot first symbol is 2 (idx 0,2) or
+    // 8 (idx 1,3). ssb_slot already accounts for the slot; this is intra-slot.
+    uint32_t ssb_first_symbol =
+        ((m_fallback_ssb_idx == 0) || (m_fallback_ssb_idx == 2)) ? 2 : 8;
+    if (m_ssb_first_symbol_override >= 0) {
+        ssb_first_symbol = (uint32_t)m_ssb_first_symbol_override;
+    }
+    double ssb_intra_slot_s = 1e-3 * (double)ssb_first_symbol / 14.0;
+
+    // Set sync anchor in device-time coordinates (aligned to slot start)
+    m_sync_device_time = dev_at_mib - ssb_intra_slot_s;
     m_sync_sfn         = m_fallback_sfn;   // 4-LSB SFN
     m_sync_slot        = m_fallback_ssb_slot;
     m_sync_t_offset    = 0;
     m_synced           = true;
     m_using_fallback   = false;  // use normal device-time TX path now
+    m_sync_ssb_idx     = m_fallback_ssb_idx;
 
     printf("[prach_tx] Fallback sync (device-time calibrated):\n");
     printf("  Epoch offset   = %.3f s (unix = dev + offset)\n", m_dev_epoch_offset);
     printf("  dev_now        = %.6f s\n", dev_now);
-    printf("  dev_at_mib     = %.6f s (SFN=%u slot=%u)\n",
-           dev_at_mib, m_sync_sfn, m_sync_slot);
+    printf("  dev_at_mib     = %.6f s  (slot-start = %.6f s, -%.0f us)\n",
+           dev_at_mib, m_sync_device_time, ssb_intra_slot_s * 1e6);
+    printf("  anchor: SFN=%u slot=%u ssb_idx=%u\n",
+           m_sync_sfn, m_sync_slot, m_sync_ssb_idx);
 
     return true;
 }
@@ -565,6 +660,9 @@ bool prach_tx::transmit_preamble(uint32_t sfn, uint32_t ro_slot) {
     int64_t slots_from_sync = (int64_t)frames_to_ro * 10 +
                               (int64_t)ro_slot - (int64_t)m_sync_slot;
     double t_tx = m_sync_device_time + (double)slots_from_sync * slot_dur;
+
+    // Manual timing nudge (sweep parameter from tool_config)
+    t_tx += m_tx_offset_us * 1e-6;
 
     // Advance if target is in the past (one RO period = 16 frames = 160ms)
     if (t_tx < t_now - 0.001) {
@@ -651,6 +749,9 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn, uint32_t ro_slot)
     double frac_secs_now = 0.0;
     srsran_rf_get_time(&m_rf, &full_secs_now, &frac_secs_now);
     double t_now = (double)full_secs_now + frac_secs_now;
+
+    // Manual timing nudge
+    dev_time += m_tx_offset_us * 1e-6;
 
     if (dev_time <= t_now) {
         fprintf(stderr, "[prach_tx] FATAL: target time %.6f s is in the past (now=%.6f)\n",

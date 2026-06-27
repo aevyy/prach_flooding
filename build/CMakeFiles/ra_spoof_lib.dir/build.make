@@ -240,6 +240,20 @@ CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/prach_tx.cpp -o CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.s
 
+CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
+CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o: /home/avi/wireless/ra-spoof/src/tool_config.cpp
+CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o -c /home/avi/wireless/ra-spoof/src/tool_config.cpp
+
+CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/avi/wireless/ra-spoof/src/tool_config.cpp > CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.i
+
+CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/tool_config.cpp -o CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.s
+
 # Object files for target ra_spoof_lib
 ra_spoof_lib_OBJECTS = \
 "CMakeFiles/ra_spoof_lib.dir/src/cell_config.cpp.o" \
@@ -253,7 +267,8 @@ ra_spoof_lib_OBJECTS = \
 "CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o" \
-"CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o"
+"CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o" \
+"CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o"
 
 # External object files for target ra_spoof_lib
 ra_spoof_lib_EXTERNAL_OBJECTS =
@@ -270,9 +285,10 @@ libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o
+libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/build.make
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Linking CXX static library libra_spoof_lib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX static library libra_spoof_lib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/ra_spoof_lib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ra_spoof_lib.dir/link.txt --verbose=$(VERBOSE)
 

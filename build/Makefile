@@ -508,6 +508,30 @@ src/ssb_sync.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.s
 .PHONY : src/ssb_sync.cpp.s
 
+src/tool_config.o: src/tool_config.cpp.o
+.PHONY : src/tool_config.o
+
+# target to build an object file
+src/tool_config.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o
+.PHONY : src/tool_config.cpp.o
+
+src/tool_config.i: src/tool_config.cpp.i
+.PHONY : src/tool_config.i
+
+# target to preprocess a source file
+src/tool_config.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.i
+.PHONY : src/tool_config.cpp.i
+
+src/tool_config.s: src/tool_config.cpp.s
+.PHONY : src/tool_config.s
+
+# target to generate assembly for a file
+src/tool_config.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.s
+.PHONY : src/tool_config.cpp.s
+
 src/ul_rx.o: src/ul_rx.cpp.o
 .PHONY : src/ul_rx.o
 
@@ -728,6 +752,9 @@ help:
 	@echo "... src/ssb_sync.o"
 	@echo "... src/ssb_sync.i"
 	@echo "... src/ssb_sync.s"
+	@echo "... src/tool_config.o"
+	@echo "... src/tool_config.i"
+	@echo "... src/tool_config.s"
 	@echo "... src/ul_rx.o"
 	@echo "... src/ul_rx.i"
 	@echo "... src/ul_rx.s"

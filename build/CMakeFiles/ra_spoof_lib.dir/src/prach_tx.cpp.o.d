@@ -152,6 +152,7 @@ CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o: \
  /usr/include/c++/15/bits/uses_allocator.h \
  /usr/include/c++/15/bits/uses_allocator_args.h /usr/include/c++/15/tuple \
  /home/avi/wireless/ra-spoof/src/ssb_sync.h \
+ /home/avi/wireless/ra-spoof/src/tool_config.h \
  /usr/local/include/srsran/phy/phch/prach.h /usr/include/c++/15/complex.h \
  /usr/include/c++/15/complex /usr/include/c++/15/sstream \
  /usr/include/c++/15/istream /usr/include/c++/15/ios \
