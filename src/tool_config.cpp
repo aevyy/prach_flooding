@@ -55,6 +55,15 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
             TRY_SCALAR(run, "resync_every",  tc.run.resync_every,  tc.run.src_resync);
         }
 
+        // --- flood ---
+        auto flood = root["flood"];
+        if (flood) {
+            TRY_SCALAR(flood, "enabled",          tc.flood.enabled,          tc.flood.src_enabled);
+            TRY_SCALAR(flood, "num_preambles",    tc.flood.num_preambles,    tc.flood.src_num);
+            TRY_SCALAR(flood, "strategy",         tc.flood.strategy,         tc.flood.src_strategy);
+            TRY_SCALAR(flood, "power_backoff_db", tc.flood.power_backoff_db, tc.flood.src_backoff);
+        }
+
         printf("[tool_config] Loaded %s\n", path.c_str());
         return true;
     } catch (const std::exception& e) {
@@ -86,5 +95,9 @@ void print_tool_config(const tool_config& tc) {
     printf("  run.continuous                = %s     (%s)\n", tc.run.continuous ? "true" : "false", src_str(tc.run.src_cont));
     printf("  run.max_tx                    = %u    (%s)\n", tc.run.max_tx,        src_str(tc.run.src_max_tx));
     printf("  run.resync_every              = %u    (%s)\n", tc.run.resync_every,  src_str(tc.run.src_resync));
+    printf("  flood.enabled                 = %s     (%s)\n", tc.flood.enabled ? "true" : "false", src_str(tc.flood.src_enabled));
+    printf("  flood.num_preambles           = %u    (%s)\n", tc.flood.num_preambles, src_str(tc.flood.src_num));
+    printf("  flood.strategy                = %s    (%s)\n", tc.flood.strategy.c_str(), src_str(tc.flood.src_strategy));
+    printf("  flood.power_backoff_db        = %.1f  (%s)\n", tc.flood.power_backoff_db, src_str(tc.flood.src_backoff));
     printf("================================\n\n");
 }
