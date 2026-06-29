@@ -10,6 +10,23 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o: /home/avi/wireless/ra-spoof/src/main.cpp
   /home/avi/wireless/ra-spoof/src/ro.h \
   /home/avi/wireless/ra-spoof/src/ssb_sync.h \
   /home/avi/wireless/ra-spoof/src/tool_config.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/config.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common_nr.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/dft/dft.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/crc.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_code.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_decoder.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_encoder.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_rm.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/modem/modem_table.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_msg_nr.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_nr.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/prach.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/rf/rf.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/sync/ssb.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/debug.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/phy_logger.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
@@ -306,29 +323,12 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o: /home/avi/wireless/ra-spoof/src/main.cpp
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdbool.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h \
-  /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h \
-  /usr/local/include/srsran/config.h \
-  /usr/local/include/srsran/phy/common/phy_common.h \
-  /usr/local/include/srsran/phy/common/phy_common_nr.h \
-  /usr/local/include/srsran/phy/dft/dft.h \
-  /usr/local/include/srsran/phy/fec/crc.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_code.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_decoder.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_encoder.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_rm.h \
-  /usr/local/include/srsran/phy/modem/modem_table.h \
-  /usr/local/include/srsran/phy/phch/pbch_msg_nr.h \
-  /usr/local/include/srsran/phy/phch/pbch_nr.h \
-  /usr/local/include/srsran/phy/phch/prach.h \
-  /usr/local/include/srsran/phy/rf/rf.h \
-  /usr/local/include/srsran/phy/sync/ssb.h \
-  /usr/local/include/srsran/phy/utils/debug.h \
-  /usr/local/include/srsran/phy/utils/phy_logger.h
+  /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h
 
-ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a \
+ra-spoof: /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a \
   /lib64/ld-linux-x86-64.so.2 \
   /lib64/libc.so.6 \
   /lib64/libgcc_s.so.1 \
@@ -357,28 +357,20 @@ ra-spoof: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a
   /usr/lib64/libboost_serialization.so.1.83.0 \
   /usr/lib64/libboost_system.so.1.83.0 \
   /usr/lib64/libboost_thread.so.1.83.0 \
-  /usr/lib64/libbz2.so.1 \
   /usr/lib64/libc_nonshared.a \
   /usr/lib64/libcap.so.2 \
-  /usr/lib64/libdw.so.1 \
-  /usr/lib64/libelf.so.1 \
-  /usr/lib64/liblzma.so.5 \
   /usr/lib64/libmbedcrypto.so.16 \
   /usr/lib64/libmbedx509.so.7 \
   /usr/lib64/libpython3.14.so.1.0 \
   /usr/lib64/libudev.so.1 \
   /usr/lib64/libusb-1.0.so.0 \
-  /usr/lib64/libz.so.1 \
-  /usr/lib64/libzstd.so.1 \
   CMakeFiles/ra-spoof.dir/src/main.cpp.o \
   libra_spoof_lib.a
 
 
+libra_spoof_lib.a:
+
 CMakeFiles/ra-spoof.dir/src/main.cpp.o:
-
-/usr/lib64/libzstd.so.1:
-
-/usr/lib64/libz.so.1:
 
 /usr/lib64/libusb-1.0.so.0:
 
@@ -388,11 +380,7 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /usr/lib64/libmbedx509.so.7:
 
-/usr/lib64/libdw.so.1:
-
 /usr/lib64/libcap.so.2:
-
-/usr/lib64/libbz2.so.1:
 
 /usr/lib64/libboost_thread.so.1.83.0:
 
@@ -409,6 +397,8 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o:
 
 /usr/lib64/libpthread.a:
+
+/usr/lib64/libmbedtls.so:
 
 /usr/lib64/libm.so:
 
@@ -430,29 +420,11 @@ CMakeFiles/ra-spoof.dir/src/main.cpp.o:
 
 /lib64/ld-linux-x86-64.so.2:
 
-libra_spoof_lib.a:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a:
 
-/home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so:
 
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
-
-/usr/lib64/libmbedtls.so:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a:
-
-/usr/local/include/srsran/phy/utils/debug.h:
-
-/usr/local/include/srsran/phy/rf/rf.h:
-
-/usr/local/include/srsran/phy/phch/prach.h:
-
-/usr/local/include/srsran/phy/phch/pbch_msg_nr.h:
-
-/usr/local/include/srsran/phy/fec/polar/polar_encoder.h:
-
-/usr/local/include/srsran/phy/fec/polar/polar_decoder.h:
-
-/usr/local/include/srsran/phy/common/phy_common_nr.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdbool.h:
 
@@ -508,17 +480,27 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/c++locale.h:
 
-/usr/lib64/crti.o:
+/usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h:
 
-/usr/include/stdio.h:
+/usr/include/c++/15/x86_64-redhat-linux/bits/c++allocator.h:
 
-/usr/include/bits/wordsize.h:
+/usr/include/c++/15/vector:
 
-/usr/include/bits/timesize.h:
+/usr/include/c++/15/type_traits:
 
-/usr/include/bits/waitflags.h:
+/usr/include/c++/15/tuple:
 
-/usr/include/c++/15/bits/locale_facets.tcc:
+/usr/include/c++/15/tr1/special_function_util.h:
+
+/usr/include/c++/15/tr1/poly_hermite.tcc:
+
+/usr/include/c++/15/tr1/modified_bessel_func.tcc:
+
+/usr/include/c++/15/tr1/legendre_function.tcc:
+
+/usr/include/c++/15/tr1/exp_integral.tcc:
+
+/usr/include/c++/15/tr1/ell_integral.tcc:
 
 /usr/include/bits/types/struct_sched_param.h:
 
@@ -526,31 +508,21 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/bits/cxxabi_init_exception.h:
 
-/usr/include/bits/types/struct_itimerspec.h:
-
 /usr/include/bits/types/sigset_t.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/crc.h:
 
 /usr/include/wchar.h:
 
 /usr/include/c++/15/sstream:
 
-/usr/include/c++/15/tr1/poly_hermite.tcc:
-
 /usr/include/bits/types/sigevent_t.h:
 
-/usr/include/c++/15/tr1/ell_integral.tcc:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/phy_logger.h:
 
 /usr/include/bits/typesizes.h:
 
-/usr/local/include/srsran/phy/modem/modem_table.h:
-
-/usr/include/c++/15/bits/alloc_traits.h:
-
 /usr/include/bits/types/locale_t.h:
-
-/usr/local/include/srsran/phy/dft/dft.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h:
 
@@ -558,13 +530,11 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/bits/locale_classes.h:
 
+/usr/include/bits/mathcalls.h:
+
 /usr/include/bits/types/sig_atomic_t.h:
 
 /usr/include/bits/types/__fpos_t.h:
-
-/usr/local/include/srsran/phy/utils/phy_logger.h:
-
-/usr/include/bits/mathcalls.h:
 
 /usr/include/bits/types/__fpos64_t.h:
 
@@ -588,23 +558,91 @@ libra_spoof_lib.a:
 
 /home/avi/wireless/ra-spoof/src/ra_rnti.h:
 
-/usr/include/bits/struct_mutex.h:
-
-/usr/include/bits/types/struct_timeval.h:
-
 /usr/include/bits/stdio_lim.h:
 
 /usr/include/bits/types/__mbstate_t.h:
 
-/usr/include/asm/posix_types.h:
+/usr/include/bits/signum-generic.h:
 
-/usr/include/bits/time.h:
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
 
-/usr/include/c++/15/mutex:
+/usr/include/c++/15/bits/cxxabi_forced.h:
 
-/usr/include/bits/unistd_ext.h:
+/usr/include/bits/sigevent-consts.h:
 
-/usr/include/bits/stdio.h:
+/usr/include/c++/15/tr1/gamma.tcc:
+
+/usr/include/bits/signum-arch.h:
+
+/usr/include/c++/15/chrono:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/modem/modem_table.h:
+
+/usr/include/c++/15/bits/vector.tcc:
+
+/usr/include/c++/15/tr1/riemann_zeta.tcc:
+
+/usr/include/bits/siginfo-consts-arch.h:
+
+/usr/include/bits/sigstack.h:
+
+/usr/include/bits/select.h:
+
+/usr/include/bits/types/cookie_io_functions_t.h:
+
+/usr/include/bits/types/siginfo_t.h:
+
+/usr/include/bits/pthreadtypes.h:
+
+/usr/include/bits/pthreadtypes-arch.h:
+
+/usr/include/bits/pthread_stack_min-dynamic.h:
+
+/usr/include/bits/posix_opt.h:
+
+/usr/include/bits/atomic_wide_counter.h:
+
+/usr/include/asm-generic/errno.h:
+
+/usr/include/bits/fp-logb.h:
+
+/usr/include/bits/mathcalls-narrow.h:
+
+/usr/include/c++/15/tr1/hypergeometric.tcc:
+
+/usr/include/bits/mathcalls-macros.h:
+
+/usr/include/asm-generic/int-ll64.h:
+
+/usr/include/c++/15/bits/memoryfwd.h:
+
+/usr/include/c++/15/tr1/beta_function.tcc:
+
+/usr/include/bits/types/struct_itimerspec.h:
+
+/usr/include/bits/mathcalls-helper-functions.h:
+
+/usr/include/c++/15/bits/stl_function.h:
+
+/usr/include/bits/types/struct_sigstack.h:
+
+/usr/include/c++/15/cwchar:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a:
+
+/usr/include/bits/long-double.h:
+
+/usr/include/asm-generic/errno-base.h:
+
+/usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/debug.h:
+
+/usr/include/c++/15/cstring:
+
+/usr/include/asm-generic/types.h:
+
+/usr/include/asm-generic/bitsperlong.h:
 
 /usr/include/c++/15/bits/ostream_insert.h:
 
@@ -616,83 +654,43 @@ libra_spoof_lib.a:
 
 /usr/include/bits/sigstksz.h:
 
-/usr/include/bits/signum-generic.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/rf/rf.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
+/usr/include/bits/time.h:
 
-/usr/include/c++/15/bits/cxxabi_forced.h:
+/usr/include/asm/posix_types.h:
 
-/usr/include/bits/sigevent-consts.h:
+/usr/include/c++/15/bits/alloc_traits.h:
 
-/usr/include/c++/15/chrono:
+/usr/include/bits/struct_mutex.h:
 
-/usr/include/c++/15/bits/vector.tcc:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_nr.h:
 
-/usr/include/c++/15/tr1/riemann_zeta.tcc:
-
-/usr/include/bits/siginfo-consts-arch.h:
-
-/usr/include/bits/sigstack.h:
-
-/usr/include/bits/endianness.h:
-
-/usr/include/bits/libm-simd-decl-stubs.h:
-
-/usr/include/c++/15/bits/ostream.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common_nr.h:
 
 /usr/include/bits/confname.h:
 
-/usr/include/bits/uintn-identity.h:
+/usr/include/bits/stdio.h:
 
-/usr/include/bits/byteswap.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_encoder.h:
 
-/usr/include/bits/signal_ext.h:
+/usr/include/bits/setjmp.h:
 
-/usr/include/bits/types/mbstate_t.h:
-
-/usr/include/c++/15/bits/stl_uninitialized.h:
-
-/usr/include/bits/atomic_wide_counter.h:
-
-/usr/include/bits/posix_opt.h:
-
-/usr/include/c++/15/bits/std_mutex.h:
-
-/usr/include/complex.h:
-
-/usr/include/bits/ss_flags.h:
-
-/usr/include/asm/posix_types_64.h:
-
-/usr/include/asm-generic/bitsperlong.h:
-
-/usr/include/asm-generic/types.h:
-
-/usr/include/asm-generic/errno-base.h:
-
-/usr/include/c++/15/math.h:
+/usr/include/c++/15/bits/char_traits.h:
 
 /usr/include/c++/15/cerrno:
 
-/usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h:
+/usr/include/features.h:
 
-/usr/local/include/srsran/phy/fec/polar/polar_rm.h:
+/usr/include/bits/sched.h:
 
-/usr/include/bits/types/__sigset_t.h:
+/usr/include/bits/types/__FILE.h:
 
-/usr/include/c++/15/bit:
+/usr/include/c++/15/math.h:
 
-/usr/include/c++/15/bits/allocator.h:
-
-/usr/include/asm-generic/posix_types.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h:
 
 /usr/include/bits/stdlib-bsearch.h:
-
-/usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h:
-
-/usr/include/bits/locale.h:
-
-/home/avi/wireless/ra-spoof/src/ro.h:
 
 /usr/include/c++/15/bits/istream.tcc:
 
@@ -704,15 +702,9 @@ libra_spoof_lib.a:
 
 /home/avi/wireless/ra-spoof/src/cell_config.h:
 
-/usr/local/include/srsran/phy/phch/pbch_nr.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/config.h:
 
-/usr/include/gnu/stubs-64.h:
-
-/usr/include/bits/types/__sigval_t.h:
-
-/usr/include/asm/types.h:
-
-/usr/local/include/srsran/phy/sync/ssb.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/sync/ssb.h:
 
 /usr/include/bits/sigthread.h:
 
@@ -726,19 +718,15 @@ libra_spoof_lib.a:
 
 /usr/include/alloca.h:
 
-/usr/include/bits/types/siginfo_t.h:
+/usr/include/bits/signal_ext.h:
 
-/usr/include/features.h:
+/usr/include/bits/types/mbstate_t.h:
 
-/usr/include/bits/types/__FILE.h:
+/usr/include/c++/15/bits/stl_uninitialized.h:
 
-/usr/include/bits/sched.h:
+/usr/include/bits/byteswap.h:
 
-/usr/include/asm-generic/int-ll64.h:
-
-/usr/include/c++/15/bits/memoryfwd.h:
-
-/usr/include/c++/15/tr1/beta_function.tcc:
+/usr/include/bits/types/__sigset_t.h:
 
 /usr/include/c++/15/bits/move.h:
 
@@ -746,37 +734,13 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/bits/invoke.h:
 
-/usr/include/asm-generic/errno.h:
+/usr/include/bits/types/struct_timespec.h:
 
-/usr/include/bits/fp-logb.h:
+/usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h:
 
-/usr/include/c++/15/bits/exception_ptr.h:
+/usr/include/c++/15/bits/localefwd.h:
 
-/usr/include/bits/floatn-common.h:
-
-/usr/include/bits/floatn.h:
-
-/usr/include/c++/15/bits/refwrap.h:
-
-/usr/include/c++/15/type_traits:
-
-/usr/include/wctype.h:
-
-/usr/include/sched.h:
-
-/usr/include/bits/fp-fast.h:
-
-/usr/include/bits/long-double.h:
-
-/usr/include/bits/types.h:
-
-/usr/lib64/liblzma.so.5:
-
-/usr/include/c++/15/bits/streambuf_iterator.h:
-
-/usr/include/c++/15/tr1/exp_integral.tcc:
-
-/usr/include/bits/types/__locale_t.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/prach.h:
 
 /usr/include/sys/time.h:
 
@@ -786,17 +750,83 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/bits/specfun.h:
 
-/usr/include/bits/math-vector.h:
+/usr/include/gnu/stubs-64.h:
 
-/usr/include/c++/15/bits/concept_check.h:
+/usr/include/bits/types/__sigval_t.h:
 
-/usr/include/c++/15/bits/version.h:
+/usr/include/c++/15/pstl/pstl_config.h:
 
-/usr/include/bits/mathcalls-narrow.h:
+/usr/include/bits/sigcontext.h:
+
+/usr/lib64/libyaml-cpp.so:
+
+/usr/include/asm/bitsperlong.h:
+
+/usr/include/c++/15/tr1/poly_laguerre.tcc:
+
+/usr/include/bits/types/clock_t.h:
+
+/usr/include/c++/15/bits/charconv.h:
+
+/usr/include/complex.h:
+
+/usr/include/bits/ss_flags.h:
+
+/usr/include/asm/posix_types_64.h:
+
+/usr/include/asm/types.h:
+
+/usr/include/c++/15/typeinfo:
+
+/usr/include/bits/stdint-intn.h:
+
+/usr/include/bits/types/clockid_t.h:
+
+/home/avi/wireless/ra-spoof/src/ro.h:
+
+/usr/include/bits/locale.h:
+
+/usr/include/c++/15/bits/std_mutex.h:
+
+/usr/include/bits/timesize.h:
+
+/usr/include/bits/wchar.h:
+
+/usr/include/bits/types/struct___jmp_buf_tag.h:
+
+/usr/include/bits/waitstatus.h:
+
+/usr/include/bits/stdint-uintn.h:
+
+/usr/include/asm/errno.h:
+
+/usr/include/bits/endianness.h:
+
+/usr/include/bits/libm-simd-decl-stubs.h:
+
+/usr/include/c++/15/bits/ostream.h:
+
+/usr/include/c++/15/bits/exception_ptr.h:
+
+/usr/include/bits/floatn-common.h:
+
+/usr/include/bits/floatn.h:
+
+/usr/include/c++/15/bits/refwrap.h:
+
+/usr/include/wctype.h:
+
+/usr/include/sched.h:
+
+/usr/include/bits/fp-fast.h:
+
+/usr/include/bits/types.h:
+
+/usr/include/c++/15/bits/streambuf_iterator.h:
+
+/usr/include/bits/types/__locale_t.h:
 
 /usr/include/bits/sigaction.h:
-
-/usr/local/include/srsran/phy/fec/crc.h:
 
 /usr/include/bits/iscanonical.h:
 
@@ -808,63 +838,41 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/istream:
 
+/usr/include/bits/types/struct_timeval.h:
+
 /usr/include/bits/types/time_t.h:
 
-/usr/include/bits/mathcalls-helper-functions.h:
+/usr/include/bits/math-vector.h:
 
-/usr/include/c++/15/bits/stl_function.h:
+/usr/include/c++/15/bits/concept_check.h:
 
-/usr/include/bits/types/struct_sigstack.h:
+/usr/include/c++/15/bits/version.h:
 
-/usr/include/c++/15/cwchar:
+/usr/include/bits/uintn-identity.h:
 
-/usr/include/bits/pthread_stack_min-dynamic.h:
+/usr/include/c++/15/mutex:
 
-/usr/include/bits/pthreadtypes-arch.h:
+/usr/include/bits/unistd_ext.h:
 
-/usr/include/bits/pthreadtypes.h:
+/usr/include/bits/waitflags.h:
 
-/usr/include/bits/types/struct_timespec.h:
+/usr/include/c++/15/bits/locale_facets.tcc:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h:
+/usr/lib64/crti.o:
 
-/usr/include/c++/15/bits/localefwd.h:
+/usr/include/stdio.h:
 
-/usr/include/bits/types/cookie_io_functions_t.h:
+/usr/include/bits/wordsize.h:
 
-/usr/include/asm/errno.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_decoder.h:
 
-/usr/include/bits/stdint-uintn.h:
+/usr/include/asm-generic/posix_types.h:
 
-/usr/include/bits/select.h:
+/usr/include/c++/15/bit:
 
-/usr/include/bits/waitstatus.h:
-
-/usr/include/bits/wchar.h:
-
-/usr/include/bits/types/struct___jmp_buf_tag.h:
-
-/usr/local/include/srsran/phy/fec/polar/polar_code.h:
-
-/usr/include/bits/setjmp.h:
-
-/usr/lib64/libelf.so.1:
-
-/usr/include/c++/15/bits/char_traits.h:
-
-/usr/lib64/libyaml-cpp.so:
-
-/usr/include/asm/bitsperlong.h:
-
-/usr/include/bits/types/clock_t.h:
-
-/usr/include/c++/15/tr1/poly_laguerre.tcc:
-
-/usr/include/c++/15/bits/charconv.h:
+/usr/include/c++/15/bits/allocator.h:
 
 /usr/include/c++/15/bits/basic_ios.h:
-
-/usr/include/c++/15/tr1/modified_bessel_func.tcc:
 
 /usr/include/c++/15/bits/basic_ios.tcc:
 
@@ -873,8 +881,6 @@ libra_spoof_lib.a:
 /usr/include/bits/wctype-wchar.h:
 
 /usr/include/c++/15/bits/cpp_type_traits.h:
-
-/usr/local/include/srsran/config.h:
 
 /usr/include/c++/15/streambuf:
 
@@ -930,6 +936,8 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/bits/nested_exception.h:
 
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_msg_nr.h:
+
 /usr/include/bits/cpu-set.h:
 
 /usr/include/c++/15/bits/new_allocator.h:
@@ -942,8 +950,6 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/bits/parse_numbers.h:
 
-/usr/local/include/srsran/phy/common/phy_common.h:
-
 /usr/include/c++/15/bits/postypes.h:
 
 /usr/include/c++/15/bits/range_access.h:
@@ -953,12 +959,6 @@ libra_spoof_lib.a:
 /usr/include/c++/15/bits/sstream.tcc:
 
 /usr/include/c++/15/bits/std_abs.h:
-
-/usr/include/bits/stdint-intn.h:
-
-/usr/include/bits/types/clockid_t.h:
-
-/usr/include/c++/15/typeinfo:
 
 /usr/include/sys/cdefs.h:
 
@@ -971,8 +971,6 @@ libra_spoof_lib.a:
 /usr/include/c++/15/clocale:
 
 /usr/include/c++/15/bits/stl_iterator.h:
-
-/usr/include/c++/15/vector:
 
 /usr/include/c++/15/bits/ptr_traits.h:
 
@@ -1042,13 +1040,15 @@ libra_spoof_lib.a:
 
 /usr/include/c++/15/cstdint:
 
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_rm.h:
+
 /usr/include/bits/siginfo-arch.h:
 
 /usr/include/c++/15/cstdio:
 
-/usr/include/c++/15/cstring:
-
 /usr/include/bits/getopt_core.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_code.h:
 
 /usr/include/c++/15/debug/debug.h:
 
@@ -1076,13 +1076,11 @@ libra_spoof_lib.a:
 
 /usr/include/signal.h:
 
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/dft/dft.h:
+
 /usr/include/c++/15/bits/exception.h:
 
 /usr/include/c++/15/ostream:
-
-/usr/include/bits/sigcontext.h:
-
-/usr/include/c++/15/pstl/pstl_config.h:
 
 /usr/include/c++/15/ratio:
 
@@ -1097,19 +1095,3 @@ libra_spoof_lib.a:
 /usr/include/c++/15/system_error:
 
 /usr/include/c++/15/tr1/bessel_function.tcc:
-
-/usr/include/bits/signum-arch.h:
-
-/usr/include/c++/15/tr1/gamma.tcc:
-
-/usr/include/bits/mathcalls-macros.h:
-
-/usr/include/c++/15/tr1/hypergeometric.tcc:
-
-/usr/include/c++/15/tr1/legendre_function.tcc:
-
-/usr/include/c++/15/tr1/special_function_util.h:
-
-/usr/include/c++/15/tuple:
-
-/usr/include/c++/15/x86_64-redhat-linux/bits/c++allocator.h:

@@ -1,0 +1,12 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/mem_pool_test.dir/link.d"
+  "CMakeFiles/mem_pool_test.dir/mem_pool_test.cc.o"
+  "CMakeFiles/mem_pool_test.dir/mem_pool_test.cc.o.d"
+  "mem_pool_test"
+  "mem_pool_test.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang CXX)
+  include(CMakeFiles/mem_pool_test.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

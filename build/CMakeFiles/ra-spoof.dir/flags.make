@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -DBOOST_SYSTEM_DYN_LINK -DBOOST_SYSTEM_NO_LIB
 
-CXX_INCLUDES = -I/home/avi/wireless/ra-spoof/src -I/home/avi/wireless/rt-recon-sdk/include
+CXX_INCLUDES = -I/home/avi/wireless/ra-spoof/src -I/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include -I/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/include -I/home/avi/wireless/rt-recon-sdk/include
 
 CXX_FLAGS = -O2 -g -DNDEBUG -std=gnu++17 -Wall
 

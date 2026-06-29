@@ -45,10 +45,10 @@ CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o: /home/avi/wireless/ra-spoo
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h
 
-test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a \
+test_ra_rnti: /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a \
   /lib64/ld-linux-x86-64.so.2 \
   /lib64/libc.so.6 \
   /lib64/libgcc_s.so.1 \
@@ -77,36 +77,22 @@ test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_comm
   /usr/lib64/libboost_serialization.so.1.83.0 \
   /usr/lib64/libboost_system.so.1.83.0 \
   /usr/lib64/libboost_thread.so.1.83.0 \
-  /usr/lib64/libbz2.so.1 \
   /usr/lib64/libc_nonshared.a \
   /usr/lib64/libcap.so.2 \
-  /usr/lib64/libdw.so.1 \
-  /usr/lib64/libelf.so.1 \
-  /usr/lib64/liblzma.so.5 \
   /usr/lib64/libmbedcrypto.so.16 \
   /usr/lib64/libmbedx509.so.7 \
   /usr/lib64/libpython3.14.so.1.0 \
   /usr/lib64/libudev.so.1 \
   /usr/lib64/libusb-1.0.so.0 \
-  /usr/lib64/libz.so.1 \
-  /usr/lib64/libzstd.so.1 \
   CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o \
   libra_spoof_lib.a
 
 
-/usr/lib64/libz.so.1:
-
 /usr/lib64/libudev.so.1:
-
-/usr/lib64/libelf.so.1:
-
-/usr/lib64/libdw.so.1:
-
-/usr/lib64/libc_nonshared.a:
 
 /usr/lib64/libpython3.14.so.1.0:
 
-/usr/lib64/libbz2.so.1:
+/usr/lib64/libc_nonshared.a:
 
 /usr/lib64/libboost_thread.so.1.83.0:
 
@@ -116,13 +102,13 @@ test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_comm
 
 /usr/lib/gcc/x86_64-redhat-linux/15/libstdc++.so:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
-
-/usr/lib64/libzstd.so.1:
-
 /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o:
 
 /usr/lib64/libyaml-cpp.so:
+
+/usr/lib64/libmbedcrypto.so.16:
+
+/usr/lib64/libpthread.a:
 
 /usr/lib64/libm.so:
 
@@ -160,6 +146,10 @@ test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_comm
 
 /usr/include/bits/types/struct_FILE.h:
 
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a:
+
 /usr/include/bits/typesizes.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
@@ -168,6 +158,8 @@ test_ra_rnti: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_comm
 
 /usr/include/bits/floatn-common.h:
 
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a:
+
 /usr/lib64/libboost_system.so:
 
 CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o:
@@ -175,16 +167,6 @@ CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o:
 /usr/include/bits/long-double.h:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/cpu_defines.h:
-
-/usr/lib64/libmbedcrypto.so.16:
-
-/usr/lib64/libpthread.a:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a:
-
-/usr/lib64/liblzma.so.5:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a:
 
 /usr/include/bits/types/cookie_io_functions_t.h:
 
@@ -195,6 +177,8 @@ CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o:
 /home/avi/wireless/ra-spoof/src/ra_rnti.h:
 
 /usr/include/features.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a:
 
 /usr/lib64/libfftw3f.so:
 
@@ -209,8 +193,6 @@ libra_spoof_lib.a:
 /usr/include/bits/floatn.h:
 
 /usr/include/bits/libc-header-start.h:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a:
 
 /usr/lib64/crti.o:
 
@@ -238,15 +220,17 @@ libra_spoof_lib.a:
 
 /usr/include/gnu/stubs-64.h:
 
-/home/avi/wireless/ra-spoof/tests/test_ra_rnti.cpp:
-
-/usr/include/gnu/stubs.h:
-
 /usr/include/stdint.h:
 
 /usr/lib64/libboost_chrono.so.1.83.0:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h:
+
+/home/avi/wireless/ra-spoof/tests/test_ra_rnti.cpp:
+
+/usr/include/gnu/stubs.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so:
 
 /usr/lib64/libboost_atomic.so.1.83.0:
 
@@ -255,8 +239,6 @@ libra_spoof_lib.a:
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
 
 /lib64/ld-linux-x86-64.so.2:
 

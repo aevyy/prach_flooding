@@ -1,8 +1,8 @@
 CMakeFiles/ra_spoof_lib.dir/src/cell_config.cpp.o: \
  /home/avi/wireless/ra-spoof/src/cell_config.cpp \
  /usr/include/stdc-predef.h /home/avi/wireless/ra-spoof/src/cell_config.h \
- /usr/local/include/srsran/phy/common/phy_common_nr.h \
- /usr/local/include/srsran/phy/common/phy_common.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common_nr.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h \
  /usr/include/c++/15/math.h /usr/include/c++/15/cmath \
  /usr/include/c++/15/bits/requires_hosted.h \
  /usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h \
@@ -83,18 +83,20 @@ CMakeFiles/ra_spoof_lib.dir/src/cell_config.cpp.o: \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
  /usr/include/bits/types/cookie_io_functions_t.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
- /usr/local/include/srsran/config.h /usr/include/inttypes.h \
- /usr/local/include/srsran/phy/sync/ssb.h \
- /usr/local/include/srsran/phy/dft/dft.h \
- /usr/local/include/srsran/phy/phch/pbch_nr.h \
- /usr/local/include/srsran/phy/fec/crc.h \
- /usr/local/include/srsran/phy/fec/polar/polar_code.h \
- /usr/local/include/srsran/phy/utils/debug.h \
- /usr/local/include/srsran/phy/utils/phy_logger.h /usr/include/errno.h \
- /usr/include/bits/errno.h /usr/include/linux/errno.h \
- /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
- /usr/include/asm-generic/errno-base.h /usr/include/bits/types/error_t.h \
- /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/config.h \
+ /usr/include/inttypes.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/sync/ssb.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/dft/dft.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_nr.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/crc.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_code.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/debug.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/phy_logger.h \
+ /usr/include/errno.h /usr/include/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/bits/types/error_t.h /usr/include/pthread.h \
+ /usr/include/sched.h /usr/include/bits/sched.h \
  /usr/include/linux/sched/types.h /usr/include/linux/types.h \
  /usr/include/asm/types.h /usr/include/asm-generic/types.h \
  /usr/include/asm-generic/int-ll64.h /usr/include/asm/bitsperlong.h \
@@ -109,12 +111,12 @@ CMakeFiles/ra_spoof_lib.dir/src/cell_config.cpp.o: \
  /usr/include/bits/pthread_stack_min-dynamic.h \
  /usr/include/c++/15/stdlib.h /usr/include/c++/15/cstdlib \
  /usr/include/string.h /usr/include/strings.h /usr/include/sys/time.h \
- /usr/local/include/srsran/phy/fec/polar/polar_decoder.h \
- /usr/local/include/srsran/phy/fec/polar/polar_encoder.h \
- /usr/local/include/srsran/phy/fec/polar/polar_rm.h \
- /usr/local/include/srsran/phy/modem/modem_table.h \
- /usr/local/include/srsran/phy/common/phy_common.h \
- /usr/local/include/srsran/phy/phch/pbch_msg_nr.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_decoder.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_encoder.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_rm.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/modem/modem_table.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_msg_nr.h \
  /usr/include/c++/15/cstdint /usr/include/c++/15/string \
  /usr/include/c++/15/bits/stringfwd.h \
  /usr/include/c++/15/bits/memoryfwd.h \
@@ -149,101 +151,4 @@ CMakeFiles/ra_spoof_lib.dir/src/cell_config.cpp.o: \
  /usr/include/c++/15/bits/basic_string.tcc \
  /usr/include/c++/15/bits/memory_resource.h /usr/include/c++/15/cstddef \
  /usr/include/c++/15/bits/uses_allocator.h \
- /usr/include/c++/15/bits/uses_allocator_args.h /usr/include/c++/15/tuple \
- /usr/include/yaml-cpp/yaml.h /usr/include/yaml-cpp/parser.h \
- /usr/include/c++/15/ios /usr/include/c++/15/exception \
- /usr/include/c++/15/bits/exception_ptr.h \
- /usr/include/c++/15/bits/cxxabi_init_exception.h \
- /usr/include/c++/15/typeinfo /usr/include/c++/15/bits/nested_exception.h \
- /usr/include/c++/15/bits/ios_base.h /usr/include/c++/15/ext/atomicity.h \
- /usr/include/c++/15/x86_64-redhat-linux/bits/gthr.h \
- /usr/include/c++/15/x86_64-redhat-linux/bits/gthr-default.h \
- /usr/include/c++/15/x86_64-redhat-linux/bits/atomic_word.h \
- /usr/include/sys/single_threaded.h \
- /usr/include/c++/15/bits/locale_classes.h \
- /usr/include/c++/15/bits/locale_classes.tcc \
- /usr/include/c++/15/system_error \
- /usr/include/c++/15/x86_64-redhat-linux/bits/error_constants.h \
- /usr/include/c++/15/stdexcept /usr/include/c++/15/streambuf \
- /usr/include/c++/15/bits/streambuf.tcc \
- /usr/include/c++/15/bits/basic_ios.h \
- /usr/include/c++/15/bits/locale_facets.h /usr/include/c++/15/cwctype \
- /usr/include/wctype.h /usr/include/bits/wctype-wchar.h \
- /usr/include/c++/15/x86_64-redhat-linux/bits/ctype_base.h \
- /usr/include/c++/15/bits/streambuf_iterator.h \
- /usr/include/c++/15/x86_64-redhat-linux/bits/ctype_inline.h \
- /usr/include/c++/15/bits/locale_facets.tcc \
- /usr/include/c++/15/bits/basic_ios.tcc /usr/include/c++/15/memory \
- /usr/include/c++/15/bits/stl_tempbuf.h \
- /usr/include/c++/15/bits/stl_uninitialized.h \
- /usr/include/c++/15/bits/stl_raw_storage_iter.h \
- /usr/include/c++/15/bits/align.h /usr/include/c++/15/bits/unique_ptr.h \
- /usr/include/c++/15/bits/shared_ptr.h \
- /usr/include/c++/15/bits/shared_ptr_base.h \
- /usr/include/c++/15/bits/allocated_ptr.h \
- /usr/include/c++/15/ext/aligned_buffer.h \
- /usr/include/c++/15/ext/concurrence.h \
- /usr/include/c++/15/bits/shared_ptr_atomic.h \
- /usr/include/c++/15/bits/atomic_base.h \
- /usr/include/c++/15/bits/atomic_lockfree_defines.h \
- /usr/include/c++/15/backward/auto_ptr.h \
- /usr/include/c++/15/pstl/glue_memory_defs.h \
- /usr/include/c++/15/pstl/execution_defs.h /usr/include/yaml-cpp/dll.h \
- /usr/include/yaml-cpp/emitter.h /usr/include/c++/15/sstream \
- /usr/include/c++/15/istream /usr/include/c++/15/ostream \
- /usr/include/c++/15/bits/ostream.h /usr/include/c++/15/bits/ostream.tcc \
- /usr/include/c++/15/bits/istream.tcc \
- /usr/include/c++/15/bits/sstream.tcc /usr/include/yaml-cpp/binary.h \
- /usr/include/c++/15/vector /usr/include/c++/15/bits/stl_vector.h \
- /usr/include/c++/15/bits/stl_bvector.h \
- /usr/include/c++/15/bits/vector.tcc /usr/include/yaml-cpp/emitterdef.h \
- /usr/include/yaml-cpp/emittermanip.h /usr/include/yaml-cpp/null.h \
- /usr/include/yaml-cpp/ostream_wrapper.h \
- /usr/include/yaml-cpp/emitterstyle.h /usr/include/yaml-cpp/stlemitter.h \
- /usr/include/c++/15/list /usr/include/c++/15/bits/stl_list.h \
- /usr/include/c++/15/bits/list.tcc /usr/include/c++/15/set \
- /usr/include/c++/15/bits/stl_tree.h \
- /usr/include/c++/15/bits/node_handle.h \
- /usr/include/c++/15/bits/stl_set.h \
- /usr/include/c++/15/bits/stl_multiset.h \
- /usr/include/c++/15/bits/erase_if.h /usr/include/c++/15/map \
- /usr/include/c++/15/bits/stl_map.h \
- /usr/include/c++/15/bits/stl_multimap.h \
- /usr/include/yaml-cpp/exceptions.h /usr/include/yaml-cpp/mark.h \
- /usr/include/yaml-cpp/noexcept.h /usr/include/yaml-cpp/traits.h \
- /usr/include/c++/15/utility /usr/include/c++/15/bits/stl_relops.h \
- /usr/include/yaml-cpp/node/node.h \
- /usr/include/yaml-cpp/node/detail/iterator_fwd.h \
- /usr/include/yaml-cpp/node/ptr.h /usr/include/yaml-cpp/node/type.h \
- /usr/include/yaml-cpp/node/impl.h \
- /usr/include/yaml-cpp/node/detail/memory.h \
- /usr/include/yaml-cpp/node/detail/node.h \
- /usr/include/yaml-cpp/node/detail/node_ref.h \
- /usr/include/yaml-cpp/node/detail/node_data.h \
- /usr/include/yaml-cpp/node/detail/node_iterator.h \
- /usr/include/c++/15/iterator /usr/include/c++/15/bits/stream_iterator.h \
- /usr/include/yaml-cpp/node/iterator.h \
- /usr/include/yaml-cpp/node/detail/iterator.h /usr/include/c++/15/atomic \
- /usr/include/yaml-cpp/node/convert.h /usr/include/c++/15/array \
- /usr/include/c++/15/compare /usr/include/c++/15/unordered_map \
- /usr/include/c++/15/bits/unordered_map.h \
- /usr/include/c++/15/bits/hashtable.h \
- /usr/include/c++/15/bits/hashtable_policy.h \
- /usr/include/c++/15/bits/enable_special_members.h \
- /usr/include/c++/15/valarray /usr/include/c++/15/algorithm \
- /usr/include/c++/15/bits/stl_algo.h \
- /usr/include/c++/15/bits/algorithmfwd.h \
- /usr/include/c++/15/bits/stl_heap.h \
- /usr/include/c++/15/bits/uniform_int_dist.h \
- /usr/include/c++/15/pstl/glue_algorithm_defs.h \
- /usr/include/c++/15/bits/valarray_array.h \
- /usr/include/c++/15/bits/valarray_array.tcc \
- /usr/include/c++/15/bits/valarray_before.h \
- /usr/include/c++/15/bits/slice_array.h \
- /usr/include/c++/15/bits/valarray_after.h \
- /usr/include/c++/15/bits/gslice.h \
- /usr/include/c++/15/bits/gslice_array.h \
- /usr/include/c++/15/bits/mask_array.h \
- /usr/include/c++/15/bits/indirect_array.h \
- /usr/include/yaml-cpp/node/detail/impl.h \
- /usr/include/yaml-cpp/node/parse.h /usr/include/yaml-cpp/node/emit.h
+ /usr/include/c++/15/bits/uses_allocator_args.h /usr/include/c++/15/tuple

@@ -20,10 +20,6 @@ set(CMAKE_MAKEFILE_DEPENDS
   "/usr/lib64/cmake/boost_system-1.83.0/boost_system-config.cmake"
   "/usr/lib64/cmake/boost_system-1.83.0/libboost_system-variant-shared.cmake"
   "/usr/lib64/cmake/boost_system-1.83.0/libboost_system-variant-static.cmake"
-  "/usr/lib64/cmake/yaml-cpp/yaml-cpp-config-version.cmake"
-  "/usr/lib64/cmake/yaml-cpp/yaml-cpp-config.cmake"
-  "/usr/lib64/cmake/yaml-cpp/yaml-cpp-targets-release.cmake"
-  "/usr/lib64/cmake/yaml-cpp/yaml-cpp-targets.cmake"
   "/usr/share/cmake/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake/Modules/CMakeCommonLanguageInclude.cmake"
@@ -76,7 +72,4 @@ set(CMAKE_DEPEND_INFO_FILES
   "CMakeFiles/test_ro.dir/DependInfo.cmake"
   "CMakeFiles/test_pbch.dir/DependInfo.cmake"
   "CMakeFiles/test_ra_rnti.dir/DependInfo.cmake"
-  "CMakeFiles/test_pdcch_loopback.dir/DependInfo.cmake"
-  "CMakeFiles/test_pdsch_loopback.dir/DependInfo.cmake"
-  "CMakeFiles/test_prach_loopback.dir/DependInfo.cmake"
   )

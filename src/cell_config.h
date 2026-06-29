@@ -87,9 +87,5 @@ struct cell_config {
     void resolve_prach_ro();
 };
 
-// Parse the gNB config file (gnb.yaml) to populate cell_config.
-// Returns true on success.
-bool parse_gnb_config(const std::string& path, cell_config& cfg);
-
 // Print cell config summary
 void print_cell_config(const cell_config& cfg);

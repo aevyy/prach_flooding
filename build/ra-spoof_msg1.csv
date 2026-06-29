@@ -1819,3 +1819,9 @@ timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,
 2026-06-27T15:25:36.111,Msg1_PRACH,40814,4081,4,0x0039,0,60.0,0,transmitted
 timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,outcome
 2026-06-27T15:42:32.180,Msg1_PRACH,14,1,4,0x0039,0,30.0,0,transmitted
+timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,outcome
+2026-06-28T17:42:10.771,Msg1_PRACH,7534,753,4,0x0039,0,30.0,0,transmitted
+timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,outcome
+2026-06-28T17:42:26.578,Msg1_PRACH,7534,753,4,0x0039,0,50.0,0,transmitted
+timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,outcome
+2026-06-28T17:42:44.739,Msg1_PRACH,7534,753,4,0x0039,0,30.0,0,transmitted

@@ -1,0 +1,1093 @@
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineSystem.cmake:205 (message)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      The system is: Linux - 7.0.11-100.fc43.x86_64 - x86_64
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCCompiler.cmake:123 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /usr/bin/cc 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.out"
+      
+      The C compiler identification is GNU, found in:
+        /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/3.31.11/CompilerIdC/a.out
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCXXCompiler.cmake:126 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/c++ 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.out"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/3.31.11/CompilerIdCXX/a.out
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_02e3d/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_02e3d.dir/build.make CMakeFiles/cmTC_02e3d.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA'
+        Building C object CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o
+        /usr/bin/cc   -v -o CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/cc
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-redhat-linux
+        Configured with: ../configure --enable-bootstrap --enable-languages=c,c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none,amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_02e3d.dir/'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -v /usr/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_02e3d.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o /tmp/ccVz7ezt.s
+        GNU C23 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)
+        	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7), GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.24-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/../../../../x86_64-redhat-linux/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/x86_64-redhat-linux/15/include
+         /usr/local/include
+         /usr/include
+        End of search list.
+        Compiler executable checksum: 26be2a77f083688cd617fb87abbd954c
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_02e3d.dir/'
+         as -v --64 -o CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o /tmp/ccVz7ezt.s
+        GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.'
+        Linking C executable cmTC_02e3d
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_02e3d.dir/link.txt --verbose=1
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/cc
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-redhat-linux
+        Configured with: ../configure --enable-bootstrap --enable-languages=c,c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none,amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_02e3d' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_02e3d.'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccmHCdzb.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_02e3d /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccmHCdzb.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_02e3d /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        GNU ld version 2.45.1-4.fc43
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_02e3d' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_02e3d.'
+        /usr/bin/cc  -v -Wl,-v CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -o cmTC_02e3d
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/x86_64-redhat-linux/15/include]
+          add: [/usr/local/include]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/x86_64-redhat-linux/15/include] ==> [/usr/lib/gcc/x86_64-redhat-linux/15/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/lib/gcc/x86_64-redhat-linux/15/include;/usr/local/include;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_02e3d/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_02e3d.dir/build.make CMakeFiles/cmTC_02e3d.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-GYCDuA']
+        ignore line: [Building C object CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o]
+        ignore line: [/usr/bin/cc   -v -o CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -c /usr/share/cmake/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/cc]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-redhat-linux]
+        ignore line: [Configured with: ../configure --enable-bootstrap --enable-languages=c c++ fortran objc obj-c++ ada go d m2 cobol lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_02e3d.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/cc1 -quiet -v /usr/share/cmake/Modules/CMakeCCompilerABI.c -quiet -dumpdir CMakeFiles/cmTC_02e3d.dir/ -dumpbase CMakeCCompilerABI.c.c -dumpbase-ext .c -mtune=generic -march=x86-64 -version -o /tmp/ccVz7ezt.s]
+        ignore line: [GNU C23 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)]
+        ignore line: [	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7)  GMP version 6.3.0  MPFR version 4.2.2  MPC version 1.3.1  isl version isl-0.24-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/../../../../x86_64-redhat-linux/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/x86_64-redhat-linux/15/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 26be2a77f083688cd617fb87abbd954c]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_02e3d.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o /tmp/ccVz7ezt.s]
+        ignore line: [GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o' '-c' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.']
+        ignore line: [Linking C executable cmTC_02e3d]
+        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_02e3d.dir/link.txt --verbose=1]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/cc]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-redhat-linux]
+        ignore line: [Configured with: ../configure --enable-bootstrap --enable-languages=c c++ fortran objc obj-c++ ada go d m2 cobol lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_02e3d' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_02e3d.']
+        link line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccmHCdzb.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_02e3d /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-redhat-linux/15/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccmHCdzb.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--no-add-needed] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_02e3d] ==> ignore
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o]
+          arg [-L/usr/lib/gcc/x86_64-redhat-linux/15] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/15]
+          arg [-L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+          arg [-L/usr/lib/gcc/x86_64-redhat-linux/15/../../..] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../..]
+          arg [-L/lib] ==> dir [/lib]
+          arg [-L/usr/lib] ==> dir [/usr/lib]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o] ==> ignore
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [-lc] ==> lib [c]
+          arg [-lgcc] ==> lib [gcc]
+          arg [--push-state] ==> ignore
+          arg [--as-needed] ==> ignore
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [--pop-state] ==> ignore
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        ignore line: [collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccmHCdzb.res -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lgcc_s --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_02e3d /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_02e3d.dir/CMakeCCompilerABI.c.o -lgcc --push-state --as-needed -lgcc_s --pop-state -lc -lgcc --push-state --as-needed -lgcc_s --pop-state /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        linker tool for 'C': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> [/usr/lib64/crt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> [/usr/lib64/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o] ==> [/usr/lib64/crtn.o]
+        collapse library dir [/usr/lib/gcc/x86_64-redhat-linux/15] ==> [/usr/lib/gcc/x86_64-redhat-linux/15]
+        collapse library dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64] ==> [/usr/lib64]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+        collapse library dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../..] ==> [/usr/lib]
+        collapse library dir [/lib] ==> [/lib]
+        collapse library dir [/usr/lib] ==> [/usr/lib]
+        implicit libs: [gcc;gcc_s;c;gcc;gcc_s]
+        implicit objs: [/usr/lib64/crt1.o;/usr/lib64/crti.o;/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o;/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o;/usr/lib64/crtn.o]
+        implicit dirs: [/usr/lib/gcc/x86_64-redhat-linux/15;/usr/lib64;/lib64;/usr/lib;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/share/cmake/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Running the C compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld version 2.45.1-4.fc43
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:74 (try_compile)"
+      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c61f8/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_c61f8.dir/build.make CMakeFiles/cmTC_c61f8.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X'
+        Building CXX object CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o
+        /usr/bin/c++   -v -o CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/c++
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-redhat-linux
+        Configured with: ../configure --enable-bootstrap --enable-languages=c,c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none,amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c61f8.dir/'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/cc1plus -quiet -v -D_GNU_SOURCE /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c61f8.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /tmp/ccPXzJYG.s
+        GNU C++17 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)
+        	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7), GMP version 6.3.0, MPFR version 4.2.2, MPC version 1.3.1, isl version isl-0.24-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed"
+        ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/../../../../x86_64-redhat-linux/include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15
+         /usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/x86_64-redhat-linux
+         /usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/backward
+         /usr/lib/gcc/x86_64-redhat-linux/15/include
+         /usr/local/include
+         /usr/include
+        End of search list.
+        Compiler executable checksum: 61fbb778c0a8c441a1c0ce3e680cc1db
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c61f8.dir/'
+         as -v --64 -o CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccPXzJYG.s
+        GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.'
+        Linking CXX executable cmTC_c61f8
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c61f8.dir/link.txt --verbose=1
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/c++
+        COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper
+        OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa
+        OFFLOAD_TARGET_DEFAULT=1
+        Target: x86_64-redhat-linux
+        Configured with: ../configure --enable-bootstrap --enable-languages=c,c++,fortran,objc,obj-c++,ada,go,d,m2,cobol,lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none,amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp
+        Thread model: posix
+        Supported LTO compression algorithms: zlib zstd
+        gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) 
+        COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/
+        LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c61f8' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c61f8.'
+         /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLsKcpr.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_c61f8 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)
+        /usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLsKcpr.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_c61f8 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o
+        GNU ld version 2.45.1-4.fc43
+        COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c61f8' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c61f8.'
+        /usr/bin/c++  -v -Wl,-v CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -o cmTC_c61f8
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X'
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:182 (message)"
+      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15]
+          add: [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/x86_64-redhat-linux]
+          add: [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/backward]
+          add: [/usr/lib/gcc/x86_64-redhat-linux/15/include]
+          add: [/usr/local/include]
+          add: [/usr/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15] ==> [/usr/include/c++/15]
+        collapse include dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/x86_64-redhat-linux] ==> [/usr/include/c++/15/x86_64-redhat-linux]
+        collapse include dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/backward] ==> [/usr/include/c++/15/backward]
+        collapse include dir [/usr/lib/gcc/x86_64-redhat-linux/15/include] ==> [/usr/lib/gcc/x86_64-redhat-linux/15/include]
+        collapse include dir [/usr/local/include] ==> [/usr/local/include]
+        collapse include dir [/usr/include] ==> [/usr/include]
+        implicit include dirs: [/usr/include/c++/15;/usr/include/c++/15/x86_64-redhat-linux;/usr/include/c++/15/backward;/usr/lib/gcc/x86_64-redhat-linux/15/include;/usr/local/include;/usr/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:218 (message)"
+      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(\\.[a-z]+)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|")?[ 	]*(([^"]*[/\\])?(ld[0-9]*(\\.[a-z]+)?))("|,| |$)]
+        ignore line: [Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X']
+        ignore line: []
+        ignore line: [Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_c61f8/fast]
+        ignore line: [/usr/bin/gmake  -f CMakeFiles/cmTC_c61f8.dir/build.make CMakeFiles/cmTC_c61f8.dir/build]
+        ignore line: [gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-j7p39X']
+        ignore line: [Building CXX object CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o]
+        ignore line: [/usr/bin/c++   -v -o CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -c /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/c++]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-redhat-linux]
+        ignore line: [Configured with: ../configure --enable-bootstrap --enable-languages=c c++ fortran objc obj-c++ ada go d m2 cobol lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c61f8.dir/']
+        ignore line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/cc1plus -quiet -v -D_GNU_SOURCE /usr/share/cmake/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpdir CMakeFiles/cmTC_c61f8.dir/ -dumpbase CMakeCXXCompilerABI.cpp.cpp -dumpbase-ext .cpp -mtune=generic -march=x86-64 -version -o /tmp/ccPXzJYG.s]
+        ignore line: [GNU C++17 (GCC) version 15.2.1 20260123 (Red Hat 15.2.1-7) (x86_64-redhat-linux)]
+        ignore line: [	compiled by GNU C version 15.2.1 20260123 (Red Hat 15.2.1-7)  GMP version 6.3.0  MPFR version 4.2.2  MPC version 1.3.1  isl version isl-0.24-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/include-fixed"]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/x86_64-redhat-linux/15/../../../../x86_64-redhat-linux/include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15]
+        ignore line: [ /usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/x86_64-redhat-linux]
+        ignore line: [ /usr/lib/gcc/x86_64-redhat-linux/15/../../../../include/c++/15/backward]
+        ignore line: [ /usr/lib/gcc/x86_64-redhat-linux/15/include]
+        ignore line: [ /usr/local/include]
+        ignore line: [ /usr/include]
+        ignore line: [End of search list.]
+        ignore line: [Compiler executable checksum: 61fbb778c0a8c441a1c0ce3e680cc1db]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c61f8.dir/']
+        ignore line: [ as -v --64 -o CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o /tmp/ccPXzJYG.s]
+        ignore line: [GNU assembler version 2.45.1 (x86_64-redhat-linux) using BFD version version 2.45.1-4.fc43]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o' '-c' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.']
+        ignore line: [Linking CXX executable cmTC_c61f8]
+        ignore line: [/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_c61f8.dir/link.txt --verbose=1]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/c++]
+        ignore line: [COLLECT_LTO_WRAPPER=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper]
+        ignore line: [OFFLOAD_TARGET_NAMES=nvptx-none:amdgcn-amdhsa]
+        ignore line: [OFFLOAD_TARGET_DEFAULT=1]
+        ignore line: [Target: x86_64-redhat-linux]
+        ignore line: [Configured with: ../configure --enable-bootstrap --enable-languages=c c++ fortran objc obj-c++ ada go d m2 cobol lto --prefix=/usr --mandir=/usr/share/man --infodir=/usr/share/info --with-bugurl=https://bugzilla.redhat.com/ --enable-shared --enable-threads=posix --enable-checking=release --enable-multilib --with-system-zlib --enable-__cxa_atexit --disable-libunwind-exceptions --enable-gnu-unique-object --enable-linker-build-id --with-gcc-major-version-only --enable-libstdcxx-backtrace --with-libstdcxx-zoneinfo=/usr/share/zoneinfo --with-linker-hash-style=gnu --enable-plugin --enable-initfini-array --with-isl=/builddir/build/BUILD/gcc-15.2.1-build/gcc-15.2.1-20260123/obj-x86_64-redhat-linux/isl-install --enable-offload-targets=nvptx-none amdgcn-amdhsa --enable-offload-defaulted --without-cuda-driver --enable-gnu-indirect-function --enable-cet --with-tune=generic --with-arch_32=i686 --build=x86_64-redhat-linux --with-build-config=bootstrap-lto --enable-link-serialization=1 --disable-libssp]
+        ignore line: [Thread model: posix]
+        ignore line: [Supported LTO compression algorithms: zlib zstd]
+        ignore line: [gcc version 15.2.1 20260123 (Red Hat 15.2.1-7) (GCC) ]
+        ignore line: [COMPILER_PATH=/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/15/:/usr/libexec/gcc/x86_64-redhat-linux/:/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/x86_64-redhat-linux/15/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/:/lib/../lib64/:/usr/lib/../lib64/:/usr/lib/gcc/x86_64-redhat-linux/15/../../../:/lib/:/usr/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-v' '-o' 'cmTC_c61f8' '-foffload-options=-l_GCC_stdc++' '-foffload-options=-l_GCC_m' '-shared-libgcc' '-mtune=generic' '-march=x86-64' '-dumpdir' 'cmTC_c61f8.']
+        link line: [ /usr/libexec/gcc/x86_64-redhat-linux/15/collect2 -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLsKcpr.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_c61f8 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+          arg [/usr/libexec/gcc/x86_64-redhat-linux/15/collect2] ==> ignore
+          arg [-plugin] ==> ignore
+          arg [/usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so] ==> ignore
+          arg [-plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper] ==> ignore
+          arg [-plugin-opt=-fresolution=/tmp/ccLsKcpr.res] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lc] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc_s] ==> ignore
+          arg [-plugin-opt=-pass-through=-lgcc] ==> ignore
+          arg [--build-id] ==> ignore
+          arg [--no-add-needed] ==> ignore
+          arg [--eh-frame-hdr] ==> ignore
+          arg [--hash-style=gnu] ==> ignore
+          arg [-m] ==> ignore
+          arg [elf_x86_64] ==> ignore
+          arg [-dynamic-linker] ==> ignore
+          arg [/lib64/ld-linux-x86-64.so.2] ==> ignore
+          arg [-o] ==> ignore
+          arg [cmTC_c61f8] ==> ignore
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o]
+          arg [-L/usr/lib/gcc/x86_64-redhat-linux/15] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/15]
+          arg [-L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64]
+          arg [-L/lib/../lib64] ==> dir [/lib/../lib64]
+          arg [-L/usr/lib/../lib64] ==> dir [/usr/lib/../lib64]
+          arg [-L/usr/lib/gcc/x86_64-redhat-linux/15/../../..] ==> dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../..]
+          arg [-L/lib] ==> dir [/lib]
+          arg [-L/usr/lib] ==> dir [/usr/lib]
+          arg [-v] ==> ignore
+          arg [CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o] ==> ignore
+          arg [-lstdc++] ==> lib [stdc++]
+          arg [-lm] ==> lib [m]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [-lc] ==> lib [c]
+          arg [-lgcc_s] ==> lib [gcc_s]
+          arg [-lgcc] ==> lib [gcc]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o]
+          arg [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o] ==> obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        ignore line: [collect2 version 15.2.1 20260123 (Red Hat 15.2.1-7)]
+        ignore line: [/usr/bin/ld -plugin /usr/libexec/gcc/x86_64-redhat-linux/15/liblto_plugin.so -plugin-opt=/usr/libexec/gcc/x86_64-redhat-linux/15/lto-wrapper -plugin-opt=-fresolution=/tmp/ccLsKcpr.res -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc -plugin-opt=-pass-through=-lc -plugin-opt=-pass-through=-lgcc_s -plugin-opt=-pass-through=-lgcc --build-id --no-add-needed --eh-frame-hdr --hash-style=gnu -m elf_x86_64 -dynamic-linker /lib64/ld-linux-x86-64.so.2 -o cmTC_c61f8 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o -L/usr/lib/gcc/x86_64-redhat-linux/15 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64 -L/lib/../lib64 -L/usr/lib/../lib64 -L/usr/lib/gcc/x86_64-redhat-linux/15/../../.. -L/lib -L/usr/lib -v CMakeFiles/cmTC_c61f8.dir/CMakeCXXCompilerABI.cpp.o -lstdc++ -lm -lgcc_s -lgcc -lc -lgcc_s -lgcc /usr/lib/gcc/x86_64-redhat-linux/15/crtend.o /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o]
+        linker tool for 'CXX': /usr/bin/ld
+        collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crt1.o] ==> [/usr/lib64/crt1.o]
+        collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crti.o] ==> [/usr/lib64/crti.o]
+        collapse obj [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o] ==> [/usr/lib64/crtn.o]
+        collapse library dir [/usr/lib/gcc/x86_64-redhat-linux/15] ==> [/usr/lib/gcc/x86_64-redhat-linux/15]
+        collapse library dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64] ==> [/usr/lib64]
+        collapse library dir [/lib/../lib64] ==> [/lib64]
+        collapse library dir [/usr/lib/../lib64] ==> [/usr/lib64]
+        collapse library dir [/usr/lib/gcc/x86_64-redhat-linux/15/../../..] ==> [/usr/lib]
+        collapse library dir [/lib] ==> [/lib]
+        collapse library dir [/usr/lib] ==> [/usr/lib]
+        implicit libs: [stdc++;m;gcc_s;gcc;c;gcc_s;gcc]
+        implicit objs: [/usr/lib64/crt1.o;/usr/lib64/crti.o;/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o;/usr/lib/gcc/x86_64-redhat-linux/15/crtend.o;/usr/lib64/crtn.o]
+        implicit dirs: [/usr/lib/gcc/x86_64-redhat-linux/15;/usr/lib64;/lib64;/usr/lib;/lib]
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CMakeDetermineLinkerId.cmake:40 (message)"
+      - "/usr/share/cmake/Modules/CMakeDetermineCompilerABI.cmake:255 (cmake_determine_linker_id)"
+      - "/usr/share/cmake/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:34 (project)"
+    message: |
+      Running the CXX compiler's linker: "/usr/bin/ld" "-v"
+      GNU ld version 2.45.1-4.fc43
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "cmake/modules/CheckAtomic.cmake:39 (CHECK_CXX_SOURCE_COMPILES)"
+      - "cmake/modules/CheckAtomic.cmake:70 (check_working_cxx_atomics)"
+      - "CMakeLists.txt:140 (include)"
+    checks:
+      - "Performing Test HAVE_CXX_ATOMICS_WITHOUT_LIB"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-YgOSIT"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-YgOSIT"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_CXX_ATOMICS_WITHOUT_LIB"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-YgOSIT'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_3d8e4/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_3d8e4.dir/build.make CMakeFiles/cmTC_3d8e4.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-YgOSIT'
+        Building CXX object CMakeFiles/cmTC_3d8e4.dir/src.cxx.o
+        /usr/bin/c++ -DHAVE_CXX_ATOMICS_WITHOUT_LIB  -std=c++11 -o CMakeFiles/cmTC_3d8e4.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-YgOSIT/src.cxx
+        Linking CXX executable cmTC_3d8e4
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_3d8e4.dir/link.txt --verbose=1
+        /usr/bin/c++   -std=c++11 CMakeFiles/cmTC_3d8e4.dir/src.cxx.o -o cmTC_3d8e4
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-YgOSIT'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "cmake/modules/CheckAtomic.cmake:52 (CHECK_CXX_SOURCE_COMPILES)"
+      - "cmake/modules/CheckAtomic.cmake:90 (check_working_cxx_atomics64)"
+      - "CMakeLists.txt:140 (include)"
+    checks:
+      - "Performing Test HAVE_CXX_ATOMICS64_WITHOUT_LIB"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-R1jtni"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-R1jtni"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_CXX_ATOMICS64_WITHOUT_LIB"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-R1jtni'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_747fd/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_747fd.dir/build.make CMakeFiles/cmTC_747fd.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-R1jtni'
+        Building CXX object CMakeFiles/cmTC_747fd.dir/src.cxx.o
+        /usr/bin/c++ -DHAVE_CXX_ATOMICS64_WITHOUT_LIB  -std=c++11 -o CMakeFiles/cmTC_747fd.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-R1jtni/src.cxx
+        Linking CXX executable cmTC_747fd
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_747fd.dir/link.txt --verbose=1
+        /usr/bin/c++  -std=c++11 CMakeFiles/cmTC_747fd.dir/src.cxx.o -o cmTC_747fd
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-R1jtni'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/FindThreads.cmake:97 (CHECK_C_SOURCE_COMPILES)"
+      - "/usr/share/cmake/Modules/FindThreads.cmake:163 (_threads_check_libc)"
+      - "CMakeLists.txt:162 (find_package)"
+    checks:
+      - "Performing Test CMAKE_HAVE_LIBC_PTHREAD"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-TKZsgJ"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-TKZsgJ"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "CMAKE_HAVE_LIBC_PTHREAD"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-TKZsgJ'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_65cd5/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_65cd5.dir/build.make CMakeFiles/cmTC_65cd5.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-TKZsgJ'
+        Building C object CMakeFiles/cmTC_65cd5.dir/src.c.o
+        /usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_65cd5.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-TKZsgJ/src.c
+        Linking C executable cmTC_65cd5
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_65cd5.dir/link.txt --verbose=1
+        /usr/bin/cc CMakeFiles/cmTC_65cd5.dir/src.c.o -o cmTC_65cd5
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-TKZsgJ'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "cmake/modules/FindUHD.cmake:72 (check_cxx_source_compiles)"
+      - "CMakeLists.txt:211 (find_package)"
+    checks:
+      - "Performing Test UHD_ENABLE_X300_FW_RESET"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-efpFAn"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-efpFAn"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "UHD_ENABLE_X300_FW_RESET"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-efpFAn'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_56f7c/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_56f7c.dir/build.make CMakeFiles/cmTC_56f7c.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-efpFAn'
+        Building CXX object CMakeFiles/cmTC_56f7c.dir/src.cxx.o
+        /usr/bin/c++ -DUHD_ENABLE_X300_FW_RESET  -L/lib64 -o CMakeFiles/cmTC_56f7c.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-efpFAn/src.cxx
+        Linking CXX executable cmTC_56f7c
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_56f7c.dir/link.txt --verbose=1
+        /usr/bin/ld: CMakeFiles/cmTC_56f7c.dir/src.cxx.o: in function `try_usrp_x300_reset()':
+        src.cxx:(.text+0xcc): undefined reference to `x300_make_ctrl_iface_enet(std::shared_ptr<uhd::transport::udp_simple>, bool)'
+        collect2: error: ld returned 1 exit status
+        /usr/bin/c++   -L/lib64 CMakeFiles/cmTC_56f7c.dir/src.cxx.o -o cmTC_56f7c  -luhd -lboost_program_options -lboost_system
+        gmake[1]: *** [CMakeFiles/cmTC_56f7c.dir/build.make:102: cmTC_56f7c] Error 1
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-efpFAn'
+        gmake: *** [Makefile:134: cmTC_56f7c/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "cmake/modules/FindUHD.cmake:93 (check_cxx_source_compiles)"
+      - "CMakeLists.txt:211 (find_package)"
+    checks:
+      - "Performing Test UHD_ENABLE_RFNOC"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "UHD_ENABLE_RFNOC"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_762c7/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_762c7.dir/build.make CMakeFiles/cmTC_762c7.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5'
+        Building CXX object CMakeFiles/cmTC_762c7.dir/src.cxx.o
+        /usr/bin/c++ -DUHD_ENABLE_RFNOC  -L/lib64 -o CMakeFiles/cmTC_762c7.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5/src.cxx
+        /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5/src.cxx:2:14: fatal error: uhd/device3.hpp: No such file or directory
+            2 |     #include <uhd/device3.hpp>
+              |              ^~~~~~~~~~~~~~~~~
+        compilation terminated.
+        gmake[1]: *** [CMakeFiles/cmTC_762c7.dir/build.make:81: CMakeFiles/cmTC_762c7.dir/src.cxx.o] Error 1
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-SKgtU5'
+        gmake: *** [Makefile:134: cmTC_762c7/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/CheckCXXSourceCompiles.cmake:58 (cmake_check_source_compiles)"
+      - "cmake/modules/FindUHD.cmake:122 (check_cxx_source_compiles)"
+      - "CMakeLists.txt:211 (find_package)"
+    checks:
+      - "Performing Test UHD_ENABLE_CUSTOM_RFNOC"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "UHD_ENABLE_CUSTOM_RFNOC"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_0da0b/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_0da0b.dir/build.make CMakeFiles/cmTC_0da0b.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55'
+        Building CXX object CMakeFiles/cmTC_0da0b.dir/src.cxx.o
+        /usr/bin/c++ -DUHD_ENABLE_CUSTOM_RFNOC  -L/lib64 -o CMakeFiles/cmTC_0da0b.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55/src.cxx
+        /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55/src.cxx:2:14: fatal error: uhd/device3.hpp: No such file or directory
+            2 |     #include <uhd/device3.hpp>
+              |              ^~~~~~~~~~~~~~~~~
+        compilation terminated.
+        gmake[1]: *** [CMakeFiles/cmTC_0da0b.dir/build.make:81: CMakeFiles/cmTC_0da0b.dir/src.cxx.o] Error 1
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-gclP55'
+        gmake: *** [Makefile:134: cmTC_0da0b/fast] Error 2
+        
+      exitCode: 2
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/CheckCXXCompilerFlag.cmake:55 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:352 (check_cxx_compiler_flag)"
+      - "CMakeLists.txt:369 (ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)"
+    checks:
+      - "Performing Test HAVE_WNO_UNUSED_BUT_SET_VARIABLE"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-FGzPlq"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-FGzPlq"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wall -Wno-comment -Wno-reorder -Wno-unused-variable -Wtype-limits -std=c++14 -fno-strict-aliasing"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_WNO_UNUSED_BUT_SET_VARIABLE"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-FGzPlq'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_652f6/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_652f6.dir/build.make CMakeFiles/cmTC_652f6.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-FGzPlq'
+        Building CXX object CMakeFiles/cmTC_652f6.dir/src.cxx.o
+        /usr/bin/c++ -DHAVE_WNO_UNUSED_BUT_SET_VARIABLE  -Wall -Wno-comment -Wno-reorder -Wno-unused-variable -Wtype-limits -std=c++14 -fno-strict-aliasing    -Wno-unused-but-set-variable -o CMakeFiles/cmTC_652f6.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-FGzPlq/src.cxx
+        Linking CXX executable cmTC_652f6
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_652f6.dir/link.txt --verbose=1
+        /usr/bin/c++  -Wall -Wno-comment -Wno-reorder -Wno-unused-variable -Wtype-limits -std=c++14 -fno-strict-aliasing  CMakeFiles/cmTC_652f6.dir/src.cxx.o -o cmTC_652f6
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-FGzPlq'
+        
+      exitCode: 0
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "cmake/modules/CheckCSourceRuns.cmake:62 (try_run)"
+      - "cmake/modules/FindSSE.cmake:39 (check_c_source_runs)"
+      - "CMakeLists.txt:372 (find_package)"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_SSE_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e9072/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e9072.dir/build.make CMakeFiles/cmTC_e9072.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        Building C object CMakeFiles/cmTC_e9072.dir/src.c.o
+        /usr/bin/cc   -DHAVE_SSE -msse4.1 -o CMakeFiles/cmTC_e9072.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp/src.c
+        Linking C executable cmTC_e9072
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e9072.dir/link.txt --verbose=1
+        /usr/bin/cc  -DHAVE_SSE -msse4.1 CMakeFiles/cmTC_e9072.dir/src.c.o -o cmTC_e9072
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "HAVE_SSE_EXITCODE"
+      cached: true
+      stdout: |
+      exitCode: 0
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "cmake/modules/CheckCSourceRuns.cmake:62 (try_run)"
+      - "cmake/modules/FindSSE.cmake:63 (check_c_source_runs)"
+      - "CMakeLists.txt:372 (find_package)"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_AVX_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ea4bf/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ea4bf.dir/build.make CMakeFiles/cmTC_ea4bf.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        Building C object CMakeFiles/cmTC_ea4bf.dir/src.c.o
+        /usr/bin/cc   -DHAVE_AVX -mavx -o CMakeFiles/cmTC_ea4bf.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp/src.c
+        Linking C executable cmTC_ea4bf
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ea4bf.dir/link.txt --verbose=1
+        /usr/bin/cc  -DHAVE_AVX -mavx CMakeFiles/cmTC_ea4bf.dir/src.c.o -o cmTC_ea4bf
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "HAVE_AVX_EXITCODE"
+      cached: true
+      stdout: |
+      exitCode: 0
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "cmake/modules/CheckCSourceRuns.cmake:62 (try_run)"
+      - "cmake/modules/FindSSE.cmake:97 (check_c_source_runs)"
+      - "CMakeLists.txt:372 (find_package)"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_AVX2_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_92b77/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_92b77.dir/build.make CMakeFiles/cmTC_92b77.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        Building C object CMakeFiles/cmTC_92b77.dir/src.c.o
+        /usr/bin/cc   -DHAVE_AVX2 -mavx2 -o CMakeFiles/cmTC_92b77.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp/src.c
+        Linking C executable cmTC_92b77
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_92b77.dir/link.txt --verbose=1
+        /usr/bin/cc  -DHAVE_AVX2 -mavx2 CMakeFiles/cmTC_92b77.dir/src.c.o -o cmTC_92b77
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "HAVE_AVX2_EXITCODE"
+      cached: true
+      stdout: |
+      exitCode: 0
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "cmake/modules/CheckCSourceRuns.cmake:62 (try_run)"
+      - "cmake/modules/FindSSE.cmake:131 (check_c_source_runs)"
+      - "CMakeLists.txt:372 (find_package)"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_FMA_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_02262/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_02262.dir/build.make CMakeFiles/cmTC_02262.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        Building C object CMakeFiles/cmTC_02262.dir/src.c.o
+        /usr/bin/cc   -DHAVE_FMA -mfma -o CMakeFiles/cmTC_02262.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp/src.c
+        Linking C executable cmTC_02262
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_02262.dir/link.txt --verbose=1
+        /usr/bin/cc  -DHAVE_FMA -mfma CMakeFiles/cmTC_02262.dir/src.c.o -o cmTC_02262
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "HAVE_FMA_EXITCODE"
+      cached: true
+      stdout: |
+      exitCode: 0
+  -
+    kind: "try_run-v1"
+    backtrace:
+      - "cmake/modules/CheckCSourceRuns.cmake:62 (try_run)"
+      - "cmake/modules/FindSSE.cmake:166 (check_c_source_runs)"
+      - "CMakeLists.txt:372 (find_package)"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_AVX512_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_0f366/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_0f366.dir/build.make CMakeFiles/cmTC_0f366.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        Building C object CMakeFiles/cmTC_0f366.dir/src.c.o
+        /usr/bin/cc   -DHAVE_AVX512 -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512 -o CMakeFiles/cmTC_0f366.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp/src.c
+        Linking C executable cmTC_0f366
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0f366.dir/link.txt --verbose=1
+        /usr/bin/cc  -DHAVE_AVX512 -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512 CMakeFiles/cmTC_0f366.dir/src.c.o -o cmTC_0f366
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeTmp'
+        
+      exitCode: 0
+    runResult:
+      variable: "HAVE_AVX512_EXITCODE"
+      cached: true
+      stdout: |
+      exitCode: "FAILED_TO_RUN"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:360 (check_c_compiler_flag)"
+      - "CMakeLists.txt:375 (ADD_C_COMPILER_FLAG_IF_AVAILABLE)"
+    checks:
+      - "Performing Test HAVE_MARCH_native"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-JZYCdU"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-JZYCdU"
+    cmakeVariables:
+      CMAKE_C_FLAGS: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_MARCH_native"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-JZYCdU'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_51ae3/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_51ae3.dir/build.make CMakeFiles/cmTC_51ae3.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-JZYCdU'
+        Building C object CMakeFiles/cmTC_51ae3.dir/src.c.o
+        /usr/bin/cc -DHAVE_MARCH_native  -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512   -march=native -o CMakeFiles/cmTC_51ae3.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-JZYCdU/src.c
+        Linking C executable cmTC_51ae3
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_51ae3.dir/link.txt --verbose=1
+        /usr/bin/cc  -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512 CMakeFiles/cmTC_51ae3.dir/src.c.o -o cmTC_51ae3
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-JZYCdU'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/CheckCXXCompilerFlag.cmake:55 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:352 (check_cxx_compiler_flag)"
+      - "CMakeLists.txt:391 (ADD_CXX_COMPILER_FLAG_IF_AVAILABLE)"
+    checks:
+      - "Performing Test HAVE_VISIBILITY_HIDDEN_CXX"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-yZdI6S"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-yZdI6S"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -Wall -Wno-comment -Wno-reorder -Wno-unused-variable -Wtype-limits -std=c++14 -fno-strict-aliasing -Wno-unused-but-set-variable -march=native -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_VISIBILITY_HIDDEN_CXX"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-yZdI6S'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_d54df/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_d54df.dir/build.make CMakeFiles/cmTC_d54df.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-yZdI6S'
+        Building CXX object CMakeFiles/cmTC_d54df.dir/src.cxx.o
+        /usr/bin/c++ -DHAVE_VISIBILITY_HIDDEN_CXX  -Wall -Wno-comment -Wno-reorder -Wno-unused-variable -Wtype-limits -std=c++14 -fno-strict-aliasing -Wno-unused-but-set-variable -march=native -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512   -fvisibility=hidden -o CMakeFiles/cmTC_d54df.dir/src.cxx.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-yZdI6S/src.cxx
+        Linking CXX executable cmTC_d54df
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_d54df.dir/link.txt --verbose=1
+        /usr/bin/c++  -Wall -Wno-comment -Wno-reorder -Wno-unused-variable -Wtype-limits -std=c++14 -fno-strict-aliasing -Wno-unused-but-set-variable -march=native -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512 CMakeFiles/cmTC_d54df.dir/src.cxx.o -o cmTC_d54df
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-yZdI6S'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:360 (check_c_compiler_flag)"
+      - "CMakeLists.txt:403 (ADD_C_COMPILER_FLAG_IF_AVAILABLE)"
+    checks:
+      - "Performing Test HAVE_ERROR_INCOMPATIBLE"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-eTCIE6"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-eTCIE6"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -march=native"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_ERROR_INCOMPATIBLE"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-eTCIE6'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_e2d11/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_e2d11.dir/build.make CMakeFiles/cmTC_e2d11.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-eTCIE6'
+        Building C object CMakeFiles/cmTC_e2d11.dir/src.c.o
+        /usr/bin/cc -DHAVE_ERROR_INCOMPATIBLE  -march=native -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512   -Werror=incompatible-pointer-types -o CMakeFiles/cmTC_e2d11.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-eTCIE6/src.c
+        Linking C executable cmTC_e2d11
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_e2d11.dir/link.txt --verbose=1
+        /usr/bin/cc  -march=native -mavx512f -mavx512cd -mavx512bw -mavx512dq -DLV_HAVE_AVX512 CMakeFiles/cmTC_e2d11.dir/src.c.o -o cmTC_e2d11
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-eTCIE6'
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/usr/share/cmake/Modules/Internal/CheckSourceCompiles.cmake:108 (try_compile)"
+      - "/usr/share/cmake/Modules/Internal/CheckCompilerFlag.cmake:18 (cmake_check_source_compiles)"
+      - "/usr/share/cmake/Modules/CheckCCompilerFlag.cmake:56 (cmake_check_compiler_flag)"
+      - "CMakeLists.txt:360 (check_c_compiler_flag)"
+      - "CMakeLists.txt:485 (ADD_C_COMPILER_FLAG_IF_AVAILABLE)"
+    checks:
+      - "Performing Test HAVE_VISIBILITY_HIDDEN_C"
+    directories:
+      source: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-wH7jCv"
+      binary: "/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-wH7jCv"
+    cmakeVariables:
+      CMAKE_C_FLAGS: " -march=native -Werror=incompatible-pointer-types -Wall -Wno-comment -Wno-write-strings -Wno-unused-result -Wformat -Wmissing-field-initializers -Wtype-limits -std=c99 -fno-strict-aliasing -D_GNU_SOURCE -Wno-unused-but-set-variable -O3 -fno-trapping-math -fno-math-errno -DBUILD_TYPE_RELEASE -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mfma -DLV_HAVE_FMA -Ofast -funroll-loops"
+      CMAKE_EXE_LINKER_FLAGS: ""
+      CMAKE_MODULE_PATH: "/home/avi/wireless/ra-spoof/srsRAN_4G/cmake/modules"
+    buildResult:
+      variable: "HAVE_VISIBILITY_HIDDEN_C"
+      cached: true
+      stdout: |
+        Change Dir: '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-wH7jCv'
+        
+        Run Build Command(s): /usr/bin/cmake -E env VERBOSE=1 /usr/bin/gmake -f Makefile cmTC_ad80e/fast
+        /usr/bin/gmake  -f CMakeFiles/cmTC_ad80e.dir/build.make CMakeFiles/cmTC_ad80e.dir/build
+        gmake[1]: Entering directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-wH7jCv'
+        Building C object CMakeFiles/cmTC_ad80e.dir/src.c.o
+        /usr/bin/cc -DHAVE_VISIBILITY_HIDDEN_C  -march=native -Werror=incompatible-pointer-types -Wall -Wno-comment -Wno-write-strings -Wno-unused-result -Wformat -Wmissing-field-initializers -Wtype-limits -std=c99 -fno-strict-aliasing -D_GNU_SOURCE -Wno-unused-but-set-variable -O3 -fno-trapping-math -fno-math-errno -DBUILD_TYPE_RELEASE -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mfma -DLV_HAVE_FMA -Ofast -funroll-loops  -march=native -Werror=incompatible-pointer-types -Wall -Wno-comment -Wno-write-strings -Wno-unused-result -Wformat -Wmissing-field-initializers -Wtype-limits -std=c99 -fno-strict-aliasing -D_GNU_SOURCE -Wno-unused-but-set-variable -O3 -fno-trapping-math -fno-math-errno -DBUILD_TYPE_RELEASE -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mfma -DLV_HAVE_FMA -Ofast -funroll-loops   -fvisibility=hidden -o CMakeFiles/cmTC_ad80e.dir/src.c.o -c /home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-wH7jCv/src.c
+        Linking C executable cmTC_ad80e
+        /usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ad80e.dir/link.txt --verbose=1
+        /usr/bin/cc  -march=native -Werror=incompatible-pointer-types -Wall -Wno-comment -Wno-write-strings -Wno-unused-result -Wformat -Wmissing-field-initializers -Wtype-limits -std=c99 -fno-strict-aliasing -D_GNU_SOURCE -Wno-unused-but-set-variable -O3 -fno-trapping-math -fno-math-errno -DBUILD_TYPE_RELEASE -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mfma -DLV_HAVE_FMA -Ofast -funroll-loops  -march=native -Werror=incompatible-pointer-types -Wall -Wno-comment -Wno-write-strings -Wno-unused-result -Wformat -Wmissing-field-initializers -Wtype-limits -std=c99 -fno-strict-aliasing -D_GNU_SOURCE -Wno-unused-but-set-variable -O3 -fno-trapping-math -fno-math-errno -DBUILD_TYPE_RELEASE -mfpmath=sse -mavx2 -DLV_HAVE_AVX2 -DLV_HAVE_AVX -DLV_HAVE_SSE -mfma -DLV_HAVE_FMA -Ofast -funroll-loops CMakeFiles/cmTC_ad80e.dir/src.c.o -o cmTC_ad80e
+        gmake[1]: Leaving directory '/home/avi/wireless/ra-spoof/srsRAN_4G/build/CMakeFiles/CMakeScratch/TryCompile-wH7jCv'
+        
+      exitCode: 0
+...

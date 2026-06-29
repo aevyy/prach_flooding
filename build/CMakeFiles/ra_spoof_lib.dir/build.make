@@ -142,80 +142,10 @@ CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/ssb_sync.cpp -o CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.s
 
-CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
-CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o: /home/avi/wireless/ra-spoof/src/ul_rx.cpp
-CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o -c /home/avi/wireless/ra-spoof/src/ul_rx.cpp
-
-CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/avi/wireless/ra-spoof/src/ul_rx.cpp > CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.i
-
-CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/ul_rx.cpp -o CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.s
-
-CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
-CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o: /home/avi/wireless/ra-spoof/src/dl_grid.cpp
-CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o -c /home/avi/wireless/ra-spoof/src/dl_grid.cpp
-
-CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/avi/wireless/ra-spoof/src/dl_grid.cpp > CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.i
-
-CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/dl_grid.cpp -o CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.s
-
-CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
-CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o: /home/avi/wireless/ra-spoof/src/rar.cpp
-CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o -c /home/avi/wireless/ra-spoof/src/rar.cpp
-
-CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/avi/wireless/ra-spoof/src/rar.cpp > CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.i
-
-CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/rar.cpp -o CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.s
-
-CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
-CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o: /home/avi/wireless/ra-spoof/src/msg4.cpp
-CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o -c /home/avi/wireless/ra-spoof/src/msg4.cpp
-
-CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/avi/wireless/ra-spoof/src/msg4.cpp > CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.i
-
-CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/msg4.cpp -o CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.s
-
-CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
-CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o: /home/avi/wireless/ra-spoof/src/inject.cpp
-CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o -c /home/avi/wireless/ra-spoof/src/inject.cpp
-
-CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/avi/wireless/ra-spoof/src/inject.cpp > CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.i
-
-CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/avi/wireless/ra-spoof/src/inject.cpp -o CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.s
-
 CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
 CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o: /home/avi/wireless/ra-spoof/src/influx_reader.cpp
 CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o -c /home/avi/wireless/ra-spoof/src/influx_reader.cpp
 
 CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.i: cmake_force
@@ -229,7 +159,7 @@ CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.s: cmake_force
 CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
 CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o: /home/avi/wireless/ra-spoof/src/prach_tx.cpp
 CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o -c /home/avi/wireless/ra-spoof/src/prach_tx.cpp
 
 CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.i: cmake_force
@@ -243,7 +173,7 @@ CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.s: cmake_force
 CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o: CMakeFiles/ra_spoof_lib.dir/flags.make
 CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o: /home/avi/wireless/ra-spoof/src/tool_config.cpp
 CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o: CMakeFiles/ra_spoof_lib.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o -MF CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o.d -o CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o -c /home/avi/wireless/ra-spoof/src/tool_config.cpp
 
 CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.i: cmake_force
@@ -261,11 +191,6 @@ ra_spoof_lib_OBJECTS = \
 "CMakeFiles/ra_spoof_lib.dir/src/ra_rnti.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/log_csv.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.o" \
-"CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o" \
-"CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o" \
-"CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o" \
-"CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o" \
-"CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o" \
 "CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o"
@@ -278,17 +203,12 @@ libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/ro.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/ra_rnti.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/log_csv.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/ssb_sync.cpp.o
-libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o
-libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o
-libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o
-libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o
-libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/prach_tx.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.o
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/build.make
 libra_spoof_lib.a: CMakeFiles/ra_spoof_lib.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Linking CXX static library libra_spoof_lib.a"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/avi/wireless/ra-spoof/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Linking CXX static library libra_spoof_lib.a"
 	$(CMAKE_COMMAND) -P CMakeFiles/ra_spoof_lib.dir/cmake_clean_target.cmake
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/ra_spoof_lib.dir/link.txt --verbose=$(VERBOSE)
 

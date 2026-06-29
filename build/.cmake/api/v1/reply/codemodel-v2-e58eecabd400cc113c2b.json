@@ -1,0 +1,96 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"jsonFile" : "directory-.-RelWithDebInfo-f5ebdc15457944623624.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.16"
+					},
+					"projectIndex" : 0,
+					"source" : ".",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"name" : "RelWithDebInfo",
+			"projects" : 
+			[
+				{
+					"directoryIndexes" : 
+					[
+						0
+					],
+					"name" : "ra-spoof",
+					"targetIndexes" : 
+					[
+						0,
+						1,
+						2,
+						3,
+						4
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 0,
+					"id" : "ra-spoof::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ra-spoof-RelWithDebInfo-4458f940bbae32b48b8c.json",
+					"name" : "ra-spoof",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "ra_spoof_lib::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-ra_spoof_lib-RelWithDebInfo-1db83a9ec7e5fea5aa03.json",
+					"name" : "ra_spoof_lib",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_pbch::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_pbch-RelWithDebInfo-6d5bf4ba277b26933d6e.json",
+					"name" : "test_pbch",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_ra_rnti::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_ra_rnti-RelWithDebInfo-08a0172b0d27b8900863.json",
+					"name" : "test_ra_rnti",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
+					"id" : "test_ro::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-test_ro-RelWithDebInfo-a17b1b4c77288c17922a.json",
+					"name" : "test_ro",
+					"projectIndex" : 0
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "/home/avi/wireless/ra-spoof/build",
+		"source" : "/home/avi/wireless/ra-spoof"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 7
+	}
+}

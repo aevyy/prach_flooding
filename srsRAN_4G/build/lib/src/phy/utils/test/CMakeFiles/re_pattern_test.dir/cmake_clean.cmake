@@ -1,0 +1,12 @@
+file(REMOVE_RECURSE
+  "CMakeFiles/re_pattern_test.dir/link.d"
+  "CMakeFiles/re_pattern_test.dir/re_pattern_test.c.o"
+  "CMakeFiles/re_pattern_test.dir/re_pattern_test.c.o.d"
+  "re_pattern_test"
+  "re_pattern_test.pdb"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang C)
+  include(CMakeFiles/re_pattern_test.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

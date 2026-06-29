@@ -4,14 +4,14 @@ test_ra_rnti: \
   /usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o \
   CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o \
   libra_spoof_lib.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libmbedtls.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libfmt.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libfftw3f.so \
   /usr/lib64/libboost_system.so.1.83.0 \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libyaml-cpp.so \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libpthread.a \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libuhd.so \
@@ -44,7 +44,6 @@ test_ra_rnti: \
   /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/crtn.o \
   /usr/lib64/libmbedx509.so.7 \
   /usr/lib64/libmbedcrypto.so.16 \
-  /usr/lib64/libdw.so.1 \
   /usr/lib64/libboost_chrono.so.1.83.0 \
   /usr/lib64/libboost_filesystem.so.1.83.0 \
   /usr/lib64/libboost_serialization.so.1.83.0 \
@@ -52,11 +51,6 @@ test_ra_rnti: \
   /usr/lib64/libusb-1.0.so.0 \
   /usr/lib64/libpython3.14.so.1.0 \
   /lib64/ld-linux-x86-64.so.2 \
-  /usr/lib64/libelf.so.1 \
-  /usr/lib64/libz.so.1 \
-  /usr/lib64/libzstd.so.1 \
-  /usr/lib64/liblzma.so.5 \
-  /usr/lib64/libbz2.so.1 \
   /usr/lib64/libboost_atomic.so.1.83.0 \
   /usr/lib64/libudev.so.1 \
   /usr/lib64/libcap.so.2
@@ -71,11 +65,11 @@ CMakeFiles/test_ra_rnti.dir/tests/test_ra_rnti.cpp.o:
 
 libra_spoof_lib.a:
 
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a:
 
-/home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a:
 
-/home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libmbedtls.so:
 
@@ -85,7 +79,7 @@ libra_spoof_lib.a:
 
 /usr/lib64/libboost_system.so.1.83.0:
 
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/../../../../lib64/libyaml-cpp.so:
 
@@ -151,8 +145,6 @@ libra_spoof_lib.a:
 
 /usr/lib64/libmbedcrypto.so.16:
 
-/usr/lib64/libdw.so.1:
-
 /usr/lib64/libboost_chrono.so.1.83.0:
 
 /usr/lib64/libboost_filesystem.so.1.83.0:
@@ -166,16 +158,6 @@ libra_spoof_lib.a:
 /usr/lib64/libpython3.14.so.1.0:
 
 /lib64/ld-linux-x86-64.so.2:
-
-/usr/lib64/libelf.so.1:
-
-/usr/lib64/libz.so.1:
-
-/usr/lib64/libzstd.so.1:
-
-/usr/lib64/liblzma.so.5:
-
-/usr/lib64/libbz2.so.1:
 
 /usr/lib64/libboost_atomic.so.1.83.0:
 

@@ -2,8 +2,8 @@ CMakeFiles/ra_spoof_lib.dir/src/ro.cpp.o: \
  /home/avi/wireless/ra-spoof/src/ro.cpp /usr/include/stdc-predef.h \
  /home/avi/wireless/ra-spoof/src/ro.h \
  /home/avi/wireless/ra-spoof/src/cell_config.h \
- /usr/local/include/srsran/phy/common/phy_common_nr.h \
- /usr/local/include/srsran/phy/common/phy_common.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common_nr.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h \
  /usr/include/c++/15/math.h /usr/include/c++/15/cmath \
  /usr/include/c++/15/bits/requires_hosted.h \
  /usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h \
@@ -84,18 +84,20 @@ CMakeFiles/ra_spoof_lib.dir/src/ro.cpp.o: \
  /usr/include/bits/types/FILE.h /usr/include/bits/types/struct_FILE.h \
  /usr/include/bits/types/cookie_io_functions_t.h \
  /usr/include/bits/stdio_lim.h /usr/include/bits/stdio.h \
- /usr/local/include/srsran/config.h /usr/include/inttypes.h \
- /usr/local/include/srsran/phy/sync/ssb.h \
- /usr/local/include/srsran/phy/dft/dft.h \
- /usr/local/include/srsran/phy/phch/pbch_nr.h \
- /usr/local/include/srsran/phy/fec/crc.h \
- /usr/local/include/srsran/phy/fec/polar/polar_code.h \
- /usr/local/include/srsran/phy/utils/debug.h \
- /usr/local/include/srsran/phy/utils/phy_logger.h /usr/include/errno.h \
- /usr/include/bits/errno.h /usr/include/linux/errno.h \
- /usr/include/asm/errno.h /usr/include/asm-generic/errno.h \
- /usr/include/asm-generic/errno-base.h /usr/include/bits/types/error_t.h \
- /usr/include/pthread.h /usr/include/sched.h /usr/include/bits/sched.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/config.h \
+ /usr/include/inttypes.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/sync/ssb.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/dft/dft.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_nr.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/crc.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_code.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/debug.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/phy_logger.h \
+ /usr/include/errno.h /usr/include/bits/errno.h \
+ /usr/include/linux/errno.h /usr/include/asm/errno.h \
+ /usr/include/asm-generic/errno.h /usr/include/asm-generic/errno-base.h \
+ /usr/include/bits/types/error_t.h /usr/include/pthread.h \
+ /usr/include/sched.h /usr/include/bits/sched.h \
  /usr/include/linux/sched/types.h /usr/include/linux/types.h \
  /usr/include/asm/types.h /usr/include/asm-generic/types.h \
  /usr/include/asm-generic/int-ll64.h /usr/include/asm/bitsperlong.h \
@@ -110,12 +112,12 @@ CMakeFiles/ra_spoof_lib.dir/src/ro.cpp.o: \
  /usr/include/bits/pthread_stack_min-dynamic.h \
  /usr/include/c++/15/stdlib.h /usr/include/c++/15/cstdlib \
  /usr/include/string.h /usr/include/strings.h /usr/include/sys/time.h \
- /usr/local/include/srsran/phy/fec/polar/polar_decoder.h \
- /usr/local/include/srsran/phy/fec/polar/polar_encoder.h \
- /usr/local/include/srsran/phy/fec/polar/polar_rm.h \
- /usr/local/include/srsran/phy/modem/modem_table.h \
- /usr/local/include/srsran/phy/common/phy_common.h \
- /usr/local/include/srsran/phy/phch/pbch_msg_nr.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_decoder.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_encoder.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_rm.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/modem/modem_table.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h \
+ /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_msg_nr.h \
  /usr/include/c++/15/cstdint /usr/include/c++/15/string \
  /usr/include/c++/15/bits/stringfwd.h \
  /usr/include/c++/15/bits/memoryfwd.h \

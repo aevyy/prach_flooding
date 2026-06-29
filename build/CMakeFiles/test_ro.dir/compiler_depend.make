@@ -4,6 +4,21 @@
 CMakeFiles/test_ro.dir/tests/test_ro.cpp.o: /home/avi/wireless/ra-spoof/tests/test_ro.cpp \
   /home/avi/wireless/ra-spoof/src/cell_config.h \
   /home/avi/wireless/ra-spoof/src/ro.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/config.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common_nr.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/dft/dft.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/crc.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_code.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_decoder.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_encoder.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_rm.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/modem/modem_table.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_msg_nr.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_nr.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/sync/ssb.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/debug.h \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/phy_logger.h \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
@@ -215,27 +230,12 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o: /home/avi/wireless/ra-spoof/tests/te
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stdbool.h \
   /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h \
-  /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h \
-  /usr/local/include/srsran/config.h \
-  /usr/local/include/srsran/phy/common/phy_common.h \
-  /usr/local/include/srsran/phy/common/phy_common_nr.h \
-  /usr/local/include/srsran/phy/dft/dft.h \
-  /usr/local/include/srsran/phy/fec/crc.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_code.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_decoder.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_encoder.h \
-  /usr/local/include/srsran/phy/fec/polar/polar_rm.h \
-  /usr/local/include/srsran/phy/modem/modem_table.h \
-  /usr/local/include/srsran/phy/phch/pbch_msg_nr.h \
-  /usr/local/include/srsran/phy/phch/pbch_nr.h \
-  /usr/local/include/srsran/phy/sync/ssb.h \
-  /usr/local/include/srsran/phy/utils/debug.h \
-  /usr/local/include/srsran/phy/utils/phy_logger.h
+  /usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h
 
-test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so \
-  /home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a \
+test_ro: /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so \
+  /home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a \
   /lib64/ld-linux-x86-64.so.2 \
   /lib64/libc.so.6 \
   /lib64/libgcc_s.so.1 \
@@ -264,28 +264,20 @@ test_ro: /home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a 
   /usr/lib64/libboost_serialization.so.1.83.0 \
   /usr/lib64/libboost_system.so.1.83.0 \
   /usr/lib64/libboost_thread.so.1.83.0 \
-  /usr/lib64/libbz2.so.1 \
   /usr/lib64/libc_nonshared.a \
   /usr/lib64/libcap.so.2 \
-  /usr/lib64/libdw.so.1 \
-  /usr/lib64/libelf.so.1 \
-  /usr/lib64/liblzma.so.5 \
   /usr/lib64/libmbedcrypto.so.16 \
   /usr/lib64/libmbedx509.so.7 \
   /usr/lib64/libpython3.14.so.1.0 \
   /usr/lib64/libudev.so.1 \
   /usr/lib64/libusb-1.0.so.0 \
-  /usr/lib64/libz.so.1 \
-  /usr/lib64/libzstd.so.1 \
   CMakeFiles/test_ro.dir/tests/test_ro.cpp.o \
   libra_spoof_lib.a
 
 
+libra_spoof_lib.a:
+
 CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
-
-/usr/lib64/libzstd.so.1:
-
-/usr/lib64/libz.so.1:
 
 /usr/lib64/libusb-1.0.so.0:
 
@@ -295,13 +287,7 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib64/libmbedx509.so.7:
 
-/usr/lib64/liblzma.so.5:
-
-/usr/lib64/libdw.so.1:
-
 /usr/lib64/libcap.so.2:
-
-/usr/lib64/libbz2.so.1:
 
 /usr/lib64/libboost_thread.so.1.83.0:
 
@@ -309,45 +295,11 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib64/libboost_serialization.so.1.83.0:
 
-/usr/include/c++/15/bits/stl_iterator_base_funcs.h:
-
-/usr/include/c++/15/bits/stl_function.h:
-
-/usr/include/bits/mathcalls-helper-functions.h:
-
-/usr/include/c++/15/cwchar:
-
-/usr/include/string.h:
-
-/usr/include/c++/15/bits/stl_pair.h:
-
-/usr/include/c++/15/bits/stl_bvector.h:
-
-/usr/include/c++/15/bits/stl_iterator.h:
-
-/usr/include/c++/15/vector:
-
-/usr/include/c++/15/bits/range_access.h:
-
-/usr/include/c++/15/bits/predefined_ops.h:
-
-/usr/local/include/srsran/phy/common/phy_common_nr.h:
-
 /usr/include/c++/15/bits/move.h:
 
 /usr/include/bits/stdint-least.h:
 
-/usr/include/c++/15/bits/memoryfwd.h:
-
-/usr/include/asm-generic/int-ll64.h:
-
-/usr/include/c++/15/tr1/beta_function.tcc:
-
-/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o:
-
 /usr/include/c++/15/bits/memory_resource.h:
-
-/usr/include/bits/types/struct_timespec.h:
 
 /usr/include/c++/15/initializer_list:
 
@@ -358,10 +310,6 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 /usr/include/c++/15/bits/cpp_type_traits.h:
 
 /usr/include/pthread.h:
-
-/usr/include/c++/15/bits/exception_defines.h:
-
-/usr/include/bits/types/timer_t.h:
 
 /usr/include/c++/15/bits/version.h:
 
@@ -375,9 +323,9 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib64/libboost_atomic.so.1.83.0:
 
-/usr/include/bits/types/struct_itimerspec.h:
-
 /usr/include/bits/types/sigset_t.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/crc.h:
 
 /usr/include/c++/15/tr1/poly_hermite.tcc:
 
@@ -385,7 +333,11 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/c++/15/bits/stl_uninitialized.h:
 
+/usr/include/c++/15/bits/alloc_traits.h:
+
 /usr/include/bits/types/locale_t.h:
+
+/usr/include/bits/mathcalls.h:
 
 /usr/include/bits/types/__fpos_t.h:
 
@@ -399,11 +351,11 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/bits/types/__mbstate_t.h:
 
+/usr/include/bits/stdio_lim.h:
+
 /usr/include/asm/posix_types.h:
 
 /usr/include/bits/time.h:
-
-/usr/include/bits/stdio_lim.h:
 
 /usr/include/bits/types/__locale_t.h:
 
@@ -411,83 +363,29 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib64/libboost_system.so:
 
-/usr/include/c++/15/bits/requires_hosted.h:
-
-/usr/include/c++/15/cstdlib:
-
-/usr/include/c++/15/bits/alloc_traits.h:
-
-/usr/local/include/srsran/phy/modem/modem_table.h:
-
 /usr/include/bits/types/__fpos64_t.h:
-
-/usr/include/bits/libc-header-start.h:
-
-/usr/include/c++/15/bits/functional_hash.h:
-
-/usr/include/c++/15/ext/type_traits.h:
-
-/usr/local/include/srsran/phy/fec/crc.h:
-
-/usr/include/bits/iscanonical.h:
-
-/usr/local/include/srsran/phy/phch/pbch_msg_nr.h:
 
 /usr/include/bits/flt-eval-method.h:
 
-/usr/include/bits/floatn-common.h:
+/usr/include/bits/types.h:
 
-/usr/include/bits/errno.h:
+/usr/include/c++/15/tr1/exp_integral.tcc:
 
 /usr/include/bits/timex.h:
 
-/usr/include/c++/15/cassert:
-
-/usr/include/bits/atomic_wide_counter.h:
-
-/usr/include/c++/15/bits/hash_bytes.h:
-
-/lib64/libm.so.6:
-
-/usr/include/bits/endianness.h:
-
-/usr/include/bits/libm-simd-decl-stubs.h:
-
-/usr/include/bits/uintn-identity.h:
-
-/usr/include/c++/15/bits/stl_algobase.h:
-
-/usr/include/c++/15/clocale:
-
-/usr/lib64/libm.so:
-
-/usr/include/bits/struct_mutex.h:
-
-/usr/lib64/libelf.so.1:
-
-/usr/include/c++/15/bits/char_traits.h:
-
-/usr/include/bits/byteswap.h:
+/usr/include/bits/errno.h:
 
 /usr/include/bits/time64.h:
 
 /usr/include/bits/stdlib-float.h:
 
-/usr/include/assert.h:
+/usr/include/bits/thread-shared-types.h:
 
-/usr/include/c++/15/cctype:
+/usr/include/bits/types/struct_timeval.h:
 
-/usr/include/bits/types/struct_FILE.h:
+/usr/include/bits/stdio.h:
 
-/usr/include/asm/types.h:
-
-/usr/include/bits/setjmp.h:
-
-/usr/local/include/srsran/phy/fec/polar/polar_code.h:
-
-/usr/include/alloca.h:
-
-/home/avi/wireless/ra-spoof/src/cell_config.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_encoder.h:
 
 /usr/include/asm-generic/bitsperlong.h:
 
@@ -495,43 +393,39 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/asm-generic/errno-base.h:
 
-/usr/include/c++/15/math.h:
+/usr/include/asm-generic/int-ll64.h:
 
-/usr/include/bits/fp-logb.h:
+/usr/include/c++/15/bits/memoryfwd.h:
+
+/usr/include/c++/15/tr1/beta_function.tcc:
+
+/usr/lib/gcc/x86_64-redhat-linux/15/crtbegin.o:
 
 /usr/include/asm-generic/errno.h:
 
-/usr/include/bits/long-double.h:
+/usr/include/bits/fp-logb.h:
 
-/usr/include/c++/15/bits/std_abs.h:
+/usr/include/c++/15/bits/postypes.h:
 
-/home/avi/wireless/ra-spoof/tests/test_ro.cpp:
+/usr/include/alloca.h:
 
-/usr/include/asm/posix_types_64.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/debug.h:
 
-/usr/include/c++/15/backward/binders.h:
+/usr/include/bits/struct_mutex.h:
 
-/usr/include/c++/15/bits/specfun.h:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_nr.h:
 
-/usr/include/bits/types.h:
+/usr/include/bits/types/struct_itimerspec.h:
 
-/usr/include/c++/15/tr1/exp_integral.tcc:
+/usr/include/bits/types/struct_timespec.h:
 
-/usr/include/c++/15/bit:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/sync/ssb.h:
 
-/usr/include/c++/15/bits/allocator.h:
-
-/usr/include/asm-generic/posix_types.h:
-
-/usr/include/stdc-predef.h:
-
-/usr/include/bits/floatn.h:
-
-/usr/include/c++/15/bits/refwrap.h:
-
-/usr/include/c++/15/type_traits:
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common_nr.h:
 
 /usr/include/bits/cpu-set.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/phch/pbch_msg_nr.h:
 
 /usr/include/c++/15/bits/new_allocator.h:
 
@@ -545,17 +439,117 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/bits/math-vector.h:
 
+/home/avi/wireless/ra-spoof/tests/test_ro.cpp:
+
+/usr/include/bits/types/__sigset_t.h:
+
+/usr/include/c++/15/bit:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_decoder.h:
+
+/usr/include/c++/15/bits/allocator.h:
+
+/usr/include/asm-generic/posix_types.h:
+
+/usr/include/stdc-predef.h:
+
+/usr/include/c++/15/pstl/pstl_config.h:
+
+/usr/include/bits/stdlib-bsearch.h:
+
+/usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h:
+
+/usr/include/asm/posix_types_64.h:
+
+/home/avi/wireless/ra-spoof/src/cell_config.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/utils/phy_logger.h:
+
+/usr/include/c++/15/tr1/ell_integral.tcc:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/config.h:
+
+/usr/include/math.h:
+
+/usr/include/bits/uintn-identity.h:
+
+/usr/include/bits/typesizes.h:
+
+/usr/include/c++/15/math.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/common/phy_common.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/modem/modem_table.h:
+
+/usr/include/c++/15/bits/vector.tcc:
+
+/usr/include/bits/pthreadtypes.h:
+
+/lib64/libmvec.so.1:
+
+/usr/include/asm/types.h:
+
+/usr/include/assert.h:
+
+/usr/include/c++/15/cassert:
+
+/usr/include/bits/atomic_wide_counter.h:
+
+/usr/include/c++/15/bits/hash_bytes.h:
+
+/lib64/libm.so.6:
+
+/home/avi/wireless/ra-spoof/src/ro.h:
+
+/usr/include/bits/locale.h:
+
+/usr/include/c++/15/bits/char_traits.h:
+
+/usr/include/bits/setjmp.h:
+
+/usr/include/bits/byteswap.h:
+
+/usr/include/bits/endian.h:
+
+/usr/include/bits/endianness.h:
+
+/usr/include/bits/libm-simd-decl-stubs.h:
+
+/usr/include/bits/floatn-common.h:
+
+/usr/include/bits/floatn.h:
+
+/usr/include/c++/15/bits/refwrap.h:
+
+/usr/include/c++/15/type_traits:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/common/libsrsran_common.a:
+
+/usr/include/bits/long-double.h:
+
+/usr/include/c++/15/bits/functional_hash.h:
+
+/usr/include/c++/15/ext/type_traits.h:
+
+/usr/include/bits/iscanonical.h:
+
+/usr/include/bits/libc-header-start.h:
+
+/usr/include/bits/types/time_t.h:
+
+/usr/include/bits/mathcalls-helper-functions.h:
+
+/usr/include/c++/15/bits/stl_function.h:
+
+/usr/include/c++/15/cwchar:
+
+/usr/include/string.h:
+
 /usr/include/bits/mathcalls-narrow.h:
 
 /usr/lib64/libfftw3f.so:
 
 /usr/lib64/libpthread.a:
-
-/usr/include/c++/15/bits/ptr_traits.h:
-
-/usr/include/c++/15/bits/stl_construct.h:
-
-/usr/include/bits/stdio.h:
 
 /usr/include/bits/pthread_stack_min-dynamic.h:
 
@@ -567,9 +561,27 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/gnu/stubs.h:
 
-/usr/include/bits/pthreadtypes.h:
+/usr/include/bits/types/cookie_io_functions_t.h:
 
-/lib64/libmvec.so.1:
+/usr/include/asm/errno.h:
+
+/usr/include/bits/stdint-uintn.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/rf/libsrsran_rf.so:
+
+/usr/include/bits/types/__FILE.h:
+
+/usr/include/features.h:
+
+/usr/include/bits/sched.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/srslog/libsrslog.a:
+
+/usr/include/bits/types/timer_t.h:
+
+/usr/include/c++/15/bits/exception_defines.h:
+
+/usr/include/c++/15/bits/predefined_ops.h:
 
 /usr/include/bits/select.h:
 
@@ -589,33 +601,41 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/c++/15/bits/utility.h:
 
-/usr/include/bits/types/cookie_io_functions_t.h:
+/usr/include/c++/15/bits/range_access.h:
 
-/usr/include/bits/types/struct_timeval.h:
+/usr/include/c++/15/bits/requires_hosted.h:
 
-/usr/include/bits/locale.h:
+/usr/include/c++/15/cstdlib:
 
-/home/avi/wireless/ra-spoof/src/ro.h:
+/usr/include/c++/15/backward/binders.h:
 
-/usr/include/bits/stdlib-bsearch.h:
+/usr/include/c++/15/bits/specfun.h:
 
-/usr/include/c++/15/x86_64-redhat-linux/bits/c++config.h:
+/usr/include/c++/15/bits/std_abs.h:
 
-/usr/include/features.h:
+/usr/include/c++/15/bits/stl_algobase.h:
 
-/usr/include/bits/sched.h:
+/usr/include/c++/15/clocale:
 
-/usr/include/bits/types/__FILE.h:
+/usr/lib64/libm.so:
 
-/usr/include/bits/types/time_t.h:
+/usr/include/c++/15/bits/stl_iterator.h:
 
-/usr/include/bits/thread-shared-types.h:
+/usr/include/c++/15/vector:
 
-/usr/include/bits/endian.h:
+/usr/include/c++/15/bits/ptr_traits.h:
 
-/usr/include/bits/stdint-uintn.h:
+/usr/include/c++/15/bits/stl_construct.h:
 
-/usr/include/asm/errno.h:
+/usr/include/c++/15/bits/stl_iterator_base_funcs.h:
+
+/usr/include/c++/15/bits/stl_bvector.h:
+
+/usr/include/c++/15/bits/stl_pair.h:
+
+/usr/include/bits/types/struct_FILE.h:
+
+/usr/include/c++/15/cctype:
 
 /usr/include/bits/types/struct_tm.h:
 
@@ -625,8 +645,6 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/c++/15/bits/uses_allocator_args.h:
 
-/usr/include/c++/15/bits/vector.tcc:
-
 /usr/include/c++/15/cerrno:
 
 /usr/include/c++/15/cmath:
@@ -635,7 +653,13 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/c++/15/cstdint:
 
+/home/avi/wireless/ra-spoof/srsRAN_4G/build/lib/src/phy/libsrsran_phy.a:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_rm.h:
+
 /usr/include/c++/15/cstdio:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/fec/polar/polar_code.h:
 
 /usr/include/c++/15/debug/debug.h:
 
@@ -663,13 +687,9 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/c++/15/new:
 
-/usr/include/c++/15/pstl/pstl_config.h:
-
 /usr/include/c++/15/stdlib.h:
 
 /usr/include/c++/15/string:
-
-/usr/local/include/srsran/phy/fec/polar/polar_encoder.h:
 
 /usr/include/c++/15/string_view:
 
@@ -681,8 +701,6 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/inttypes.h:
 
-/usr/include/c++/15/tr1/ell_integral.tcc:
-
 /usr/include/c++/15/tr1/gamma.tcc:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/cpu_defines.h:
@@ -690,8 +708,6 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 /usr/include/c++/15/debug/assertions.h:
 
 /usr/include/sys/cdefs.h:
-
-/usr/local/include/srsran/config.h:
 
 /usr/include/bits/mathcalls-macros.h:
 
@@ -725,9 +741,7 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/features-time64.h:
 
-/usr/include/bits/mathcalls.h:
-
-/usr/local/include/srsran/phy/utils/phy_logger.h:
+/usr/include/gnu/stubs-64.h:
 
 /usr/include/bits/types/FILE.h:
 
@@ -735,9 +749,11 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/linux/sched/types.h:
 
-/usr/include/locale.h:
+/usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h:
 
-/usr/include/math.h:
+/usr/include/linux/stddef.h:
+
+/usr/include/locale.h:
 
 /usr/include/bits/fp-fast.h:
 
@@ -746,6 +762,8 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 /usr/include/stdlib.h:
 
 /usr/include/c++/15/bits/exception.h:
+
+/home/avi/wireless/ra-spoof/srsRAN_4G/lib/include/srsran/phy/dft/dft.h:
 
 /usr/include/strings.h:
 
@@ -757,10 +775,6 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/include/time.h:
 
-/usr/include/c++/15/bits/postypes.h:
-
-/usr/local/include/srsran/phy/common/phy_common.h:
-
 /usr/include/wchar.h:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stdarg.h:
@@ -771,41 +785,11 @@ CMakeFiles/test_ro.dir/tests/test_ro.cpp.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/include/stddef.h:
 
-/usr/lib/gcc/x86_64-redhat-linux/15/include/stdint.h:
-
-/usr/include/linux/stddef.h:
-
-/usr/local/include/srsran/phy/dft/dft.h:
-
-/usr/local/include/srsran/phy/fec/polar/polar_decoder.h:
-
-/lib64/libgcc_s.so.1:
-
-/usr/include/bits/types/__sigset_t.h:
-
-/usr/local/include/srsran/phy/fec/polar/polar_rm.h:
-
-/usr/include/gnu/stubs-64.h:
-
-/usr/local/include/srsran/phy/phch/pbch_nr.h:
-
-/usr/local/include/srsran/phy/sync/ssb.h:
-
-/usr/local/include/srsran/phy/utils/debug.h:
-
-/usr/include/bits/typesizes.h:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/common/libsrsran_common.a:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/rf/libsrsran_rf.so:
-
-libra_spoof_lib.a:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/srslog/libsrslog.a:
-
 /lib64/ld-linux-x86-64.so.2:
 
 /lib64/libc.so.6:
+
+/lib64/libgcc_s.so.1:
 
 /usr/include/bits/wordsize.h:
 
@@ -818,8 +802,6 @@ libra_spoof_lib.a:
 /usr/include/ctype.h:
 
 /usr/lib64/libc.so:
-
-/home/avi/wireless/SSB-Spoofer/build/lib/src/phy/libsrsran_phy.a:
 
 /usr/lib64/libmbedtls.so:
 

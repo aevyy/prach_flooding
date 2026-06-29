@@ -3,8 +3,5 @@
 /home/avi/wireless/ra-spoof/build/CMakeFiles/test_ro.dir
 /home/avi/wireless/ra-spoof/build/CMakeFiles/test_pbch.dir
 /home/avi/wireless/ra-spoof/build/CMakeFiles/test_ra_rnti.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/test_pdcch_loopback.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/test_pdsch_loopback.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/test_prach_loopback.dir
 /home/avi/wireless/ra-spoof/build/CMakeFiles/edit_cache.dir
 /home/avi/wireless/ra-spoof/build/CMakeFiles/rebuild_cache.dir

@@ -181,45 +181,6 @@ test_ra_rnti/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_ra_rnti.dir/build.make CMakeFiles/test_ra_rnti.dir/build
 .PHONY : test_ra_rnti/fast
 
-#=============================================================================
-# Target rules for targets named test_pdcch_loopback
-
-# Build rule for target.
-test_pdcch_loopback: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_pdcch_loopback
-.PHONY : test_pdcch_loopback
-
-# fast build rule for target.
-test_pdcch_loopback/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdcch_loopback.dir/build.make CMakeFiles/test_pdcch_loopback.dir/build
-.PHONY : test_pdcch_loopback/fast
-
-#=============================================================================
-# Target rules for targets named test_pdsch_loopback
-
-# Build rule for target.
-test_pdsch_loopback: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_pdsch_loopback
-.PHONY : test_pdsch_loopback
-
-# fast build rule for target.
-test_pdsch_loopback/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdsch_loopback.dir/build.make CMakeFiles/test_pdsch_loopback.dir/build
-.PHONY : test_pdsch_loopback/fast
-
-#=============================================================================
-# Target rules for targets named test_prach_loopback
-
-# Build rule for target.
-test_prach_loopback: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 test_prach_loopback
-.PHONY : test_prach_loopback
-
-# fast build rule for target.
-test_prach_loopback/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_prach_loopback.dir/build.make CMakeFiles/test_prach_loopback.dir/build
-.PHONY : test_prach_loopback/fast
-
 src/cell_config.o: src/cell_config.cpp.o
 .PHONY : src/cell_config.o
 
@@ -244,30 +205,6 @@ src/cell_config.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/cell_config.cpp.s
 .PHONY : src/cell_config.cpp.s
 
-src/dl_grid.o: src/dl_grid.cpp.o
-.PHONY : src/dl_grid.o
-
-# target to build an object file
-src/dl_grid.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.o
-.PHONY : src/dl_grid.cpp.o
-
-src/dl_grid.i: src/dl_grid.cpp.i
-.PHONY : src/dl_grid.i
-
-# target to preprocess a source file
-src/dl_grid.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.i
-.PHONY : src/dl_grid.cpp.i
-
-src/dl_grid.s: src/dl_grid.cpp.s
-.PHONY : src/dl_grid.s
-
-# target to generate assembly for a file
-src/dl_grid.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/dl_grid.cpp.s
-.PHONY : src/dl_grid.cpp.s
-
 src/influx_reader.o: src/influx_reader.cpp.o
 .PHONY : src/influx_reader.o
 
@@ -291,30 +228,6 @@ src/influx_reader.s: src/influx_reader.cpp.s
 src/influx_reader.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/influx_reader.cpp.s
 .PHONY : src/influx_reader.cpp.s
-
-src/inject.o: src/inject.cpp.o
-.PHONY : src/inject.o
-
-# target to build an object file
-src/inject.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.o
-.PHONY : src/inject.cpp.o
-
-src/inject.i: src/inject.cpp.i
-.PHONY : src/inject.i
-
-# target to preprocess a source file
-src/inject.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.i
-.PHONY : src/inject.cpp.i
-
-src/inject.s: src/inject.cpp.s
-.PHONY : src/inject.s
-
-# target to generate assembly for a file
-src/inject.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/inject.cpp.s
-.PHONY : src/inject.cpp.s
 
 src/log_csv.o: src/log_csv.cpp.o
 .PHONY : src/log_csv.o
@@ -364,30 +277,6 @@ src/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra-spoof.dir/build.make CMakeFiles/ra-spoof.dir/src/main.cpp.s
 .PHONY : src/main.cpp.s
 
-src/msg4.o: src/msg4.cpp.o
-.PHONY : src/msg4.o
-
-# target to build an object file
-src/msg4.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.o
-.PHONY : src/msg4.cpp.o
-
-src/msg4.i: src/msg4.cpp.i
-.PHONY : src/msg4.i
-
-# target to preprocess a source file
-src/msg4.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.i
-.PHONY : src/msg4.cpp.i
-
-src/msg4.s: src/msg4.cpp.s
-.PHONY : src/msg4.s
-
-# target to generate assembly for a file
-src/msg4.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/msg4.cpp.s
-.PHONY : src/msg4.cpp.s
-
 src/prach_tx.o: src/prach_tx.cpp.o
 .PHONY : src/prach_tx.o
 
@@ -435,30 +324,6 @@ src/ra_rnti.s: src/ra_rnti.cpp.s
 src/ra_rnti.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/ra_rnti.cpp.s
 .PHONY : src/ra_rnti.cpp.s
-
-src/rar.o: src/rar.cpp.o
-.PHONY : src/rar.o
-
-# target to build an object file
-src/rar.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.o
-.PHONY : src/rar.cpp.o
-
-src/rar.i: src/rar.cpp.i
-.PHONY : src/rar.i
-
-# target to preprocess a source file
-src/rar.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.i
-.PHONY : src/rar.cpp.i
-
-src/rar.s: src/rar.cpp.s
-.PHONY : src/rar.s
-
-# target to generate assembly for a file
-src/rar.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/rar.cpp.s
-.PHONY : src/rar.cpp.s
 
 src/ro.o: src/ro.cpp.o
 .PHONY : src/ro.o
@@ -532,30 +397,6 @@ src/tool_config.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/tool_config.cpp.s
 .PHONY : src/tool_config.cpp.s
 
-src/ul_rx.o: src/ul_rx.cpp.o
-.PHONY : src/ul_rx.o
-
-# target to build an object file
-src/ul_rx.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.o
-.PHONY : src/ul_rx.cpp.o
-
-src/ul_rx.i: src/ul_rx.cpp.i
-.PHONY : src/ul_rx.i
-
-# target to preprocess a source file
-src/ul_rx.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.i
-.PHONY : src/ul_rx.cpp.i
-
-src/ul_rx.s: src/ul_rx.cpp.s
-.PHONY : src/ul_rx.s
-
-# target to generate assembly for a file
-src/ul_rx.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/ra_spoof_lib.dir/build.make CMakeFiles/ra_spoof_lib.dir/src/ul_rx.cpp.s
-.PHONY : src/ul_rx.cpp.s
-
 tests/test_pbch.o: tests/test_pbch.cpp.o
 .PHONY : tests/test_pbch.o
 
@@ -579,78 +420,6 @@ tests/test_pbch.s: tests/test_pbch.cpp.s
 tests/test_pbch.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pbch.dir/build.make CMakeFiles/test_pbch.dir/tests/test_pbch.cpp.s
 .PHONY : tests/test_pbch.cpp.s
-
-tests/test_pdcch_loopback.o: tests/test_pdcch_loopback.cpp.o
-.PHONY : tests/test_pdcch_loopback.o
-
-# target to build an object file
-tests/test_pdcch_loopback.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdcch_loopback.dir/build.make CMakeFiles/test_pdcch_loopback.dir/tests/test_pdcch_loopback.cpp.o
-.PHONY : tests/test_pdcch_loopback.cpp.o
-
-tests/test_pdcch_loopback.i: tests/test_pdcch_loopback.cpp.i
-.PHONY : tests/test_pdcch_loopback.i
-
-# target to preprocess a source file
-tests/test_pdcch_loopback.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdcch_loopback.dir/build.make CMakeFiles/test_pdcch_loopback.dir/tests/test_pdcch_loopback.cpp.i
-.PHONY : tests/test_pdcch_loopback.cpp.i
-
-tests/test_pdcch_loopback.s: tests/test_pdcch_loopback.cpp.s
-.PHONY : tests/test_pdcch_loopback.s
-
-# target to generate assembly for a file
-tests/test_pdcch_loopback.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdcch_loopback.dir/build.make CMakeFiles/test_pdcch_loopback.dir/tests/test_pdcch_loopback.cpp.s
-.PHONY : tests/test_pdcch_loopback.cpp.s
-
-tests/test_pdsch_loopback.o: tests/test_pdsch_loopback.cpp.o
-.PHONY : tests/test_pdsch_loopback.o
-
-# target to build an object file
-tests/test_pdsch_loopback.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdsch_loopback.dir/build.make CMakeFiles/test_pdsch_loopback.dir/tests/test_pdsch_loopback.cpp.o
-.PHONY : tests/test_pdsch_loopback.cpp.o
-
-tests/test_pdsch_loopback.i: tests/test_pdsch_loopback.cpp.i
-.PHONY : tests/test_pdsch_loopback.i
-
-# target to preprocess a source file
-tests/test_pdsch_loopback.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdsch_loopback.dir/build.make CMakeFiles/test_pdsch_loopback.dir/tests/test_pdsch_loopback.cpp.i
-.PHONY : tests/test_pdsch_loopback.cpp.i
-
-tests/test_pdsch_loopback.s: tests/test_pdsch_loopback.cpp.s
-.PHONY : tests/test_pdsch_loopback.s
-
-# target to generate assembly for a file
-tests/test_pdsch_loopback.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_pdsch_loopback.dir/build.make CMakeFiles/test_pdsch_loopback.dir/tests/test_pdsch_loopback.cpp.s
-.PHONY : tests/test_pdsch_loopback.cpp.s
-
-tests/test_prach_loopback.o: tests/test_prach_loopback.cpp.o
-.PHONY : tests/test_prach_loopback.o
-
-# target to build an object file
-tests/test_prach_loopback.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_prach_loopback.dir/build.make CMakeFiles/test_prach_loopback.dir/tests/test_prach_loopback.cpp.o
-.PHONY : tests/test_prach_loopback.cpp.o
-
-tests/test_prach_loopback.i: tests/test_prach_loopback.cpp.i
-.PHONY : tests/test_prach_loopback.i
-
-# target to preprocess a source file
-tests/test_prach_loopback.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_prach_loopback.dir/build.make CMakeFiles/test_prach_loopback.dir/tests/test_prach_loopback.cpp.i
-.PHONY : tests/test_prach_loopback.cpp.i
-
-tests/test_prach_loopback.s: tests/test_prach_loopback.cpp.s
-.PHONY : tests/test_prach_loopback.s
-
-# target to generate assembly for a file
-tests/test_prach_loopback.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/test_prach_loopback.dir/build.make CMakeFiles/test_prach_loopback.dir/tests/test_prach_loopback.cpp.s
-.PHONY : tests/test_prach_loopback.cpp.s
 
 tests/test_ra_rnti.o: tests/test_ra_rnti.cpp.o
 .PHONY : tests/test_ra_rnti.o
@@ -711,41 +480,26 @@ help:
 	@echo "... ra-spoof"
 	@echo "... ra_spoof_lib"
 	@echo "... test_pbch"
-	@echo "... test_pdcch_loopback"
-	@echo "... test_pdsch_loopback"
-	@echo "... test_prach_loopback"
 	@echo "... test_ra_rnti"
 	@echo "... test_ro"
 	@echo "... src/cell_config.o"
 	@echo "... src/cell_config.i"
 	@echo "... src/cell_config.s"
-	@echo "... src/dl_grid.o"
-	@echo "... src/dl_grid.i"
-	@echo "... src/dl_grid.s"
 	@echo "... src/influx_reader.o"
 	@echo "... src/influx_reader.i"
 	@echo "... src/influx_reader.s"
-	@echo "... src/inject.o"
-	@echo "... src/inject.i"
-	@echo "... src/inject.s"
 	@echo "... src/log_csv.o"
 	@echo "... src/log_csv.i"
 	@echo "... src/log_csv.s"
 	@echo "... src/main.o"
 	@echo "... src/main.i"
 	@echo "... src/main.s"
-	@echo "... src/msg4.o"
-	@echo "... src/msg4.i"
-	@echo "... src/msg4.s"
 	@echo "... src/prach_tx.o"
 	@echo "... src/prach_tx.i"
 	@echo "... src/prach_tx.s"
 	@echo "... src/ra_rnti.o"
 	@echo "... src/ra_rnti.i"
 	@echo "... src/ra_rnti.s"
-	@echo "... src/rar.o"
-	@echo "... src/rar.i"
-	@echo "... src/rar.s"
 	@echo "... src/ro.o"
 	@echo "... src/ro.i"
 	@echo "... src/ro.s"
@@ -755,21 +509,9 @@ help:
 	@echo "... src/tool_config.o"
 	@echo "... src/tool_config.i"
 	@echo "... src/tool_config.s"
-	@echo "... src/ul_rx.o"
-	@echo "... src/ul_rx.i"
-	@echo "... src/ul_rx.s"
 	@echo "... tests/test_pbch.o"
 	@echo "... tests/test_pbch.i"
 	@echo "... tests/test_pbch.s"
-	@echo "... tests/test_pdcch_loopback.o"
-	@echo "... tests/test_pdcch_loopback.i"
-	@echo "... tests/test_pdcch_loopback.s"
-	@echo "... tests/test_pdsch_loopback.o"
-	@echo "... tests/test_pdsch_loopback.i"
-	@echo "... tests/test_pdsch_loopback.s"
-	@echo "... tests/test_prach_loopback.o"
-	@echo "... tests/test_prach_loopback.i"
-	@echo "... tests/test_prach_loopback.s"
 	@echo "... tests/test_ra_rnti.o"
 	@echo "... tests/test_ra_rnti.i"
 	@echo "... tests/test_ra_rnti.s"
