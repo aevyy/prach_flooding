@@ -508,6 +508,15 @@ bool prach_tx::sync_to_ssb() {
            ssb_start_device_time, m_sync_device_time, ssb_intra_slot_s * 1e6);
     printf("  Slot        = %u (from ssb_idx=%u, hrf=%d)\n", ssb_slot, ssb_idx, hrf);
 
+    // Regenerate preamble with measured CFO correction applied
+    if (m_cfo_correct) {
+        printf("[prach_tx] Regenerating preamble with measured CFO (%.1f Hz UL)\n", m_cfo_ul_hz);
+        if (!generate_preamble()) {
+            fprintf(stderr, "[prach_tx] FATAL: preamble regen after CFO failed\n");
+            return false;
+        }
+    }
+
     return true;
 }
 

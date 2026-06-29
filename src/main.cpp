@@ -1,6 +1,6 @@
 // ra-spoof main — Msg1 PRACH preamble injection
 //
-// Config precedence: default < ra-spoof.yaml < CLI
+// Config: InfluxDB (live sniffer) → ra-spoof.yaml → CLI overrides
 
 #include "cell_config.h"
 #include "influx_reader.h"
@@ -32,13 +32,11 @@ static void print_usage(const char* prog) {
     printf("Usage: %s [options]\n", prog);
     printf("Options:\n");
     printf("  -c, --config PATH          ra-spoof.yaml path (default: configs/ra-spoof.yaml)\n");
-    printf("  -g, --gnb-config PATH      gnb.yaml path (default: /home/avi/Downloads/gnb.yaml)\n");
     printf("  --influx-host HOST         InfluxDB host (default: localhost)\n");
     printf("  --influx-port PORT         InfluxDB port (default: 8086)\n");
     printf("  --influx-org ORG           InfluxDB org (default: rtu)\n");
     printf("  --influx-bucket BUCKET     InfluxDB bucket (default: rtusystem)\n");
     printf("  --influx-data-id ID        Sniffer data_id tag (default: test)\n");
-    printf("  --no-influx                Skip InfluxDB; use gnb.yaml only\n");
     printf("  --dry-run                  Run pipeline without RF TX\n");
     printf("  --confirm-rf-isolated      Required for RF TX\n");
     printf("  --tx-gain DB               TX gain in dB\n");
@@ -71,10 +69,8 @@ int main(int argc, char* argv[]) {
 
     // --- Defaults / CLI variables ---
     std::string config_path     = "configs/ra-spoof.yaml";
-    std::string gnb_config_path = "/home/avi/Downloads/gnb.yaml";
     bool        dry_run         = false;
     bool        rf_isolated     = false;
-    bool        no_influx       = false;
 
     influx_cfg icfg;
     icfg.host    = "localhost";
@@ -101,13 +97,11 @@ int main(int argc, char* argv[]) {
 
     static struct option long_opts[] = {
         {"config",              required_argument, 0, 'c'},
-        {"gnb-config",          required_argument, 0, 'g'},
         {"influx-host",         required_argument, 0, 'H'},
         {"influx-port",         required_argument, 0, 'P'},
         {"influx-org",          required_argument, 0, 'O'},
         {"influx-bucket",       required_argument, 0, 'B'},
         {"influx-data-id",      required_argument, 0, 'I'},
-        {"no-influx",           no_argument,       0, 'N'},
         {"dry-run",             no_argument,       0, 'D'},
         {"confirm-rf-isolated", no_argument,       0, 'R'},
         {"tx-gain",             required_argument, 0, 'G'},
@@ -128,16 +122,14 @@ int main(int argc, char* argv[]) {
     };
 
     int c;
-    while ((c = getopt_long(argc, argv, "c:g:h", long_opts, nullptr)) != -1) {
+    while ((c = getopt_long(argc, argv, "c:h", long_opts, nullptr)) != -1) {
         switch (c) {
             case 'c': config_path        = optarg; break;
-            case 'g': gnb_config_path    = optarg; break;
             case 'H': icfg.host          = optarg; break;
             case 'P': icfg.port          = atoi(optarg); break;
             case 'O': icfg.org           = optarg; break;
             case 'B': icfg.bucket        = optarg; break;
             case 'I': icfg.data_id       = optarg; break;
-            case 'N': no_influx          = true; break;
             case 'D': dry_run            = true; break;
             case 'R': rf_isolated        = true; break;
             case 'G': cli.tx_gain        = atof(optarg); cli.has_gain = true; break;
@@ -201,27 +193,16 @@ int main(int argc, char* argv[]) {
     }
 
     // -----------------------------------------------------------------------
-    // Step 1: Load cell config
+    // Step 1: Load cell config from InfluxDB (sole config source)
     // -----------------------------------------------------------------------
     cell_config cfg;
-    bool influx_ok = false;
 
-    if (!no_influx) {
-        printf("[main] Step 1: Pulling cell config from InfluxDB...\n");
-        influx_ok = influx_pull_cell_config(icfg, cfg);
-        if (!influx_ok) {
-            fprintf(stderr, "[main] FATAL: InfluxDB pull failed.\n");
-            return 1;
-        }
-        influx_sanity_check(cfg);
-    } else {
-        printf("[main] Step 1: --no-influx: loading cell config from gnb.yaml...\n");
-        if (!parse_gnb_config(gnb_config_path, cfg)) {
-            fprintf(stderr, "[main] FATAL: Cannot parse gNB config from %s\n", gnb_config_path.c_str());
-            return 1;
-        }
-        printf("[main] WARNING: Using static gnb.yaml config — PRACH params may be stale.\n");
+    printf("[main] Step 1: Pulling cell config from InfluxDB...\n");
+    if (!influx_pull_cell_config(icfg, cfg)) {
+        fprintf(stderr, "[main] FATAL: InfluxDB pull failed.\n");
+        return 1;
     }
+    influx_sanity_check(cfg);
 
     // Populate prach_x/y/subframe/format from prach_config_idx
     cfg.resolve_prach_ro();
@@ -285,7 +266,7 @@ int main(int argc, char* argv[]) {
     // -----------------------------------------------------------------------
     printf("\n[main] Step 6.5: Synchronizing to gNB SSB (PCI=%u)...\n", cfg.pci);
 
-    if (!no_influx) {
+    {
         uint32_t fb_sfn=0, fb_ssb_idx=0, fb_ssb_slot=0, fb_scs=0;
         bool fb_hrf=false;
         double fb_unix_time=0.0;

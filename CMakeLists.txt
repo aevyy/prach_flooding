@@ -4,52 +4,49 @@ project(ra-spoof LANGUAGES CXX C)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+# ---------------------------------------------------------------------------
+# Find srsRAN
+# ---------------------------------------------------------------------------
+# We now use the locally built srsRAN_4G from the srsRAN_4G/build directory
+# instead of linking against pre-built binaries that might have different
+# FFT/nof_prb assumptions.
+# ---------------------------------------------------------------------------
+set(SRSRAN_ROOT "${CMAKE_CURRENT_SOURCE_DIR}/srsRAN_4G")
+set(SRSRAN_BUILD "${SRSRAN_ROOT}/build")
+
+# Verify local srsRAN headers exist
+if(NOT EXISTS "${SRSRAN_ROOT}/lib/include/srsran/srsran.h")
+  message(FATAL_ERROR "srsRAN headers not found in ${SRSRAN_ROOT}/lib/include/srsran/")
+endif()
+
+# Verify local srsRAN build exists
+if(NOT EXISTS "${SRSRAN_BUILD}/lib/src/phy/libsrsran_phy.a")
+  message(FATAL_ERROR "libsrsran_phy.a not found. Please build srsRAN_4G in ${SRSRAN_BUILD} first.")
+endif()
+
 # Embed runtime library path so libsrsran_rf*.so is found without LD_LIBRARY_PATH
-set(SNIFFER_RF_RPATH "/home/avi/wireless/ssb_Spoofer/build/lib/src/phy/rf")
-set(CMAKE_BUILD_RPATH "${SNIFFER_RF_RPATH}")
-set(CMAKE_INSTALL_RPATH "${SNIFFER_RF_RPATH}")
+set(SRSRAN_RF_RPATH "${SRSRAN_BUILD}/lib/src/phy/rf")
+set(CMAKE_BUILD_RPATH "${SRSRAN_RF_RPATH}")
+set(CMAKE_INSTALL_RPATH "${SRSRAN_RF_RPATH}")
 set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
 
 find_package(PkgConfig REQUIRED)
 
-# ---------------------------------------------------------------------------
-# Find srsRAN
-# ---------------------------------------------------------------------------
-# Headers are installed at /usr/local/include/srsran/ (from srsRAN Project)
-# Pre-built static libraries come from the 5g-sniffer build (monolithic)
-# ---------------------------------------------------------------------------
-if(NOT EXISTS "/usr/local/include/srsran/srsran.h")
-  message(FATAL_ERROR "srsRAN headers not found at /usr/local/include/srsran/")
-endif()
-
-set(SNIFFER_BUILD "/home/avi/wireless/SSB-Spoofer/build")
-set(SRSRAN_BUILD  "/home/avi/wireless/srsRAN_Project/build")
-
-# PHY library (monolithic, from ssb_Spoofer)
-if(NOT EXISTS "${SNIFFER_BUILD}/lib/src/phy/libsrsran_phy.a")
-  message(FATAL_ERROR "libsrsran_phy.a not found at ${SNIFFER_BUILD}/lib/src/phy/")
-endif()
+# PHY library
 # Whole-archive to resolve circular deps; allow-multiple-definition for duplicate symbols
 set(SRSRAN_PHY_LINK_LIBS
   "-Wl,--allow-multiple-definition"
-  "-Wl,--whole-archive" "${SNIFFER_BUILD}/lib/src/phy/libsrsran_phy.a" "-Wl,--no-whole-archive"
+  "-Wl,--whole-archive" "${SRSRAN_BUILD}/lib/src/phy/libsrsran_phy.a" "-Wl,--no-whole-archive"
 )
 
-# Common library (from ssb_Spoofer) - normal linking
-if(NOT EXISTS "${SNIFFER_BUILD}/lib/src/common/libsrsran_common.a")
-  message(FATAL_ERROR "libsrsran_common.a not found at ${SNIFFER_BUILD}/lib/src/common/")
-endif()
-set(SRSRAN_COMMON_LINK_LIBS "${SNIFFER_BUILD}/lib/src/common/libsrsran_common.a")
+# Common library
+set(SRSRAN_COMMON_LINK_LIBS "${SRSRAN_BUILD}/lib/src/common/libsrsran_common.a")
+
+# srslog library
+set(SRSRAN_SRSLOG_LIBS "${SRSRAN_BUILD}/lib/src/srslog/libsrslog.a")
 
 # srsran_rf (shared library for RF abstraction — UHD plugin loaded at runtime)
-set(SRSRAN_RF_LIB "${SNIFFER_BUILD}/lib/src/phy/rf/libsrsran_rf.so")
-
-# srslog library (provides fmt::v7 symbols used by phy/common)
-if(EXISTS "${SNIFFER_BUILD}/lib/src/srslog/libsrslog.a")
-  set(SRSRAN_SRSLOG_LIBS "${SNIFFER_BUILD}/lib/src/srslog/libsrslog.a")
-else()
-  set(SRSRAN_SRSLOG_LIBS "")
-endif()
+set(SRSRAN_RF_LIB "${SRSRAN_BUILD}/lib/src/phy/rf/libsrsran_rf.so")
 
 # Transitive deps needed by libsrsran_phy and libsrsran_common
 pkg_check_modules(MBEDTLS REQUIRED mbedtls)
@@ -64,11 +61,6 @@ set(SRSRAN_COMMON_DEPS_LIBS
   ${FFTW3F_LIBRARIES}
   Boost::system
 )
-
-# MAC library (TODO M2: from srsRAN_Project, requires fmt/srslog deps)
-
-# yaml-cpp
-find_package(yaml-cpp REQUIRED)
 
 # UHD
 pkg_check_modules(UHD REQUIRED uhd)
@@ -87,23 +79,18 @@ set(LIB_SOURCES
     src/ra_rnti.cpp
     src/log_csv.cpp
     src/ssb_sync.cpp
-    src/ul_rx.cpp
-    src/dl_grid.cpp
-    src/rar.cpp
-    src/msg4.cpp
-    src/inject.cpp
     src/influx_reader.cpp
     src/prach_tx.cpp
     src/tool_config.cpp
   # NOTE: rt-recon-sdk used header-only (influxdb.hpp flux_query + local parse logic)
-  # SDK .cc files are NOT compiled here — they drag in srslog/fmt7 which breaks GCC 15
 )
 
 add_library(ra_spoof_lib STATIC ${LIB_SOURCES})
 
 target_include_directories(ra_spoof_lib PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/src
-  /usr/local/include
+  ${SRSRAN_ROOT}/lib/include
+  ${SRSRAN_BUILD}/lib/include  # For generated build_info.h / version.h
   ${RT_RECON_SDK}/include
 )
 
@@ -148,29 +135,4 @@ add_executable(test_ra_rnti tests/test_ra_rnti.cpp)
 target_link_libraries(test_ra_rnti PRIVATE ra_spoof_lib)
 target_compile_options(test_ra_rnti PRIVATE -Wall)
 
-add_executable(test_pdcch_loopback tests/test_pdcch_loopback.cpp)
-target_link_libraries(test_pdcch_loopback PRIVATE
-  ra_spoof_lib
-  ${SRSRAN_PHY_LINK_LIBS}
-  ${SRSRAN_COMMON_LINK_LIBS}
-  ${SRSRAN_COMMON_DEPS_LIBS}
-)
-target_compile_options(test_pdcch_loopback PRIVATE -Wall)
 
-add_executable(test_pdsch_loopback tests/test_pdsch_loopback.cpp)
-target_link_libraries(test_pdsch_loopback PRIVATE
-  ra_spoof_lib
-  ${SRSRAN_PHY_LINK_LIBS}
-  ${SRSRAN_COMMON_LINK_LIBS}
-  ${SRSRAN_COMMON_DEPS_LIBS}
-)
-target_compile_options(test_pdsch_loopback PRIVATE -Wall)
-
-add_executable(test_prach_loopback tests/test_prach_loopback.cpp)
-target_link_libraries(test_prach_loopback PRIVATE
-  ra_spoof_lib
-  ${SRSRAN_PHY_LINK_LIBS}
-  ${SRSRAN_COMMON_LINK_LIBS}
-  ${SRSRAN_COMMON_DEPS_LIBS}
-)
-target_compile_options(test_prach_loopback PRIVATE -Wall)
