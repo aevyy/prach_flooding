@@ -75,6 +75,18 @@ public:
     uint32_t get_sync_slot()           const { return m_sync_slot; }
     double   get_last_tx_time()        const { return m_last_tx_time; }
 
+    // Flood mode accessors
+    bool        is_flood_enabled()        const { return m_flood_enabled; }
+    std::string get_flood_strategy()      const { return m_flood_strategy; }
+    uint32_t    get_flood_num_preambles() const { return m_flood_num_preambles; }
+    uint32_t    get_flood_tx_count()      const { return m_flood_tx_count; }
+
+    // Get the effective RAPID(s) for the current TX (for logging)
+    // In superimpose mode: returns "0-63" style range
+    // In cycle mode: returns the current single index
+    // In single mode: returns the configured RAPID
+    std::string get_current_rapid_list() const;
+
 private:
     bool           m_initialized = false;
     bool           m_rf_open     = false;
@@ -121,9 +133,26 @@ private:
     int32_t        m_ssb_first_symbol_override = -1;  // >=0 forces intra-slot symbol
     double         m_tx_offset_us     = 0.0;   // manual timing nudge
 
+    // Single-preamble TX buffer (original path)
     std::vector<std::complex<float>> m_tx_buf;
     std::vector<std::complex<float>> m_rx_buf;  // For SSB sync
 
+    // --- Flood mode state ---
+    bool           m_flood_enabled        = false;
+    uint32_t       m_flood_num_preambles  = 64;
+    std::string    m_flood_strategy       = "superimpose";
+    float          m_flood_power_backoff_db = 0.0f;
+    uint32_t       m_flood_tx_count       = 0;  // monotonic counter for cycle mode
+
+    // Per-preamble buffers: m_flood_bufs[i] = baseband for RAPID=i
+    std::vector<std::vector<std::complex<float>>> m_flood_bufs;
+    // Superimposed TX buffer (complex sum of all m_flood_bufs)
+    std::vector<std::complex<float>> m_flood_tx_buf;
+
     bool generate_preamble();
+    bool generate_flood_preambles();
     bool attempt_sync_from_fallback();
+
+    // Get the TX buffer pointer and length for the current mode
+    void* get_tx_buffer();
 };

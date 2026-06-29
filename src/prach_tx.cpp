@@ -56,6 +56,14 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
     m_cfo_correct = tc.cfo.correct;
     m_cfo_sign    = tc.cfo.sign;
 
+    // --- Flood mode config ---
+    m_flood_enabled          = tc.flood.enabled;
+    m_flood_num_preambles    = std::min(tc.flood.num_preambles, (uint32_t)64);
+    m_flood_strategy         = tc.flood.strategy;
+    m_flood_power_backoff_db = tc.flood.power_backoff_db;
+    m_flood_tx_count         = 0;
+    if (m_flood_num_preambles < 1) m_flood_num_preambles = 1;
+
     // Apply msg1-FrequencyStart override if set
     uint32_t freq_offset_raw = cfg.prach_freq_offset;
     if (tc.freq.msg1_freq_start_override >= 0) {
@@ -111,10 +119,20 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
     prach_cfg.root_seq_idx       = cfg.prach_root_seq_idx;
     prach_cfg.zero_corr_zone     = cfg.prach_zcz;
     prach_cfg.freq_offset        = cfg.prach_freq_offset;
-    prach_cfg.num_ra_preambles   = cfg.num_ra_preambles;
     prach_cfg.hs_flag            = false;
     prach_cfg.enable_successive_cancellation = false;
     prach_cfg.enable_freq_domain_offset_calc = false;
+
+    // CRITICAL: In flood mode, override num_ra_preambles so srsran_prach_gen
+    // builds the correct cyclic shift table for ALL requested indices.
+    // Without this, srsran_prach_gen fails for indices >= cfg.num_ra_preambles.
+    if (m_flood_enabled) {
+        prach_cfg.num_ra_preambles = m_flood_num_preambles;
+        printf("[prach_tx] FLOOD: overriding num_ra_preambles %u → %u\n",
+               cfg.num_ra_preambles, m_flood_num_preambles);
+    } else {
+        prach_cfg.num_ra_preambles = cfg.num_ra_preambles;
+    }
 
     if (srsran_prach_set_cfg(&m_prach, &prach_cfg, cfg.nof_prb) != SRSRAN_SUCCESS) {
         fprintf(stderr, "[prach_tx] FATAL: srsran_prach_set_cfg failed\n");
@@ -124,6 +142,10 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
 
     m_initialized = true;
 
+    if (m_flood_enabled) {
+        printf("[prach_tx] FLOOD MODE: %s strategy, %u preambles, backoff=%.1f dB\n",
+               m_flood_strategy.c_str(), m_flood_num_preambles, m_flood_power_backoff_db);
+    }
     printf("[prach_tx] Initialized:\n");
     printf("  config_idx   = %u\n", m_cfg.config_idx);
     printf("  root_seq     = %u\n", m_cfg.root_seq);
@@ -134,7 +156,16 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
     printf("  tx_gain_db   = %.1f dB\n", m_cfg.tx_gain_db);
     printf("  dry_run      = %s\n", m_dry_run ? "YES" : "NO");
 
-    return generate_preamble();
+    if (!generate_preamble()) return false;
+
+    // Generate flood preamble set if flood mode is active
+    if (m_flood_enabled) {
+        if (!generate_flood_preambles()) {
+            fprintf(stderr, "[prach_tx] FATAL: flood preamble generation failed\n");
+            return false;
+        }
+    }
+    return true;
 }
 
 // ---------------------------------------------------------------------------
@@ -219,6 +250,132 @@ bool prach_tx::generate_preamble() {
     printf("[prach_tx] Amplitude normalized: scale=%.3f (target=%.2f)\n", scale, target_amp);
 
     return true;
+}
+
+// ---------------------------------------------------------------------------
+// generate_flood_preambles — pre-compute N preamble buffers + superimposed TX
+// ---------------------------------------------------------------------------
+bool prach_tx::generate_flood_preambles() {
+    if (!m_initialized) return false;
+
+    uint32_t preamble_len = m_prach.N_cp + m_prach.N_seq;
+
+    // Compute corrected freq_offset (same compensation as generate_preamble)
+    uint32_t freq_offset_corrected = m_cfg.freq_offset;
+    {
+        int delta_prb = (int)m_cell_cfg.nof_prb -
+                        (int)srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb));
+        freq_offset_corrected = (uint32_t)((int)m_cfg.freq_offset - delta_prb / 2);
+    }
+
+    printf("[prach_tx] FLOOD: generating %u preamble buffers (len=%u samples each)...\n",
+           m_flood_num_preambles, preamble_len);
+
+    // 1. Allocate and generate individual preamble buffers
+    m_flood_bufs.resize(m_flood_num_preambles);
+    for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        m_flood_bufs[p].assign(preamble_len, {0.0f, 0.0f});
+        cf_t* raw = reinterpret_cast<cf_t*>(m_flood_bufs[p].data());
+
+        if (srsran_prach_gen(&m_prach, p, freq_offset_corrected, raw) != SRSRAN_SUCCESS) {
+            fprintf(stderr, "[prach_tx] FATAL: srsran_prach_gen failed for RAPID=%u\n", p);
+            fprintf(stderr, "  This usually means num_ra_preambles was not overridden.\n");
+            return false;
+        }
+    }
+
+    // 2. Superimpose: complex-add all N buffers sample-by-sample
+    m_flood_tx_buf.assign(preamble_len, {0.0f, 0.0f});
+    for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        for (uint32_t n = 0; n < preamble_len; n++) {
+            m_flood_tx_buf[n] += m_flood_bufs[p][n];
+        }
+    }
+
+    // 3. CFO correction on the COMBINED buffer (one rotation, not N)
+    //    CFO is a property of the radio, not the preamble.
+    if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
+        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        for (uint32_t n = 0; n < preamble_len; n++) {
+            float ph = (float)(w * (double)n);
+            m_flood_tx_buf[n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
+        }
+        printf("[prach_tx] FLOOD: CFO correction applied to superimposed buffer\n");
+    }
+
+    // Also apply CFO to individual buffers (for cycle mode)
+    if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
+        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+            for (uint32_t n = 0; n < preamble_len; n++) {
+                float ph = (float)(w * (double)n);
+                m_flood_bufs[p][n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
+            }
+        }
+    }
+
+    // 4. Normalize superimposed buffer
+    //    RMS of superimposed uncorrelated ZC sequences ≈ sqrt(N) × single RMS.
+    //    Normalize to 0.7 × backoff to keep within DAC range.
+    {
+        float power = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            power += std::norm(m_flood_tx_buf[i]);
+        }
+        power /= preamble_len;
+
+        float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
+        float target_amp = 0.7f * backoff_linear;
+        float scale = target_amp / (std::sqrt(power) + 1e-12f);
+        for (auto& s : m_flood_tx_buf) s *= scale;
+
+        printf("[prach_tx] FLOOD superimposed: RMS=%.4f, scale=%.3f "
+               "(target=%.2f, backoff=%.1f dB)\n",
+               std::sqrt(power), scale, target_amp, m_flood_power_backoff_db);
+    }
+
+    // 5. Normalize individual buffers (for cycle mode)
+    for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        float power = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            power += std::norm(m_flood_bufs[p][i]);
+        }
+        power /= preamble_len;
+        float target_amp = 0.7f;
+        float scale = target_amp / (std::sqrt(power) + 1e-12f);
+        for (auto& s : m_flood_bufs[p]) s *= scale;
+    }
+
+    printf("[prach_tx] FLOOD: all %u preamble buffers ready\n", m_flood_num_preambles);
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// get_current_rapid_list — return human-readable RAPID description for logging
+// ---------------------------------------------------------------------------
+std::string prach_tx::get_current_rapid_list() const {
+    if (!m_flood_enabled) {
+        return std::to_string(m_cfg.rapid);
+    }
+    if (m_flood_strategy == "superimpose") {
+        return "0-" + std::to_string(m_flood_num_preambles - 1);
+    }
+    // cycle mode
+    uint32_t current = m_flood_tx_count % m_flood_num_preambles;
+    return std::to_string(current);
+}
+
+// ---------------------------------------------------------------------------
+// get_tx_buffer — return the correct TX buffer for current mode
+// ---------------------------------------------------------------------------
+void* prach_tx::get_tx_buffer() {
+    if (m_flood_enabled && m_flood_strategy == "superimpose") {
+        return reinterpret_cast<void*>(m_flood_tx_buf.data());
+    } else if (m_flood_enabled && m_flood_strategy == "cycle") {
+        uint32_t idx = m_flood_tx_count % m_flood_num_preambles;
+        return reinterpret_cast<void*>(m_flood_bufs[idx].data());
+    }
+    return reinterpret_cast<void*>(m_tx_buf.data());
 }
 
 // ---------------------------------------------------------------------------
@@ -605,7 +762,7 @@ bool prach_tx::transmit_preamble(uint32_t sfn, uint32_t ro_slot) {
     m_ra_rnti = compute_ra_rnti(0, ro_slot, 0, 0);
 
     printf("\n[prach_tx] ==================== PRACH TX ====================\n");
-    printf("[prach_tx] RAPID         = %u\n", m_cfg.rapid);
+    printf("[prach_tx] RAPID         = %s\n", get_current_rapid_list().c_str());
     printf("[prach_tx] Target RO     = SFN %u, slot %u\n", sfn, ro_slot);
     printf("[prach_tx] RA-RNTI       = 0x%04x (%u)\n", m_ra_rnti, m_ra_rnti);
     printf("[prach_tx]   = 1 + s_id(0) + 14*t_id(%u) + 14*80*f_id(0) + 14*80*8*ul_carrier(0)\n", ro_slot);
@@ -616,6 +773,9 @@ bool prach_tx::transmit_preamble(uint32_t sfn, uint32_t ro_slot) {
 
     if (m_dry_run) {
         printf("[prach_tx] DRY RUN: skipping actual RF transmission\n");
+        if (m_flood_enabled) {
+            m_flood_tx_count++;
+        }
         return true;
     }
 
@@ -691,7 +851,7 @@ bool prach_tx::transmit_preamble(uint32_t sfn, uint32_t ro_slot) {
            sfn, ro_slot, t_tx, (t_tx - t_now) * 1e3);
 
     void* buffers[1];
-    buffers[0] = reinterpret_cast<void*>(m_tx_buf.data());
+    buffers[0] = get_tx_buffer();
 
     int nsent = srsran_rf_send_timed_multi(
         &m_rf,
@@ -715,6 +875,12 @@ bool prach_tx::transmit_preamble(uint32_t sfn, uint32_t ro_slot) {
     }
 
     printf("[prach_tx] Preamble transmitted: %d samples\n", nsent);
+    if (m_flood_enabled) {
+        printf("[prach_tx] FLOOD: strategy=%s, preambles=%s, burst #%u\n",
+               m_flood_strategy.c_str(), get_current_rapid_list().c_str(),
+               m_flood_tx_count);
+        m_flood_tx_count++;
+    }
     printf("[prach_tx] Expected gNB response:\n");
     printf("  RAR (Msg2) on RA-RNTI=0x%04x (%u) within 10 slots of RO end\n",
            m_ra_rnti, m_ra_rnti);
@@ -737,7 +903,7 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn, uint32_t ro_slot)
     m_ra_rnti = compute_ra_rnti(0, ro_slot, 0, 0);
 
     printf("[prach_tx] ==================== PRACH TX ====================\n");
-    printf("[prach_tx] RAPID         = %u\n", m_cfg.rapid);
+    printf("[prach_tx] RAPID         = %s\n", get_current_rapid_list().c_str());
     printf("[prach_tx] Target RO     = SFN %u, slot %u\n", sfn, ro_slot);
     printf("[prach_tx] RA-RNTI       = 0x%04x (%u)\n", m_ra_rnti, m_ra_rnti);
     printf("[prach_tx] TX freq       = %.3f MHz\n", m_cfg.tx_freq_hz / 1e6);
@@ -747,6 +913,9 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn, uint32_t ro_slot)
 
     if (m_dry_run) {
         printf("[prach_tx] DRY RUN: skipping actual RF transmission\n");
+        if (m_flood_enabled) {
+            m_flood_tx_count++;
+        }
         return true;
     }
     if (!m_rf_open) {
@@ -772,7 +941,7 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn, uint32_t ro_slot)
            sfn, ro_slot, dev_time, (dev_time - t_now) * 1e3);
 
     void* buffers[1];
-    buffers[0] = reinterpret_cast<void*>(m_tx_buf.data());
+    buffers[0] = get_tx_buffer();
 
     int nsent = srsran_rf_send_timed_multi(
         &m_rf, buffers, m_preamble_len_samples,
@@ -790,6 +959,12 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn, uint32_t ro_slot)
     }
 
     printf("[prach_tx] Preamble transmitted: %d samples\n", nsent);
+    if (m_flood_enabled) {
+        printf("[prach_tx] FLOOD: strategy=%s, preambles=%s, burst #%u\n",
+               m_flood_strategy.c_str(), get_current_rapid_list().c_str(),
+               m_flood_tx_count);
+        m_flood_tx_count++;
+    }
     printf("[prach_tx] Expected gNB response:\n");
     printf("  RAR (Msg2) on RA-RNTI=0x%04x (%u) within 10 slots of RO end\n",
            m_ra_rnti, m_ra_rnti);

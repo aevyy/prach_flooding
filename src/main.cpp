@@ -51,6 +51,10 @@ static void print_usage(const char* prog) {
     printf("  --freq-start N             Override msg1-FrequencyStart (PRB)\n");
     printf("  --resync-every N           Re-sync SSB every N TX\n");
     printf("  --max-tx N                 Stop after N TX (0 = unlimited)\n");
+    printf("  --flood                    Enable multi-preamble flood mode\n");
+    printf("  --flood-n N                Number of preambles to flood (1-64)\n");
+    printf("  --flood-strategy S         'superimpose' or 'cycle'\n");
+    printf("  --flood-backoff DB         Amplitude reduction to prevent clipping\n");
     printf("  -h, --help                 Print this help\n");
     printf("\nEnvironment:\n");
     printf("  INFLUX_TOKEN               InfluxDB auth token\n");
@@ -93,6 +97,10 @@ int main(int argc, char* argv[]) {
         bool     has_freq_start = false;   int32_t msg1_freq_start = 0;
         bool     has_resync     = false;   uint32_t resync_every = 0;
         bool     has_max_tx     = false;   uint32_t max_tx = 0;
+        bool     has_flood      = false;   bool flood = false;
+        bool     has_flood_n    = false;   uint32_t flood_n = 0;
+        bool     has_flood_strat= false;   std::string flood_strategy;
+        bool     has_flood_back = false;   float flood_backoff = 0.0f;
     } cli;
 
     static struct option long_opts[] = {
@@ -117,6 +125,10 @@ int main(int argc, char* argv[]) {
         {"freq-start",          required_argument, 0, 'Q'},
         {"resync-every",        required_argument, 0, 'Y'},
         {"max-tx",              required_argument, 0, 'M'},
+        {"flood",               no_argument,       0, 'v'},
+        {"flood-n",             required_argument, 0, 'w'},
+        {"flood-strategy",      required_argument, 0, 'x'},
+        {"flood-backoff",       required_argument, 0, 'y'},
         {"help",                no_argument,       0, 'h'},
         {0, 0, 0, 0}
     };
@@ -145,6 +157,10 @@ int main(int argc, char* argv[]) {
             case 'Q': cli.msg1_freq_start = (int32_t)atoi(optarg); cli.has_freq_start = true; break;
             case 'Y': cli.resync_every   = (uint32_t)atoi(optarg); cli.has_resync = true; break;
             case 'M': cli.max_tx         = (uint32_t)atoi(optarg); cli.has_max_tx = true; break;
+            case 'v': cli.flood          = true; cli.has_flood = true; break;
+            case 'w': cli.flood_n        = (uint32_t)atoi(optarg); cli.has_flood_n = true; break;
+            case 'x': cli.flood_strategy = optarg; cli.has_flood_strat = true; break;
+            case 'y': cli.flood_backoff  = atof(optarg); cli.has_flood_back = true; break;
             case 'h': print_usage(argv[0]); return 0;
             default:  print_usage(argv[0]); return 1;
         }
@@ -167,6 +183,10 @@ int main(int argc, char* argv[]) {
     if (cli.has_freq_start)  { tc.freq.msg1_freq_start_override = cli.msg1_freq_start; tc.freq.src_freq_start = tool_config::SRC_CLI; }
     if (cli.has_resync)      { tc.run.resync_every  = cli.resync_every;    tc.run.src_resync   = tool_config::SRC_CLI; }
     if (cli.has_max_tx)      { tc.run.max_tx        = cli.max_tx;          tc.run.src_max_tx   = tool_config::SRC_CLI; }
+    if (cli.has_flood)       { tc.flood.enabled     = cli.flood;           tc.flood.src_enabled = tool_config::SRC_CLI; }
+    if (cli.has_flood_n)     { tc.flood.num_preambles = cli.flood_n;       tc.flood.src_num     = tool_config::SRC_CLI; }
+    if (cli.has_flood_strat) { tc.flood.strategy    = cli.flood_strategy;  tc.flood.src_strategy = tool_config::SRC_CLI; }
+    if (cli.has_flood_back)  { tc.flood.power_backoff_db = cli.flood_backoff; tc.flood.src_backoff = tool_config::SRC_CLI; }
 
     // Safety checks
     if (tc.tx.gain_db > 70.0) {
@@ -335,12 +355,18 @@ int main(int argc, char* argv[]) {
             log_csv::log_event("Msg1_PRACH",
                                tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot,
                                ra_rnti, tc.tx.preamble_index, tc.tx.gain_db,
-                               0, "transmitted");
+                               0, "transmitted",
+                               ptx.get_flood_num_preambles(),
+                               ptx.get_flood_strategy().c_str(),
+                               ptx.get_current_rapid_list().c_str());
         } else {
             fprintf(stderr, "[main] PRACH transmission %u failed\n", tx_count + 1);
             log_csv::log_event("Msg1_PRACH",
                                tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot,
-                               ra_rnti, tc.tx.preamble_index, tc.tx.gain_db, 0, "failed");
+                               ra_rnti, tc.tx.preamble_index, tc.tx.gain_db, 0, "failed",
+                               ptx.get_flood_num_preambles(),
+                               ptx.get_flood_strategy().c_str(),
+                               ptx.get_current_rapid_list().c_str());
         }
 
         if (!tc.run.continuous) break;

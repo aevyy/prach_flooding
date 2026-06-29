@@ -12,7 +12,7 @@ void init(const std::string& path) {
     std::lock_guard<std::mutex> lock(g_mutex);
     g_csv = fopen(path.c_str(), "a");
     if (g_csv) {
-        fprintf(g_csv, "timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,outcome\n");
+        fprintf(g_csv, "timestamp,channel,system_slot,sfn,slot_in_frame,rnti,rapid,tx_gain,on_air_ticks,outcome,flood_n,flood_strategy,flood_rapid_list\n");
         fflush(g_csv);
     }
 }
@@ -38,15 +38,24 @@ static void get_timestamp(char* buf, size_t len) {
 
 void log_event(const char* channel, uint32_t slot, uint32_t sfn,
                uint32_t slot_in_frame, uint16_t rnti, uint16_t rapid,
-               double tx_gain, uint64_t on_air_time_ticks, const char* outcome) {
+               double tx_gain, uint64_t on_air_time_ticks, const char* outcome,
+               uint32_t flood_n, const char* flood_strategy, const char* flood_rapid_list) {
     std::lock_guard<std::mutex> lock(g_mutex);
     if (!g_csv) return;
     
     char ts[64];
     get_timestamp(ts, sizeof(ts));
-    fprintf(g_csv, "%s,%s,%u,%u,%u,0x%04x,%u,%.1f,%lu,%s\n",
+    
+    // Fallback: if flood_rapid_list is empty, use the single rapid value
+    std::string rapid_list = flood_rapid_list;
+    if (rapid_list.empty()) {
+        rapid_list = std::to_string(rapid);
+    }
+
+    fprintf(g_csv, "%s,%s,%u,%u,%u,0x%04x,%u,%.1f,%lu,%s,%u,%s,%s\n",
             ts, channel, slot, sfn, slot_in_frame, rnti, rapid,
-            tx_gain, (unsigned long)on_air_time_ticks, outcome);
+            tx_gain, (unsigned long)on_air_time_ticks, outcome,
+            flood_n, flood_strategy, rapid_list.c_str());
     fflush(g_csv);
 }
 

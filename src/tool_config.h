@@ -53,6 +53,18 @@ struct tool_config {
         uint8_t  src_max_tx    = SRC_DEFAULT;
         uint8_t  src_resync    = SRC_DEFAULT;
     } run;
+
+    // --- flood ---
+    struct flood_t {
+        bool        enabled          = false;         // master switch; --flood on CLI
+        uint32_t    num_preambles    = 64;            // how many indices per occasion (1–64)
+        std::string strategy         = "superimpose"; // "superimpose" or "cycle"
+        float       power_backoff_db = 0.0f;          // per-preamble amplitude backoff (dB)
+        uint8_t     src_enabled      = SRC_DEFAULT;
+        uint8_t     src_num          = SRC_DEFAULT;
+        uint8_t     src_strategy     = SRC_DEFAULT;
+        uint8_t     src_backoff      = SRC_DEFAULT;
+    } flood;
 };
 
 // Parse configs/ra-spoof.yaml.  Missing keys keep their defaults; never aborts on
