@@ -189,8 +189,8 @@ int main(int argc, char* argv[]) {
     if (cli.has_flood_back)  { tc.flood.power_backoff_db = cli.flood_backoff; tc.flood.src_backoff = tool_config::SRC_CLI; }
 
     // Safety checks
-    if (tc.tx.gain_db > 70.0) {
-        fprintf(stderr, "FATAL: TX gain %.1f dB exceeds safety cap (70 dB). Refusing.\n", tc.tx.gain_db);
+    if (tc.tx.gain_db > 80.0) {
+        fprintf(stderr, "FATAL: TX gain %.1f dB exceeds safety cap (80 dB). Refusing.\n", tc.tx.gain_db);
         return 1;
     }
     if (!rf_isolated && !dry_run) {
