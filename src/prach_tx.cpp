@@ -284,15 +284,33 @@ bool prach_tx::generate_flood_preambles() {
         }
     }
 
-    // 2. Superimpose: complex-add all N buffers sample-by-sample
+    // 2. Compute per-index amplitude weights to compensate for correlator asymmetry
+    //    Phantom clustering around indices 21/22/27/28 suggests correlator-order bias.
+    //    Apply a gentle gain profile to flatten the detection probability.
+    std::vector<float> preamble_weights(m_flood_num_preambles, 1.0f);
+
+    // Strategy: boost lower indices, slightly reduce higher indices
+    // This is a starting heuristic; tune based on detection distribution.
+    for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        // Linear taper: indices 0-15 get slight boost, 48-63 get slight reduction
+        float normalized = (float)p / (float)(m_flood_num_preambles - 1);  // 0.0 to 1.0
+        preamble_weights[p] = 1.0f + 0.15f * (0.5f - normalized);  // ~1.075 @ p=0, ~0.925 @ p=63
+    }
+
+    printf("[prach_tx] FLOOD: applying per-index amplitude weights (range %.3f - %.3f)\n",
+           *std::min_element(preamble_weights.begin(), preamble_weights.end()),
+           *std::max_element(preamble_weights.begin(), preamble_weights.end()));
+
+    // 3. Superimpose: weighted complex-add all N buffers sample-by-sample
     m_flood_tx_buf.assign(preamble_len, {0.0f, 0.0f});
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        float w = preamble_weights[p];
         for (uint32_t n = 0; n < preamble_len; n++) {
-            m_flood_tx_buf[n] += m_flood_bufs[p][n];
+            m_flood_tx_buf[n] += w * m_flood_bufs[p][n];
         }
     }
 
-    // 3. CFO correction on the COMBINED buffer (one rotation, not N)
+    // 4. CFO correction on the COMBINED buffer (one rotation, not N)
     //    CFO is a property of the radio, not the preamble.
     if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
         double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
@@ -314,7 +332,7 @@ bool prach_tx::generate_flood_preambles() {
         }
     }
 
-    // 4. Normalize superimposed buffer
+    // 5. Normalize superimposed buffer
     //    RMS of superimposed uncorrelated ZC sequences ≈ sqrt(N) × single RMS.
     //    Normalize to 0.7 × backoff to keep within DAC range.
     {
@@ -334,7 +352,7 @@ bool prach_tx::generate_flood_preambles() {
                std::sqrt(power), scale, target_amp, m_flood_power_backoff_db);
     }
 
-    // 5. Normalize individual buffers (for cycle mode)
+    // 6. Normalize individual buffers (for cycle mode)
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
         float power = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
