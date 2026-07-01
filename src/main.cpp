@@ -384,7 +384,7 @@ int main(int argc, char* argv[]) {
         printf("[main] Next RO: SFN=%u slot=%u (system_slot=%u)\n",
                tx_ro_sfn, tx_ro_slot, tx_ro_sys_slot);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(30));
+        std::this_thread::sleep_for(std::chrono::milliseconds(2));
 
     } while (g_running);
 
