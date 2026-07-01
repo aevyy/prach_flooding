@@ -326,7 +326,9 @@ int main(int argc, char* argv[]) {
     uint32_t  tx_count       = 0;
     uint32_t  tx_ok_count    = 0;
     double    last_tx_time    = 0.0;
-    const double ro_interval_s = 0.160;
+    // RO period = prach_x frames × 10 ms/frame
+    // (e.g. config_idx=13 → prach_x=2 → 20 ms; was incorrectly hardcoded to 160 ms)
+    const double ro_interval_s = (double)cfg.prach_x * 10e-3;
 
     do {
         if (tc.run.continuous && tx_count > 0) {
