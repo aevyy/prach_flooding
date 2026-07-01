@@ -34,6 +34,7 @@ struct cell_config {
     uint32_t prach_zcz          = 0;
     uint32_t prach_freq_offset  = 8;  // matches live gNB (from SIB1 via InfluxDB)
     uint32_t num_ra_preambles   = 1;  // matches live gNB
+    uint32_t msg1_fdm           = 1;  // number of FD occasions
     uint32_t prach_format       = 0; // format 0
     uint32_t prach_x            = 16; // SFN period
     uint32_t prach_y            = 1;  // SFN offset

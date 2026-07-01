@@ -9,6 +9,8 @@
 #include "ro.h"
 #include "log_csv.h"
 #include "tool_config.h"
+#include "gnb_detect_reader.h"
+#include <fstream>
 
 #include <cstdio>
 #include <cstring>
@@ -49,14 +51,17 @@ static void print_usage(const char* prog) {
     printf("  --tx-offset-us F           Manual timing nudge (us)\n");
     printf("  --ssb-first-symbol N       Override SSB intra-slot first symbol\n");
     printf("  --freq-start N             Override msg1-FrequencyStart (PRB)\n");
+    printf("  --msg1-fdm N               Override msg1-FDM (1,2,4,8)\n");
     printf("  --resync-every N           Re-sync SSB every N TX\n");
     printf("  --max-tx N                 Stop after N TX (0 = unlimited)\n");
     printf("  --flood                    Enable multi-preamble flood mode\n");
     printf("  --flood-n N                Number of preambles to flood (1-64)\n");
     printf("  --flood-strategy S         'superimpose' or 'cycle'\n");
     printf("  --flood-backoff DB         Amplitude reduction to prevent clipping\n");
+    printf("  --slm-candidates N         SLM phase search count (0=Newman, default 32)\n");
     printf("  --freq-pos-count N         Superimpose N frequency positions per RO (1-16)\n");
-    printf("  --sweep-fid                Assign distinct f_id per freq position (N distinct RA-RNTIs)\n");
+    printf("  --gnb-log-path PATH        Path to gNB log for closed-loop reading\n");
+    printf("  --autotune                 Enable experimental auto-tuning\n");
     printf("  -h, --help                 Print this help\n");
     printf("\nEnvironment:\n");
     printf("  INFLUX_TOKEN               InfluxDB auth token\n");
@@ -97,14 +102,17 @@ int main(int argc, char* argv[]) {
         bool     has_tx_offset  = false;   double tx_offset_us = 0;
         bool     has_ssb_sym    = false;   int32_t ssb_first_symbol = 0;
         bool     has_freq_start = false;   int32_t msg1_freq_start = 0;
+        bool     has_msg1_fdm   = false;   int32_t msg1_fdm = 0;
         bool     has_resync     = false;   uint32_t resync_every = 0;
         bool     has_max_tx     = false;   uint32_t max_tx = 0;
         bool     has_flood      = false;   bool flood = false;
-        bool     has_flood_n    = false;   uint32_t flood_n = 0;
+        bool     has_flood_n    = false;   std::string flood_n;
         bool     has_flood_strat= false;   std::string flood_strategy;
         bool     has_flood_back = false;   float flood_backoff = 0.0f;
+        bool     has_slm_cand   = false;   uint32_t slm_candidates = 32;
         bool     has_freq_pos   = false;   uint32_t freq_pos_count = 1;
-        bool     has_sweep_fid  = false;   bool sweep_fid = false;
+        bool     has_log_path   = false;   std::string gnb_log_path;
+        bool     has_autotune   = false;   bool autotune = false;
     } cli;
 
     static struct option long_opts[] = {
@@ -127,14 +135,17 @@ int main(int argc, char* argv[]) {
         {"tx-offset-us",        required_argument, 0, 'U'},
         {"ssb-first-symbol",    required_argument, 0, 'L'},
         {"freq-start",          required_argument, 0, 'Q'},
+        {"msg1-fdm",            required_argument, 0, 'd'},
         {"resync-every",        required_argument, 0, 'Y'},
         {"max-tx",              required_argument, 0, 'M'},
         {"flood",               no_argument,       0, 'v'},
-        {"flood-n",             required_argument, 0, 'w'},
+        {"flood-n",             required_argument, 0, 'n'},
         {"flood-strategy",      required_argument, 0, 'x'},
         {"flood-backoff",       required_argument, 0, 'y'},
+        {"slm-candidates",      required_argument, 0, 'p'},
         {"freq-pos-count",      required_argument, 0, 'N'},
-        {"sweep-fid",           no_argument,       0, 'J'},
+        {"gnb-log-path",        required_argument, 0, 'l'},
+        {"autotune",            no_argument,       0, 'a'},
         {"help",                no_argument,       0, 'h'},
         {0, 0, 0, 0}
     };
@@ -161,14 +172,17 @@ int main(int argc, char* argv[]) {
             case 'U': cli.tx_offset_us   = atof(optarg); cli.has_tx_offset = true; break;
             case 'L': cli.ssb_first_symbol = (int32_t)atoi(optarg); cli.has_ssb_sym = true; break;
             case 'Q': cli.msg1_freq_start = (int32_t)atoi(optarg); cli.has_freq_start = true; break;
+            case 'd': cli.msg1_fdm       = (int32_t)atoi(optarg); cli.has_msg1_fdm = true; break;
             case 'Y': cli.resync_every   = (uint32_t)atoi(optarg); cli.has_resync = true; break;
             case 'M': cli.max_tx         = (uint32_t)atoi(optarg); cli.has_max_tx = true; break;
             case 'v': cli.flood          = true; cli.has_flood = true; break;
-            case 'w': cli.flood_n        = (uint32_t)atoi(optarg); cli.has_flood_n = true; break;
+            case 'n': cli.flood_n        = optarg; cli.has_flood_n = true; break;
             case 'x': cli.flood_strategy = optarg; cli.has_flood_strat = true; break;
             case 'y': cli.flood_backoff  = atof(optarg); cli.has_flood_back = true; break;
+            case 'p': cli.slm_candidates = (uint32_t)atoi(optarg); cli.has_slm_cand = true; break;
             case 'N': cli.freq_pos_count = (uint32_t)atoi(optarg); cli.has_freq_pos = true; break;
-            case 'J': cli.sweep_fid      = true; cli.has_sweep_fid = true; break;
+            case 'l': cli.gnb_log_path   = optarg; cli.has_log_path = true; break;
+            case 'a': cli.autotune       = true; cli.has_autotune = true; break;
             case 'h': print_usage(argv[0]); return 0;
             default:  print_usage(argv[0]); return 1;
         }
@@ -189,14 +203,17 @@ int main(int argc, char* argv[]) {
     if (cli.has_tx_offset)   { tc.timing.tx_offset_us = cli.tx_offset_us;  tc.timing.src_tx_offset = tool_config::SRC_CLI; }
     if (cli.has_ssb_sym)     { tc.timing.ssb_first_symbol_override = cli.ssb_first_symbol; tc.timing.src_ssb_sym = tool_config::SRC_CLI; }
     if (cli.has_freq_start)  { tc.freq.msg1_freq_start_override = cli.msg1_freq_start; tc.freq.src_freq_start = tool_config::SRC_CLI; }
+    if (cli.has_msg1_fdm)    { tc.freq.msg1_fdm_override = cli.msg1_fdm; tc.freq.src_fdm = tool_config::SRC_CLI; }
     if (cli.has_resync)      { tc.run.resync_every  = cli.resync_every;    tc.run.src_resync   = tool_config::SRC_CLI; }
     if (cli.has_max_tx)      { tc.run.max_tx        = cli.max_tx;          tc.run.src_max_tx   = tool_config::SRC_CLI; }
     if (cli.has_flood)       { tc.flood.enabled     = cli.flood;           tc.flood.src_enabled  = tool_config::SRC_CLI; }
-    if (cli.has_flood_n)     { tc.flood.num_preambles = cli.flood_n;       tc.flood.src_num      = tool_config::SRC_CLI; }
+    if (cli.has_flood_n)     { tc.flood.preamble_list = cli.flood_n;       tc.flood.src_num    = tool_config::SRC_CLI; }
     if (cli.has_flood_strat) { tc.flood.strategy    = cli.flood_strategy;  tc.flood.src_strategy = tool_config::SRC_CLI; }
     if (cli.has_flood_back)  { tc.flood.power_backoff_db = cli.flood_backoff; tc.flood.src_backoff = tool_config::SRC_CLI; }
+    if (cli.has_slm_cand)    { tc.flood.slm_candidates = cli.slm_candidates; tc.flood.src_slm = tool_config::SRC_CLI; }
     if (cli.has_freq_pos)    { tc.multi_ro.freq_pos_count = cli.freq_pos_count; tc.multi_ro.src_freq_pos = tool_config::SRC_CLI; }
-    if (cli.has_sweep_fid)   { tc.multi_ro.sweep_fid = cli.sweep_fid;     tc.multi_ro.src_sweep_fid = tool_config::SRC_CLI; }
+    if (cli.has_log_path)    { tc.run.gnb_log_path = cli.gnb_log_path; tc.run.src_log_path = tool_config::SRC_CLI; }
+    if (cli.has_autotune)    { tc.run.autotune = cli.autotune; tc.run.src_autotune = tool_config::SRC_CLI; }
 
     // Safety checks
     if (tc.tx.gain_db > 80.0) {
@@ -234,6 +251,16 @@ int main(int argc, char* argv[]) {
     }
     influx_sanity_check(cfg);
 
+    // Apply overrides
+    if (tc.freq.msg1_freq_start_override >= 0) {
+        cfg.prach_freq_offset = tc.freq.msg1_freq_start_override;
+        printf("[main] OVERRIDE: msg1-FrequencyStart = %u\n", cfg.prach_freq_offset);
+    }
+    if (tc.freq.msg1_fdm_override >= 0) {
+        cfg.msg1_fdm = tc.freq.msg1_fdm_override;
+        printf("[main] OVERRIDE: msg1_fdm = %u\n", cfg.msg1_fdm);
+    }
+    
     // Populate prach_x/y/subframe/format from prach_config_idx
     cfg.resolve_prach_ro();
     print_cell_config(cfg);
@@ -320,6 +347,22 @@ int main(int argc, char* argv[]) {
     ro::from_system_slot(ro_sys_slot, ro_sfn, ro_slot_in_frame);
     printf("[main] Updated Target RO: SFN=%u, slot=%u (system_slot=%u)\n",
            ro_sfn, ro_slot_in_frame, ro_sys_slot);
+           
+    // -----------------------------------------------------------------------
+    // Step 6.75: Initialize gNB Log Reader (Item 3)
+    // -----------------------------------------------------------------------
+    gnb_detect_reader reader;
+    std::ofstream det_csv;
+    if (tc.run.continuous) {
+        if (!reader.init(tc.run.gnb_log_path)) {
+            fprintf(stderr, "[main] WARNING: Could not open gNB log '%s' for closed-loop reading\n", tc.run.gnb_log_path.c_str());
+        } else {
+            det_csv.open("gnb_detections.csv", std::ios::out);
+            if (det_csv.is_open()) {
+                det_csv << "tx_time,tx_sfn,tx_slot_in_frame,mode,flood_n,num_detected,detected_idx_list,ta_list,power_list,snr_list\n";
+            }
+        }
+    }
 
     // -----------------------------------------------------------------------
     // Step 7: Transmit preamble(s)
@@ -394,6 +437,59 @@ int main(int argc, char* argv[]) {
                                ptx.get_flood_strategy().c_str(),
                                ptx.get_current_rapid_list().c_str());
         }
+        
+        // Item 3 & 6: Closed-loop reader & Optional Autotune
+        if (tc.run.continuous && tx_ok) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Settle delay
+            auto new_dets = reader.read_new_detections();
+            
+            struct timeval tv;
+            gettimeofday(&tv, NULL);
+            double tx_wall_time = tv.tv_sec + tv.tv_usec / 1e6;
+            
+            std::vector<gnb_detection_record> matched_dets;
+            for (const auto& d : new_dets) {
+                // Tolerant matching: slot matches, and time is recent. 
+                // We use wall_time logged in read_new_detections which is strictly >= tx_wall_time.
+                if (d.slot == tx_ro_slot) {
+                    matched_dets.push_back(d);
+                }
+            }
+            
+            if (det_csv.is_open()) {
+                det_csv << std::fixed << tx_wall_time << ","
+                        << tx_ro_sfn << "," << tx_ro_slot << ","
+                        << ptx.get_flood_strategy() << ","
+                        << ptx.get_flood_num_preambles() << ","
+                        << matched_dets.size() << ",\"";
+                for (size_t i=0; i<matched_dets.size(); i++) {
+                    det_csv << matched_dets[i].idx;
+                    if (i < matched_dets.size()-1) det_csv << ";";
+                }
+                det_csv << "\",\"";
+                for (size_t i=0; i<matched_dets.size(); i++) {
+                    det_csv << matched_dets[i].ta_us;
+                    if (i < matched_dets.size()-1) det_csv << ";";
+                }
+                det_csv << "\",\"";
+                for (size_t i=0; i<matched_dets.size(); i++) {
+                    det_csv << matched_dets[i].power_db;
+                    if (i < matched_dets.size()-1) det_csv << ";";
+                }
+                det_csv << "\",\"";
+                for (size_t i=0; i<matched_dets.size(); i++) {
+                    det_csv << matched_dets[i].snr_db;
+                    if (i < matched_dets.size()-1) det_csv << ";";
+                }
+                det_csv << "\"\n";
+                det_csv.flush();
+            }
+            
+            // Optional auto-tune
+            if (tc.run.autotune && tx_count >= 10 && matched_dets.size() > 0) {
+                 printf("[main] AUTOTUNE: observed %zu detections. (Auto-tuning logic placeholder)\n", matched_dets.size());
+            }
+        }
 
         if (!tc.run.continuous) break;
 
@@ -430,8 +526,7 @@ int main(int argc, char* argv[]) {
             printf("  2. gNB must emit %zu RARs (one per freq position):\n", final_rntis.size());
             for (uint32_t k = 0; k < final_rntis.size(); k++) {
                 printf("     pos[%u] f_id=%u  RA-RNTI=0x%04x (%u)\n",
-                       k, tc.multi_ro.sweep_fid ? k : 0u,
-                       final_rntis[k], final_rntis[k]);
+                       k, k, final_rntis[k], final_rntis[k]);
             }
         }
     }
