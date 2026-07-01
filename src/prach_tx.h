@@ -81,6 +81,13 @@ public:
     uint32_t    get_flood_num_preambles() const { return m_flood_num_preambles; }
     uint32_t    get_flood_tx_count()      const { return m_flood_tx_count; }
 
+    // Multi-RO accessors
+    // Returns all RA-RNTIs that will be allocated by the gNB for this burst.
+    // In single-position mode: one entry (f_id=0).
+    // In multi-position + sweep_fid mode: one entry per freq position (f_id=0..K-1).
+    std::vector<uint16_t> get_multi_ro_ra_rntis(uint32_t ro_slot) const;
+    uint32_t get_freq_pos_count() const { return m_multi_freq_pos_count; }
+
     // Get the effective RAPID(s) for the current TX (for logging)
     // In superimpose mode: returns "0-63" style range
     // In cycle mode: returns the current single index
@@ -149,9 +156,34 @@ private:
     // Superimposed TX buffer (complex sum of all m_flood_bufs)
     std::vector<std::complex<float>> m_flood_tx_buf;
 
+    // --- Multi-frequency-position attack state (#1 + #2) ---
+    // m_multi_freq_pos_count: number of freq-domain positions to superimpose.
+    //   1 = single position (legacy).  2-16 = multi-position.
+    // m_multi_sweep_fid: if true, position k uses f_id=k in the RA-RNTI formula,
+    //   generating K distinct RA-RNTIs and forcing K independent gNB RAR processes.
+    // m_multi_freq_tx_buf: final TX buffer superimposing ALL positions
+    //   (replaces m_flood_tx_buf when freq_pos_count > 1).
+    // m_freq_offsets_used: corrected freq_offset PRB value for each position.
+    uint32_t                                      m_multi_freq_pos_count = 1;
+    bool                                          m_multi_sweep_fid      = false;
+    std::vector<uint32_t>                         m_freq_offsets_used;   // per position
+    std::vector<std::complex<float>>              m_multi_freq_tx_buf;   // final combined buf
+
     bool generate_preamble();
     bool generate_flood_preambles();
+    // Generate multi-frequency-position superimposed buffer.
+    // Called after generate_flood_preambles() when freq_pos_count > 1.
+    // For single-preamble mode (flood disabled), also called when freq_pos_count > 1.
+    bool generate_multi_freq_preambles();
     bool attempt_sync_from_fallback();
+
+    // Helpers
+    // Compute corrected freq_offset for a given raw offset (accounts for srsran PRB mismatch).
+    uint32_t correct_freq_offset(uint32_t raw_offset) const;
+    // Generate and superimpose all RAPIDs into one buffer at the given corrected freq_offset.
+    // result must be pre-allocated to m_prach.N_cp + m_prach.N_seq samples.
+    bool superimpose_preambles_at_offset(uint32_t corrected_offset,
+                                         std::vector<std::complex<float>>& result);
 
     // Get the TX buffer pointer and length for the current mode
     void* get_tx_buffer();

@@ -64,6 +64,10 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
     m_flood_tx_count         = 0;
     if (m_flood_num_preambles < 1) m_flood_num_preambles = 1;
 
+    // --- Multi-freq-position / RA-RNTI sweep config ---
+    m_multi_freq_pos_count = std::max(1u, std::min(tc.multi_ro.freq_pos_count, (uint32_t)16));
+    m_multi_sweep_fid      = tc.multi_ro.sweep_fid;
+
     // Apply msg1-FrequencyStart override if set
     uint32_t freq_offset_raw = cfg.prach_freq_offset;
     if (tc.freq.msg1_freq_start_override >= 0) {
@@ -146,6 +150,11 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
         printf("[prach_tx] FLOOD MODE: %s strategy, %u preambles, backoff=%.1f dB\n",
                m_flood_strategy.c_str(), m_flood_num_preambles, m_flood_power_backoff_db);
     }
+    if (m_multi_freq_pos_count > 1) {
+        printf("[prach_tx] MULTI-FREQ-POS: %u positions @ 7 PRB spacing%s\n",
+               m_multi_freq_pos_count,
+               m_multi_sweep_fid ? ", sweep_fid=ON (distinct RA-RNTIs)" : ", sweep_fid=OFF");
+    }
     printf("[prach_tx] Initialized:\n");
     printf("  config_idx   = %u\n", m_cfg.config_idx);
     printf("  root_seq     = %u\n", m_cfg.root_seq);
@@ -163,6 +172,55 @@ bool prach_tx::init(const cell_config& cfg, const tool_config& tc, bool dry_run)
         if (!generate_flood_preambles()) {
             fprintf(stderr, "[prach_tx] FATAL: flood preamble generation failed\n");
             return false;
+        }
+    }
+
+    // Generate multi-frequency-position superimposed buffer when freq_pos_count > 1.
+    // This runs AFTER flood generation so it can leverage m_flood_num_preambles.
+    if (m_multi_freq_pos_count > 1) {
+        if (!generate_multi_freq_preambles()) {
+            fprintf(stderr, "[prach_tx] FATAL: multi-freq preamble generation failed\n");
+            return false;
+        }
+    }
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// correct_freq_offset — compensate for srsran's internal PRB count mismatch.
+//
+// srsran_prach_gen() uses srsran_nof_prb(N_ifft_ul) internally, which for a
+// 1536-pt FFT returns 100 PRB even though the actual cell has 106 PRB.  This
+// shifts k_0 by ΔN_rb/2 PRBs, so we subtract that from the caller's offset.
+// ---------------------------------------------------------------------------
+uint32_t prach_tx::correct_freq_offset(uint32_t raw_offset) const {
+    int delta_prb = (int)m_cell_cfg.nof_prb -
+                    (int)srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb));
+    return (uint32_t)((int)raw_offset - delta_prb / 2);
+}
+
+// ---------------------------------------------------------------------------
+// superimpose_preambles_at_offset — generate all flood RAPIDs at one freq
+// position and add them into `result` (complex accumulation, no normalization).
+// `result` must already be allocated to (N_cp + N_seq) samples.
+// ---------------------------------------------------------------------------
+bool prach_tx::superimpose_preambles_at_offset(
+        uint32_t corrected_offset,
+        std::vector<std::complex<float>>& result) {
+
+    uint32_t preamble_len = m_prach.N_cp + m_prach.N_seq;
+    std::vector<std::complex<float>> tmp(preamble_len, {0.0f, 0.0f});
+    cf_t* raw = reinterpret_cast<cf_t*>(tmp.data());
+
+    uint32_t n_preambles = m_flood_enabled ? m_flood_num_preambles : 1;
+    for (uint32_t p = 0; p < n_preambles; p++) {
+        if (srsran_prach_gen(&m_prach, p, corrected_offset, raw) != SRSRAN_SUCCESS) {
+            fprintf(stderr, "[prach_tx] superimpose_preambles_at_offset: gen failed RAPID=%u offset=%u\n",
+                    p, corrected_offset);
+            return false;
+        }
+        for (uint32_t n = 0; n < preamble_len; n++) {
+            result[n] += tmp[n];
         }
     }
     return true;
@@ -188,28 +246,14 @@ bool prach_tx::generate_preamble() {
 
     cf_t* raw_buf = reinterpret_cast<cf_t*>(m_tx_buf.data());
 
-    // srsran_prach_gen() internally derives N_rb_ul from the FFT size via
-    // srsran_nof_prb(N_ifft_ul), which returns 100 for a 1536-pt FFT even
-    // though the actual cell has 106 PRB.  This shifts the PRACH centre
-    // frequency by (106-100)/2 * 12 * 1.25 kHz = 540 kHz — enough for
-    // the gNB's detector (which uses the true nof_prb) to miss the preamble.
-    //
-    // Compensate by reducing the passed freq_offset so the resulting k_0
-    // lands at the correct physical frequency despite the smaller N_rb_ul.
-    uint32_t freq_offset_corrected = m_cfg.freq_offset;
-    {
-        int delta_prb = (int)m_cell_cfg.nof_prb -
-                        (int)srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb));
-        // k_0 = freq*12 - N_rb*6 + N_fft/2  →  freq must change by ΔN_rb/2
-        freq_offset_corrected = (uint32_t)((int)m_cfg.freq_offset - delta_prb / 2);
-        printf("[prach_tx] freq_offset: raw=%u  srsran_Nrb=%u  actual_Nrb=%u  "
-               "corrected=%u\n",
-               m_cfg.freq_offset,
-               srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb)),
-               m_cell_cfg.nof_prb, freq_offset_corrected);
-    }
+    // Compensate for srsran PRB-count mismatch (see correct_freq_offset())
+    uint32_t freq_offset_corrected = correct_freq_offset(m_cfg.freq_offset);
+    printf("[prach_tx] freq_offset: raw=%u  srsran_Nrb=%u  actual_Nrb=%u  corrected=%u\n",
+           m_cfg.freq_offset,
+           srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb)),
+           m_cell_cfg.nof_prb, freq_offset_corrected);
 
-    // Generate preamble: seq_index=RAPID=0, freq_offset as configured
+    // Generate preamble: seq_index=RAPID, freq_offset as corrected
     if (srsran_prach_gen(&m_prach, m_cfg.rapid, freq_offset_corrected, raw_buf) != SRSRAN_SUCCESS) {
         fprintf(stderr, "[prach_tx] FATAL: srsran_prach_gen failed\n");
         return false;
@@ -259,14 +303,7 @@ bool prach_tx::generate_flood_preambles() {
     if (!m_initialized) return false;
 
     uint32_t preamble_len = m_prach.N_cp + m_prach.N_seq;
-
-    // Compute corrected freq_offset (same compensation as generate_preamble)
-    uint32_t freq_offset_corrected = m_cfg.freq_offset;
-    {
-        int delta_prb = (int)m_cell_cfg.nof_prb -
-                        (int)srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb));
-        freq_offset_corrected = (uint32_t)((int)m_cfg.freq_offset - delta_prb / 2);
-    }
+    uint32_t freq_offset_corrected = correct_freq_offset(m_cfg.freq_offset);
 
     printf("[prach_tx] FLOOD: generating %u preamble buffers (len=%u samples each)...\n",
            m_flood_num_preambles, preamble_len);
@@ -284,44 +321,38 @@ bool prach_tx::generate_flood_preambles() {
         }
     }
 
-    // 2. Power-sharing superimpose with phase stagger
-    //
-    // OLD approach: weight ~1.0 per preamble + soft-clip at 1.5×RMS.
-    // PROBLEM: for N≥16, soft-clip hits ~10% of samples regardless of N,
-    // producing non-ZC distortion that spreads across ALL N correlator channels
-    // and raises the per-preamble noise floor — killing gNB detection.
-    //
-    // NEW approach:
-    //   - amplitude weight = 1/√N  →  combined RMS ≈ single-preamble RMS
-    //     regardless of N (power-sharing). Eliminates PAPR growth entirely.
-    //   - phase rotation e^(j·2π·p/N) per preamble  →  decorrelates addition
-    //     peaks, further reducing PAPR by distributing constructive interference.
-    //   - NO soft clip  →  zero EVM distortion on the ZC sequences.
-    //   - pure peak normalization  →  safe for the B210 DAC (peak ≤ 0.95).
-    //
-    // Tradeoff: per-preamble TX power is –10·log10(N) dB vs. single preamble.
-    // At N=16 that is –12 dB. With 55 dB TX gain this is still well above the
-    // PRACH detection floor; gNB sees clean ZC waveforms and can detect all of them.
+    // 2. Compute per-index amplitude weights to compensate for correlator asymmetry
+    //    Phantom clustering around indices 21/22/27/28 suggests correlator-order bias.
+    //    Apply a gentle gain profile to flatten the detection probability.
+    std::vector<float> preamble_weights(m_flood_num_preambles, 1.0f);
 
-    float amp_per_preamble = 1.0f / std::sqrt((float)m_flood_num_preambles);
+    // Strategy: boost lower indices, slightly reduce higher indices
+    // This is a starting heuristic; tune based on detection distribution.
+    for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        // Linear taper: indices 0-15 get slight boost, 48-63 get slight reduction
+        float normalized = (float)p / (float)(m_flood_num_preambles - 1);  // 0.0 to 1.0
+        preamble_weights[p] = 1.0f + 0.15f * (0.5f - normalized);  // ~1.075 @ p=0, ~0.925 @ p=63
+    }
 
+    printf("[prach_tx] FLOOD: applying per-index amplitude weights (range %.3f - %.3f)\n",
+           *std::min_element(preamble_weights.begin(), preamble_weights.end()),
+           *std::max_element(preamble_weights.begin(), preamble_weights.end()));
+
+    // 3. Superimpose: weighted complex-add all N buffers sample-by-sample
     m_flood_tx_buf.assign(preamble_len, {0.0f, 0.0f});
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
-        // Phase stagger: rotate preamble p by 2π·p/N
-        float phase_rad = 2.0f * (float)M_PI * (float)p / (float)m_flood_num_preambles;
-        std::complex<float> stagger(std::cosf(phase_rad), std::sinf(phase_rad));
-        std::complex<float> w = amp_per_preamble * stagger;
-
+        float w = preamble_weights[p];
         for (uint32_t n = 0; n < preamble_len; n++) {
             m_flood_tx_buf[n] += w * m_flood_bufs[p][n];
         }
     }
 
-    // 3. CFO correction on the COMBINED buffer (one rotation, not N)
+    // 4. CFO correction on the COMBINED buffer (one rotation, not N)
+    //    CFO is a property of the radio, not the preamble.
     if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
-        double ww = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
         for (uint32_t n = 0; n < preamble_len; n++) {
-            float ph = (float)(ww * (double)n);
+            float ph = (float)(w * (double)n);
             m_flood_tx_buf[n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
         }
         printf("[prach_tx] FLOOD: CFO correction applied to superimposed buffer\n");
@@ -329,57 +360,62 @@ bool prach_tx::generate_flood_preambles() {
 
     // Also apply CFO to individual buffers (for cycle mode)
     if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
-        double ww = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
         for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
             for (uint32_t n = 0; n < preamble_len; n++) {
-                float ph = (float)(ww * (double)n);
+                float ph = (float)(w * (double)n);
                 m_flood_bufs[p][n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
             }
         }
     }
 
-    // 4. Pure peak normalization — NO soft clip.
-    //    Soft-clip at 1.5×RMS introduced EVM distortion that degraded gNB detection
-    //    for large N. With power-sharing (step 2) the PAPR is already well-controlled,
-    //    so we just need to guarantee peak ≤ 0.95 for the DAC.
+    // 5. Normalize superimposed buffer (Peak Normalization + CFR)
+    //    If we just use RMS normalization, peaks > 1.0 cause catastrophic integer overflow 
+    //    in the UHD float-to-int16 conversion. We MUST ensure no sample exceeds 1.0.
     {
-        // 4a. Measure RMS and peak
-        float rms_power = 0.0f;
-        float peak_mag  = 0.0f;
+        // 5a. Find RMS to determine clipping threshold
+        float power = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            power += std::norm(m_flood_tx_buf[i]);
+        }
+        float rms = std::sqrt(power / preamble_len);
+
+        // 5b. Soft clip at 1.5 * RMS to reduce PAPR (Crest Factor Reduction)
+        // This causes slight EVM distortion but prevents catastrophic peak scaling,
+        // vastly improving the average SNR for high N.
+        float clip_level = rms * 1.5f;
+        float max_mag_after_clip = 0.0f;
+        
         for (uint32_t i = 0; i < preamble_len; i++) {
             float mag = std::abs(m_flood_tx_buf[i]);
-            rms_power += mag * mag;
-            if (mag > peak_mag) peak_mag = mag;
+            if (mag > clip_level) {
+                // scale down to clip_level while preserving phase
+                m_flood_tx_buf[i] *= (clip_level / mag);
+                mag = clip_level;
+            }
+            if (mag > max_mag_after_clip) {
+                max_mag_after_clip = mag;
+            }
         }
-        float rms  = std::sqrt(rms_power / preamble_len);
-        float papr_db = (rms > 1e-12f) ? 20.0f * std::log10f(peak_mag / rms) : 0.0f;
 
-        // 4b. Scale peak to target (0.95 * backoff).  No clipping — zero EVM distortion.
+        // 5c. Normalize peak to target (e.g., 0.95 * backoff)
         float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
         float target_peak = 0.95f * backoff_linear;
-        float scale = target_peak / (peak_mag + 1e-12f);
-
-        float final_rms = 0.0f;
+        float scale = target_peak / (max_mag_after_clip + 1e-12f);
+        
+        float final_power = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
             m_flood_tx_buf[i] *= scale;
-            final_rms += std::norm(m_flood_tx_buf[i]);
+            final_power += std::norm(m_flood_tx_buf[i]);
         }
-        final_rms = std::sqrt(final_rms / preamble_len);
+        float final_rms = std::sqrt(final_power / preamble_len);
 
-        // Per-preamble effective amplitude relative to a single preamble (0.7 RMS)
-        float per_preamble_db = 20.0f * std::log10f(
-            (final_rms / std::sqrt((float)m_flood_num_preambles)) / 0.7f + 1e-12f);
-
-        printf("[prach_tx] FLOOD superimposed (no CFR): PAPR=%.1f dB, "
-               "peak_target=%.2f, final_RMS=%.4f\n",
-               papr_db, target_peak, final_rms);
-        printf("[prach_tx] FLOOD: per-preamble effective power = %.1f dB re single preamble "
-               "(N=%u → ideal=%.1f dB)\n",
-               per_preamble_db, m_flood_num_preambles,
-               -10.0f * std::log10f((float)m_flood_num_preambles));
+        printf("[prach_tx] FLOOD superimposed (CFR applied): peak_target=%.2f, final_RMS=%.4f "
+               "(scale=%.3f, backoff=%.1f dB)\n",
+               target_peak, final_rms, scale, m_flood_power_backoff_db);
     }
 
-    // 5. Normalize individual buffers to 0.7 amplitude (for cycle mode)
+    // 6. Normalize individual buffers (for cycle mode)
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
         float power = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
@@ -395,6 +431,132 @@ bool prach_tx::generate_flood_preambles() {
     return true;
 }
 
+// ---------------------------------------------------------------------------
+// generate_multi_freq_preambles — superimpose K freq-domain positions into one
+// wideband TX buffer.  Each position uses a corrected freq_offset spaced 7 PRBs
+// from the previous (6 PRACH PRBs + 1 guard band PRB).
+//
+// When m_multi_sweep_fid=true each position k is notionally assigned f_id=k in
+// the RA-RNTI formula, so the gNB treats them as K distinct RA-RNTIs and spins
+// up K independent RAR MAC processes.  The waveform is identical regardless of
+// sweep_fid — it is purely an accounting change in the RA-RNTI logged / expected.
+//
+// CFR is applied to the combined buffer to keep peak amplitude ≤ 0.95.
+// ---------------------------------------------------------------------------
+bool prach_tx::generate_multi_freq_preambles() {
+    if (!m_initialized) return false;
+
+    uint32_t preamble_len = m_prach.N_cp + m_prach.N_seq;
+
+    // Position 0 = baseline corrected offset (same as flood / single mode).
+    // Position k = baseline + k * 7 PRBs (7 = 6 PRACH + 1 guard).
+    uint32_t base_corrected = correct_freq_offset(m_cfg.freq_offset);
+
+    // Determine the maximum legal corrected offset.
+    // srsran uses srsran_nof_prb(N_ifft_ul) as its internal N_rb_ul.
+    uint32_t srsran_nrb = srsran_nof_prb(srsran_symbol_sz(m_cell_cfg.nof_prb));
+    // PRACH occupies 6 PRBs; max corrected offset = srsran_nrb - 6
+    uint32_t max_corrected_offset = (srsran_nrb >= 6) ? (srsran_nrb - 6) : 0;
+
+    // Clamp the number of positions that actually fit in the UL carrier.
+    uint32_t actual_positions = 0;
+    m_freq_offsets_used.clear();
+    for (uint32_t k = 0; k < m_multi_freq_pos_count; k++) {
+        uint32_t off_k = base_corrected + k * 7u;
+        if (off_k > max_corrected_offset) {
+            printf("[prach_tx] MULTI-FREQ-POS: position %u offset=%u exceeds max=%u — clamping to %u positions\n",
+                   k, off_k, max_corrected_offset, k);
+            break;
+        }
+        m_freq_offsets_used.push_back(off_k);
+        actual_positions++;
+    }
+
+    if (actual_positions == 0) {
+        fprintf(stderr, "[prach_tx] FATAL: no valid freq positions computed\n");
+        return false;
+    }
+    if (actual_positions < m_multi_freq_pos_count) {
+        printf("[prach_tx] MULTI-FREQ-POS: reduced from %u to %u positions (carrier limit)\n",
+               m_multi_freq_pos_count, actual_positions);
+        m_multi_freq_pos_count = actual_positions;
+    }
+
+    printf("[prach_tx] MULTI-FREQ-POS: generating %u positions, base_corrected=%u, spacing=7 PRBs\n",
+           m_multi_freq_pos_count, base_corrected);
+    for (uint32_t k = 0; k < m_multi_freq_pos_count; k++) {
+        uint32_t f_id = m_multi_sweep_fid ? k : 0;
+        printf("[prach_tx]   pos[%u]: corrected_offset=%u, f_id=%u, RA-RNTI varies by t_id\n",
+               k, m_freq_offsets_used[k], f_id);
+    }
+
+    // Accumulate all positions into the combined buffer.
+    m_multi_freq_tx_buf.assign(preamble_len, {0.0f, 0.0f});
+    for (uint32_t k = 0; k < m_multi_freq_pos_count; k++) {
+        if (!superimpose_preambles_at_offset(m_freq_offsets_used[k], m_multi_freq_tx_buf)) {
+            fprintf(stderr, "[prach_tx] FATAL: multi-freq position %u generation failed\n", k);
+            return false;
+        }
+    }
+
+    // Apply CFO correction (one rotation over the combined buffer)
+    if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
+        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        for (uint32_t n = 0; n < preamble_len; n++) {
+            float ph = (float)(w * (double)n);
+            m_multi_freq_tx_buf[n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
+        }
+        printf("[prach_tx] MULTI-FREQ-POS: CFO correction applied (%.1f Hz UL)\n", m_cfo_ul_hz);
+    }
+
+    // CFR: soft-clip at 1.5×RMS then normalize peak to 0.95 × backoff
+    {
+        float power = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) power += std::norm(m_multi_freq_tx_buf[i]);
+        float rms = std::sqrt(power / preamble_len);
+        float clip_level = rms * 1.5f;
+        float max_mag = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            float mag = std::abs(m_multi_freq_tx_buf[i]);
+            if (mag > clip_level) {
+                m_multi_freq_tx_buf[i] *= (clip_level / mag);
+                mag = clip_level;
+            }
+            if (mag > max_mag) max_mag = mag;
+        }
+        float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
+        float target_peak = 0.95f * backoff_linear;
+        float scale = target_peak / (max_mag + 1e-12f);
+        float final_power = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            m_multi_freq_tx_buf[i] *= scale;
+            final_power += std::norm(m_multi_freq_tx_buf[i]);
+        }
+        float final_rms = std::sqrt(final_power / preamble_len);
+        printf("[prach_tx] MULTI-FREQ-POS combined (CFR): peak_target=%.2f, RMS=%.4f, "
+               "scale=%.3f (%u positions × %u preambles each)\n",
+               target_peak, final_rms, scale,
+               m_multi_freq_pos_count,
+               m_flood_enabled ? m_flood_num_preambles : 1u);
+    }
+
+    return true;
+}
+
+// ---------------------------------------------------------------------------
+// get_multi_ro_ra_rntis — return all RA-RNTIs this burst will allocate at gNB.
+// Caller uses this for CSV logging and console output.
+// ---------------------------------------------------------------------------
+std::vector<uint16_t> prach_tx::get_multi_ro_ra_rntis(uint32_t ro_slot) const {
+    std::vector<uint16_t> out;
+    uint32_t n_pos = (m_multi_freq_pos_count > 0) ? m_multi_freq_pos_count : 1;
+    for (uint32_t k = 0; k < n_pos; k++) {
+        uint32_t f_id = (m_multi_sweep_fid && m_multi_freq_pos_count > 1) ? k : 0;
+        // RA-RNTI = 1 + s_id(0) + 14*t_id(ro_slot) + 14*80*f_id + ...
+        out.push_back(compute_ra_rnti(0, ro_slot, f_id, 0));
+    }
+    return out;
+}
 
 // ---------------------------------------------------------------------------
 // get_current_rapid_list — return human-readable RAPID description for logging
@@ -415,6 +577,11 @@ std::string prach_tx::get_current_rapid_list() const {
 // get_tx_buffer — return the correct TX buffer for current mode
 // ---------------------------------------------------------------------------
 void* prach_tx::get_tx_buffer() {
+    // Multi-freq-position mode supersedes all others: the combined buffer already
+    // incorporates every flood preamble superimposed across all freq positions.
+    if (m_multi_freq_pos_count > 1 && !m_multi_freq_tx_buf.empty()) {
+        return reinterpret_cast<void*>(m_multi_freq_tx_buf.data());
+    }
     if (m_flood_enabled && m_flood_strategy == "superimpose") {
         return reinterpret_cast<void*>(m_flood_tx_buf.data());
     } else if (m_flood_enabled && m_flood_strategy == "cycle") {
