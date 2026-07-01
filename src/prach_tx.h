@@ -183,7 +183,8 @@ private:
     // Generate and superimpose all RAPIDs into one buffer at the given corrected freq_offset.
     // result must be pre-allocated to m_prach.N_cp + m_prach.N_seq samples.
     bool superimpose_preambles_at_offset(uint32_t corrected_offset,
-                                         std::vector<std::complex<float>>& result);
+                                         std::vector<std::complex<float>>& result,
+                                         float pos_target_amplitude);
 
     // Get the TX buffer pointer and length for the current mode
     void* get_tx_buffer();
