@@ -332,24 +332,50 @@ bool prach_tx::generate_flood_preambles() {
         }
     }
 
-    // 5. Normalize superimposed buffer
-    //    RMS of superimposed uncorrelated ZC sequences ≈ sqrt(N) × single RMS.
-    //    Normalize to 0.7 × backoff to keep within DAC range.
+    // 5. Normalize superimposed buffer (Peak Normalization + CFR)
+    //    If we just use RMS normalization, peaks > 1.0 cause catastrophic integer overflow 
+    //    in the UHD float-to-int16 conversion. We MUST ensure no sample exceeds 1.0.
     {
+        // 5a. Find RMS to determine clipping threshold
         float power = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
             power += std::norm(m_flood_tx_buf[i]);
         }
-        power /= preamble_len;
+        float rms = std::sqrt(power / preamble_len);
 
+        // 5b. Soft clip at 1.5 * RMS to reduce PAPR (Crest Factor Reduction)
+        // This causes slight EVM distortion but prevents catastrophic peak scaling,
+        // vastly improving the average SNR for high N.
+        float clip_level = rms * 1.5f;
+        float max_mag_after_clip = 0.0f;
+        
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            float mag = std::abs(m_flood_tx_buf[i]);
+            if (mag > clip_level) {
+                // scale down to clip_level while preserving phase
+                m_flood_tx_buf[i] *= (clip_level / mag);
+                mag = clip_level;
+            }
+            if (mag > max_mag_after_clip) {
+                max_mag_after_clip = mag;
+            }
+        }
+
+        // 5c. Normalize peak to target (e.g., 0.95 * backoff)
         float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
-        float target_amp = 0.7f * backoff_linear;
-        float scale = target_amp / (std::sqrt(power) + 1e-12f);
-        for (auto& s : m_flood_tx_buf) s *= scale;
+        float target_peak = 0.95f * backoff_linear;
+        float scale = target_peak / (max_mag_after_clip + 1e-12f);
+        
+        float final_power = 0.0f;
+        for (uint32_t i = 0; i < preamble_len; i++) {
+            m_flood_tx_buf[i] *= scale;
+            final_power += std::norm(m_flood_tx_buf[i]);
+        }
+        float final_rms = std::sqrt(final_power / preamble_len);
 
-        printf("[prach_tx] FLOOD superimposed: RMS=%.4f, scale=%.3f "
-               "(target=%.2f, backoff=%.1f dB)\n",
-               std::sqrt(power), scale, target_amp, m_flood_power_backoff_db);
+        printf("[prach_tx] FLOOD superimposed (CFR applied): peak_target=%.2f, final_RMS=%.4f "
+               "(scale=%.3f, backoff=%.1f dB)\n",
+               target_peak, final_rms, scale, m_flood_power_backoff_db);
     }
 
     // 6. Normalize individual buffers (for cycle mode)
@@ -839,7 +865,10 @@ bool prach_tx::transmit_preamble(uint32_t sfn, uint32_t ro_slot) {
     // misses CP overhead and gives ~0.933 ms instead of 1 ms.
     const double slot_dur  = 1e-3;    // 1 ms
     const double frame_dur = 10e-3;   // 10 ms
-    const double ro_period_dur = 16.0 * frame_dur; // 160 ms
+    // NOTE: ro_period_dur is the actual PRACH occasion period (prach_x frames),
+    // NOT the 16-frame 4-LSB SFN rollover used for frames_to_ro above.
+    // config_idx=13 → prach_x=2 → RO every 20 ms.
+    const double ro_period_dur = (double)m_cell_cfg.prach_x * frame_dur;
 
     srsran_rf_get_time(&m_rf, &full_secs_now, &frac_secs_now);
     t_now = (double)full_secs_now + frac_secs_now;

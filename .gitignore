@@ -4,3 +4,6 @@ srsRAN_4G/build/
 *~
 *.log
 tests/
+*.json
+figures/
+scripts/

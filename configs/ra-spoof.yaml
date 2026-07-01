@@ -24,9 +24,9 @@ run:
   resync_every: 0
 
 flood:
-  enabled: false           # master switch; --flood on CLI
-  num_preambles: 64        # how many indices to transmit per occasion (1–64)
-  strategy: "cycle"  # "superimpose" = all in one burst (coherent add)
+  enabled: true           # master switch; --flood on CLI
+  num_preambles: 8        # how many indices to transmit per occasion (1–64)
+  strategy: "superimpose"  # "superimpose" = all in one burst (coherent add)
                            # "cycle" = one index per occasion, rotate 0..N-1
   power_backoff_db: 0.0    # reduce per-preamble amplitude to avoid clipping
                            #   when superimposing (try 0 first; if gNB sees
