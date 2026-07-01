@@ -77,7 +77,7 @@ public:
 
     // Flood mode accessors
     bool        is_flood_enabled()        const { return m_flood_enabled; }
-    std::string get_flood_strategy()      const { return m_flood_strategy; }
+    const std::vector<uint32_t>& get_flood_indices() const { return m_flood_indices; }
     uint32_t    get_flood_num_preambles() const { return m_flood_num_preambles; }
     uint32_t    get_flood_tx_count()      const { return m_flood_tx_count; }
 
@@ -146,28 +146,26 @@ private:
 
     // --- Flood mode state ---
     bool           m_flood_enabled        = false;
-    uint32_t       m_flood_num_preambles  = 64;
+    uint32_t       m_flood_num_preambles  = 64; // Count of elements in m_flood_indices
+    std::vector<uint32_t> m_flood_indices;      // List of actual indices to spoof
     std::string    m_flood_strategy       = "superimpose";
     float          m_flood_power_backoff_db = 0.0f;
+    uint32_t       m_flood_slm_candidates   = 32;
     uint32_t       m_flood_tx_count       = 0;  // monotonic counter for cycle mode
 
     // Per-preamble buffers: m_flood_bufs[i] = baseband for RAPID=i
     std::vector<std::vector<std::complex<float>>> m_flood_bufs;
     // Superimposed TX buffer (complex sum of all m_flood_bufs)
     std::vector<std::complex<float>> m_flood_tx_buf;
+    // SLM/Newman best phase vector for superposition
+    std::vector<float> m_flood_phases;
 
     // --- Multi-frequency-position attack state (#1 + #2) ---
     // m_multi_freq_pos_count: number of freq-domain positions to superimpose.
-    //   1 = single position (legacy).  2-16 = multi-position.
-    // m_multi_sweep_fid: if true, position k uses f_id=k in the RA-RNTI formula,
-    //   generating K distinct RA-RNTIs and forcing K independent gNB RAR processes.
-    // m_multi_freq_tx_buf: final TX buffer superimposing ALL positions
-    //   (replaces m_flood_tx_buf when freq_pos_count > 1).
-    // m_freq_offsets_used: corrected freq_offset PRB value for each position.
-    uint32_t                                      m_multi_freq_pos_count = 1;
-    bool                                          m_multi_sweep_fid      = false;
-    std::vector<uint32_t>                         m_freq_offsets_used;   // per position
-    std::vector<std::complex<float>>              m_multi_freq_tx_buf;   // final combined buf
+    uint32_t       m_multi_freq_pos_count = 1;
+    // Superimposed buffer combining multiple frequency shifts
+    std::vector<std::complex<float>> m_multi_freq_tx_buf;
+    std::vector<uint32_t> m_freq_offsets_used;   // per position
 
     bool generate_preamble();
     bool generate_flood_preambles();

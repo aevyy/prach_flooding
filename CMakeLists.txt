@@ -67,7 +67,7 @@ pkg_check_modules(UHD REQUIRED uhd)
 
 # rt-recon-sdk — shares influxdb.hpp schema with sni5gect-compact
 # Source files are compiled in directly (no separate build step required)
-set(RT_RECON_SDK "/home/oran-testbed/misc/rt-recon-sdk")
+set(RT_RECON_SDK "/home/avi/wireless/rt-recon-sdk")
 if(NOT EXISTS "${RT_RECON_SDK}/include/rt-recon-sdk/autoconfig/influx_worker.h")
   message(FATAL_ERROR "rt-recon-sdk not found at ${RT_RECON_SDK}")
 endif()
@@ -82,6 +82,7 @@ set(LIB_SOURCES
     src/influx_reader.cpp
     src/prach_tx.cpp
     src/tool_config.cpp
+    src/gnb_detect_reader.cpp
   # NOTE: rt-recon-sdk used header-only (influxdb.hpp flux_query + local parse logic)
 )
 
