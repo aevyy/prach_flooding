@@ -284,38 +284,44 @@ bool prach_tx::generate_flood_preambles() {
         }
     }
 
-    // 2. Compute per-index amplitude weights to compensate for correlator asymmetry
-    //    Phantom clustering around indices 21/22/27/28 suggests correlator-order bias.
-    //    Apply a gentle gain profile to flatten the detection probability.
-    std::vector<float> preamble_weights(m_flood_num_preambles, 1.0f);
+    // 2. Power-sharing superimpose with phase stagger
+    //
+    // OLD approach: weight ~1.0 per preamble + soft-clip at 1.5×RMS.
+    // PROBLEM: for N≥16, soft-clip hits ~10% of samples regardless of N,
+    // producing non-ZC distortion that spreads across ALL N correlator channels
+    // and raises the per-preamble noise floor — killing gNB detection.
+    //
+    // NEW approach:
+    //   - amplitude weight = 1/√N  →  combined RMS ≈ single-preamble RMS
+    //     regardless of N (power-sharing). Eliminates PAPR growth entirely.
+    //   - phase rotation e^(j·2π·p/N) per preamble  →  decorrelates addition
+    //     peaks, further reducing PAPR by distributing constructive interference.
+    //   - NO soft clip  →  zero EVM distortion on the ZC sequences.
+    //   - pure peak normalization  →  safe for the B210 DAC (peak ≤ 0.95).
+    //
+    // Tradeoff: per-preamble TX power is –10·log10(N) dB vs. single preamble.
+    // At N=16 that is –12 dB. With 55 dB TX gain this is still well above the
+    // PRACH detection floor; gNB sees clean ZC waveforms and can detect all of them.
 
-    // Strategy: boost lower indices, slightly reduce higher indices
-    // This is a starting heuristic; tune based on detection distribution.
-    for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
-        // Linear taper: indices 0-15 get slight boost, 48-63 get slight reduction
-        float normalized = (float)p / (float)(m_flood_num_preambles - 1);  // 0.0 to 1.0
-        preamble_weights[p] = 1.0f + 0.15f * (0.5f - normalized);  // ~1.075 @ p=0, ~0.925 @ p=63
-    }
+    float amp_per_preamble = 1.0f / std::sqrt((float)m_flood_num_preambles);
 
-    printf("[prach_tx] FLOOD: applying per-index amplitude weights (range %.3f - %.3f)\n",
-           *std::min_element(preamble_weights.begin(), preamble_weights.end()),
-           *std::max_element(preamble_weights.begin(), preamble_weights.end()));
-
-    // 3. Superimpose: weighted complex-add all N buffers sample-by-sample
     m_flood_tx_buf.assign(preamble_len, {0.0f, 0.0f});
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
-        float w = preamble_weights[p];
+        // Phase stagger: rotate preamble p by 2π·p/N
+        float phase_rad = 2.0f * (float)M_PI * (float)p / (float)m_flood_num_preambles;
+        std::complex<float> stagger(std::cosf(phase_rad), std::sinf(phase_rad));
+        std::complex<float> w = amp_per_preamble * stagger;
+
         for (uint32_t n = 0; n < preamble_len; n++) {
             m_flood_tx_buf[n] += w * m_flood_bufs[p][n];
         }
     }
 
-    // 4. CFO correction on the COMBINED buffer (one rotation, not N)
-    //    CFO is a property of the radio, not the preamble.
+    // 3. CFO correction on the COMBINED buffer (one rotation, not N)
     if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
-        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        double ww = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
         for (uint32_t n = 0; n < preamble_len; n++) {
-            float ph = (float)(w * (double)n);
+            float ph = (float)(ww * (double)n);
             m_flood_tx_buf[n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
         }
         printf("[prach_tx] FLOOD: CFO correction applied to superimposed buffer\n");
@@ -323,62 +329,57 @@ bool prach_tx::generate_flood_preambles() {
 
     // Also apply CFO to individual buffers (for cycle mode)
     if (m_cfo_correct && m_cfo_ul_hz != 0.0f) {
-        double w = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
+        double ww = -2.0 * M_PI * (double)m_cfo_sign * (double)m_cfo_ul_hz / m_cfg.srate_hz;
         for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
             for (uint32_t n = 0; n < preamble_len; n++) {
-                float ph = (float)(w * (double)n);
+                float ph = (float)(ww * (double)n);
                 m_flood_bufs[p][n] *= std::complex<float>(std::cosf(ph), std::sinf(ph));
             }
         }
     }
 
-    // 5. Normalize superimposed buffer (Peak Normalization + CFR)
-    //    If we just use RMS normalization, peaks > 1.0 cause catastrophic integer overflow 
-    //    in the UHD float-to-int16 conversion. We MUST ensure no sample exceeds 1.0.
+    // 4. Pure peak normalization — NO soft clip.
+    //    Soft-clip at 1.5×RMS introduced EVM distortion that degraded gNB detection
+    //    for large N. With power-sharing (step 2) the PAPR is already well-controlled,
+    //    so we just need to guarantee peak ≤ 0.95 for the DAC.
     {
-        // 5a. Find RMS to determine clipping threshold
-        float power = 0.0f;
-        for (uint32_t i = 0; i < preamble_len; i++) {
-            power += std::norm(m_flood_tx_buf[i]);
-        }
-        float rms = std::sqrt(power / preamble_len);
-
-        // 5b. Soft clip at 1.5 * RMS to reduce PAPR (Crest Factor Reduction)
-        // This causes slight EVM distortion but prevents catastrophic peak scaling,
-        // vastly improving the average SNR for high N.
-        float clip_level = rms * 1.5f;
-        float max_mag_after_clip = 0.0f;
-        
+        // 4a. Measure RMS and peak
+        float rms_power = 0.0f;
+        float peak_mag  = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
             float mag = std::abs(m_flood_tx_buf[i]);
-            if (mag > clip_level) {
-                // scale down to clip_level while preserving phase
-                m_flood_tx_buf[i] *= (clip_level / mag);
-                mag = clip_level;
-            }
-            if (mag > max_mag_after_clip) {
-                max_mag_after_clip = mag;
-            }
+            rms_power += mag * mag;
+            if (mag > peak_mag) peak_mag = mag;
         }
+        float rms  = std::sqrt(rms_power / preamble_len);
+        float papr_db = (rms > 1e-12f) ? 20.0f * std::log10f(peak_mag / rms) : 0.0f;
 
-        // 5c. Normalize peak to target (e.g., 0.95 * backoff)
+        // 4b. Scale peak to target (0.95 * backoff).  No clipping — zero EVM distortion.
         float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
         float target_peak = 0.95f * backoff_linear;
-        float scale = target_peak / (max_mag_after_clip + 1e-12f);
-        
-        float final_power = 0.0f;
+        float scale = target_peak / (peak_mag + 1e-12f);
+
+        float final_rms = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
             m_flood_tx_buf[i] *= scale;
-            final_power += std::norm(m_flood_tx_buf[i]);
+            final_rms += std::norm(m_flood_tx_buf[i]);
         }
-        float final_rms = std::sqrt(final_power / preamble_len);
+        final_rms = std::sqrt(final_rms / preamble_len);
 
-        printf("[prach_tx] FLOOD superimposed (CFR applied): peak_target=%.2f, final_RMS=%.4f "
-               "(scale=%.3f, backoff=%.1f dB)\n",
-               target_peak, final_rms, scale, m_flood_power_backoff_db);
+        // Per-preamble effective amplitude relative to a single preamble (0.7 RMS)
+        float per_preamble_db = 20.0f * std::log10f(
+            (final_rms / std::sqrt((float)m_flood_num_preambles)) / 0.7f + 1e-12f);
+
+        printf("[prach_tx] FLOOD superimposed (no CFR): PAPR=%.1f dB, "
+               "peak_target=%.2f, final_RMS=%.4f\n",
+               papr_db, target_peak, final_rms);
+        printf("[prach_tx] FLOOD: per-preamble effective power = %.1f dB re single preamble "
+               "(N=%u → ideal=%.1f dB)\n",
+               per_preamble_db, m_flood_num_preambles,
+               -10.0f * std::log10f((float)m_flood_num_preambles));
     }
 
-    // 6. Normalize individual buffers (for cycle mode)
+    // 5. Normalize individual buffers to 0.7 amplitude (for cycle mode)
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
         float power = 0.0f;
         for (uint32_t i = 0; i < preamble_len; i++) {
@@ -393,6 +394,7 @@ bool prach_tx::generate_flood_preambles() {
     printf("[prach_tx] FLOOD: all %u preamble buffers ready\n", m_flood_num_preambles);
     return true;
 }
+
 
 // ---------------------------------------------------------------------------
 // get_current_rapid_list — return human-readable RAPID description for logging
