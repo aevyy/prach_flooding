@@ -55,6 +55,8 @@ static void print_usage(const char* prog) {
     printf("  --flood-n N                Number of preambles to flood (1-64)\n");
     printf("  --flood-strategy S         'superimpose' or 'cycle'\n");
     printf("  --flood-backoff DB         Amplitude reduction to prevent clipping\n");
+    printf("  --freq-pos-count N         Superimpose N frequency positions per RO (1-16)\n");
+    printf("  --sweep-fid                Assign distinct f_id per freq position (N distinct RA-RNTIs)\n");
     printf("  -h, --help                 Print this help\n");
     printf("\nEnvironment:\n");
     printf("  INFLUX_TOKEN               InfluxDB auth token\n");
@@ -101,6 +103,8 @@ int main(int argc, char* argv[]) {
         bool     has_flood_n    = false;   uint32_t flood_n = 0;
         bool     has_flood_strat= false;   std::string flood_strategy;
         bool     has_flood_back = false;   float flood_backoff = 0.0f;
+        bool     has_freq_pos   = false;   uint32_t freq_pos_count = 1;
+        bool     has_sweep_fid  = false;   bool sweep_fid = false;
     } cli;
 
     static struct option long_opts[] = {
@@ -129,6 +133,8 @@ int main(int argc, char* argv[]) {
         {"flood-n",             required_argument, 0, 'w'},
         {"flood-strategy",      required_argument, 0, 'x'},
         {"flood-backoff",       required_argument, 0, 'y'},
+        {"freq-pos-count",      required_argument, 0, 'N'},
+        {"sweep-fid",           no_argument,       0, 'J'},
         {"help",                no_argument,       0, 'h'},
         {0, 0, 0, 0}
     };
@@ -161,6 +167,8 @@ int main(int argc, char* argv[]) {
             case 'w': cli.flood_n        = (uint32_t)atoi(optarg); cli.has_flood_n = true; break;
             case 'x': cli.flood_strategy = optarg; cli.has_flood_strat = true; break;
             case 'y': cli.flood_backoff  = atof(optarg); cli.has_flood_back = true; break;
+            case 'N': cli.freq_pos_count = (uint32_t)atoi(optarg); cli.has_freq_pos = true; break;
+            case 'J': cli.sweep_fid      = true; cli.has_sweep_fid = true; break;
             case 'h': print_usage(argv[0]); return 0;
             default:  print_usage(argv[0]); return 1;
         }
@@ -183,10 +191,12 @@ int main(int argc, char* argv[]) {
     if (cli.has_freq_start)  { tc.freq.msg1_freq_start_override = cli.msg1_freq_start; tc.freq.src_freq_start = tool_config::SRC_CLI; }
     if (cli.has_resync)      { tc.run.resync_every  = cli.resync_every;    tc.run.src_resync   = tool_config::SRC_CLI; }
     if (cli.has_max_tx)      { tc.run.max_tx        = cli.max_tx;          tc.run.src_max_tx   = tool_config::SRC_CLI; }
-    if (cli.has_flood)       { tc.flood.enabled     = cli.flood;           tc.flood.src_enabled = tool_config::SRC_CLI; }
-    if (cli.has_flood_n)     { tc.flood.num_preambles = cli.flood_n;       tc.flood.src_num     = tool_config::SRC_CLI; }
+    if (cli.has_flood)       { tc.flood.enabled     = cli.flood;           tc.flood.src_enabled  = tool_config::SRC_CLI; }
+    if (cli.has_flood_n)     { tc.flood.num_preambles = cli.flood_n;       tc.flood.src_num      = tool_config::SRC_CLI; }
     if (cli.has_flood_strat) { tc.flood.strategy    = cli.flood_strategy;  tc.flood.src_strategy = tool_config::SRC_CLI; }
     if (cli.has_flood_back)  { tc.flood.power_backoff_db = cli.flood_backoff; tc.flood.src_backoff = tool_config::SRC_CLI; }
+    if (cli.has_freq_pos)    { tc.multi_ro.freq_pos_count = cli.freq_pos_count; tc.multi_ro.src_freq_pos = tool_config::SRC_CLI; }
+    if (cli.has_sweep_fid)   { tc.multi_ro.sweep_fid = cli.sweep_fid;     tc.multi_ro.src_sweep_fid = tool_config::SRC_CLI; }
 
     // Safety checks
     if (tc.tx.gain_db > 80.0) {
@@ -345,8 +355,13 @@ int main(int argc, char* argv[]) {
 
         bool tx_ok;
         if (tc.run.continuous && tx_count > 0 && last_tx_time > 0.0) {
-            last_tx_time += ro_interval_s;
-            tx_ok = ptx.transmit_at_time(last_tx_time, tx_ro_sfn, tx_ro_slot);
+            // FIX (#3): Re-anchor from the hardware-timestamped last TX time instead of
+            // dead-reckoning with +=.  Accumulating += causes drift: each iteration adds
+            // floating-point error, and a single late send skews all future targets,
+            // eventually causing "target in past" fatal errors.
+            double next_tx_time = ptx.get_last_tx_time() + ro_interval_s;
+            tx_ok = ptx.transmit_at_time(next_tx_time, tx_ro_sfn, tx_ro_slot);
+            last_tx_time = next_tx_time;
         } else {
             tx_ok = ptx.transmit_preamble(tx_ro_sfn, tx_ro_slot);
             last_tx_time = ptx.get_last_tx_time();
@@ -354,18 +369,27 @@ int main(int argc, char* argv[]) {
 
         if (tx_ok) {
             tx_ok_count++;
+            // Log using the primary (f_id=0) RA-RNTI for backward CSV compatibility
+            auto all_rntis = ptx.get_multi_ro_ra_rntis(tx_ro_slot);
+            if (all_rntis.size() > 1) {
+                printf("[main] Burst RA-RNTIs (%zu positions):", all_rntis.size());
+                for (auto r : all_rntis) printf(" 0x%04x", r);
+                printf("\n");
+            }
             log_csv::log_event("Msg1_PRACH",
                                tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot,
-                               ra_rnti, tc.tx.preamble_index, tc.tx.gain_db,
+                               all_rntis[0], tc.tx.preamble_index, tc.tx.gain_db,
                                0, "transmitted",
                                ptx.get_flood_num_preambles(),
                                ptx.get_flood_strategy().c_str(),
                                ptx.get_current_rapid_list().c_str());
         } else {
             fprintf(stderr, "[main] PRACH transmission %u failed\n", tx_count + 1);
+            auto all_rntis = ptx.get_multi_ro_ra_rntis(tx_ro_slot);
             log_csv::log_event("Msg1_PRACH",
                                tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot,
-                               ra_rnti, tc.tx.preamble_index, tc.tx.gain_db, 0, "failed",
+                               all_rntis[0], tc.tx.preamble_index, tc.tx.gain_db,
+                               0, "failed",
                                ptx.get_flood_num_preambles(),
                                ptx.get_flood_strategy().c_str(),
                                ptx.get_current_rapid_list().c_str());
@@ -396,8 +420,21 @@ int main(int argc, char* argv[]) {
     }
 
     printf("[main] Expected gNB behavior:\n");
-    printf("  1. gNB log: 'PRACH detected preamble=...' \n");
-    printf("  2. gNB emits RAR on RA-RNTI=0x%04x (%u)\n", ra_rnti, ra_rnti);
+    {
+        auto final_rntis = ptx.get_multi_ro_ra_rntis(ro_slot_in_frame);
+        printf("  1. gNB log: 'PRACH detected preamble=...' \n");
+        if (final_rntis.size() == 1) {
+            printf("  2. gNB emits RAR on RA-RNTI=0x%04x (%u)\n",
+                   final_rntis[0], final_rntis[0]);
+        } else {
+            printf("  2. gNB must emit %zu RARs (one per freq position):\n", final_rntis.size());
+            for (uint32_t k = 0; k < final_rntis.size(); k++) {
+                printf("     pos[%u] f_id=%u  RA-RNTI=0x%04x (%u)\n",
+                       k, tc.multi_ro.sweep_fid ? k : 0u,
+                       final_rntis[k], final_rntis[k]);
+            }
+        }
+    }
     printf("[main] Check: tail -f /tmp/gnb.log | grep -E 'PRACH|preamble|RAR|ra.rnti'\n");
 
     log_csv::close();

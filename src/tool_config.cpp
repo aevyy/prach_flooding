@@ -64,6 +64,13 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
             TRY_SCALAR(flood, "power_backoff_db", tc.flood.power_backoff_db, tc.flood.src_backoff);
         }
 
+        // --- multi_ro ---
+        auto mro = root["multi_ro"];
+        if (mro) {
+            TRY_SCALAR(mro, "freq_pos_count", tc.multi_ro.freq_pos_count, tc.multi_ro.src_freq_pos);
+            TRY_SCALAR(mro, "sweep_fid",      tc.multi_ro.sweep_fid,      tc.multi_ro.src_sweep_fid);
+        }
+
         printf("[tool_config] Loaded %s\n", path.c_str());
         return true;
     } catch (const std::exception& e) {
@@ -99,5 +106,7 @@ void print_tool_config(const tool_config& tc) {
     printf("  flood.num_preambles           = %u    (%s)\n", tc.flood.num_preambles, src_str(tc.flood.src_num));
     printf("  flood.strategy                = %s    (%s)\n", tc.flood.strategy.c_str(), src_str(tc.flood.src_strategy));
     printf("  flood.power_backoff_db        = %.1f  (%s)\n", tc.flood.power_backoff_db, src_str(tc.flood.src_backoff));
+    printf("  multi_ro.freq_pos_count       = %u    (%s)\n", tc.multi_ro.freq_pos_count, src_str(tc.multi_ro.src_freq_pos));
+    printf("  multi_ro.sweep_fid            = %s     (%s)\n", tc.multi_ro.sweep_fid ? "true" : "false", src_str(tc.multi_ro.src_sweep_fid));
     printf("================================\n\n");
 }

@@ -65,6 +65,22 @@ struct tool_config {
         uint8_t     src_strategy     = SRC_DEFAULT;
         uint8_t     src_backoff      = SRC_DEFAULT;
     } flood;
+
+    // --- multi_ro ---
+    // Multi-frequency-position attack: superimpose preambles across N frequency-domain
+    // positions per PRACH occasion.  Each position is spaced 7 PRBs apart (6 PRACH + 1
+    // guard band), and when sweep_fid=true each gets a distinct f_id (0,1,...,N-1),
+    // generating N distinct RA-RNTIs per burst — one per gNB RAR context.
+    //
+    //   freq_pos_count : 1 = legacy single-position; 2-16 = multi-position superimpose
+    //   sweep_fid      : false = all positions share f_id=0 (same RA-RNTI family)
+    //                    true  = position k gets f_id=k  → N distinct RA-RNTIs
+    struct multi_ro_t {
+        uint32_t freq_pos_count  = 1;     // number of freq-domain positions to superimpose
+        bool     sweep_fid       = false; // distinct f_id per position → distinct RA-RNTIs
+        uint8_t  src_freq_pos    = SRC_DEFAULT;
+        uint8_t  src_sweep_fid   = SRC_DEFAULT;
+    } multi_ro;
 };
 
 // Parse configs/ra-spoof.yaml.  Missing keys keep their defaults; never aborts on
