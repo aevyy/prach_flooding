@@ -74,6 +74,15 @@ public:
     uint32_t get_sync_sfn()            const { return m_sync_sfn; }
     uint32_t get_sync_slot()           const { return m_sync_slot; }
     double   get_last_tx_time()        const { return m_last_tx_time; }
+    // Returns the USRP oscillator fractional frequency error in ppm, derived from
+    // the DL CFO measured during SSB sync.  The same clock that offsets the carrier
+    // also stretches/compresses device-time intervals by the same ppm factor.
+    // Returns 0.0 safely before sync_to_ssb() runs (no CFO measured yet).
+    double   get_clock_drift_ppm()     const {
+        return (m_cell_cfg.dl_freq_hz > 0.0)
+               ? (m_cfo_dl_hz / m_cell_cfg.dl_freq_hz) * 1e6
+               : 0.0;
+    }
 
     // Flood mode accessors
     bool        is_flood_enabled()        const { return m_flood_enabled; }
