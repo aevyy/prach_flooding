@@ -32,6 +32,7 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
             TRY_SCALAR(cfo, "correct",   tc.cfo.correct,   tc.cfo.src_correct);
             TRY_SCALAR(cfo, "sign",      tc.cfo.sign,      tc.cfo.src_sign);
             TRY_SCALAR(cfo, "manual_hz", tc.cfo.manual_hz, tc.cfo.src_manual_hz);
+            TRY_SCALAR(cfo, "zcz_override", tc.cfo.zcz_override, tc.cfo.src_zcz);
         }
 
         // --- timing ---

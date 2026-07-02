@@ -48,6 +48,7 @@ static void print_usage(const char* prog) {
     printf("  --cfo-correct / --no-cfo-correct\n");
     printf("  --cfo-sign {+1|-1}         CFO correction sign\n");
     printf("  --cfo-hz F                 Manual DL CFO (Hz)\n");
+    printf("  --zcz-override N           Override zeroCorrelationZoneConfig (0-15)\n");
     printf("  --tx-offset-us F           Manual timing nudge (us)\n");
     printf("  --ssb-first-symbol N       Override SSB intra-slot first symbol\n");
     printf("  --freq-start N             Override msg1-FrequencyStart (PRB)\n");
@@ -102,6 +103,7 @@ int main(int argc, char* argv[]) {
         bool     has_cfo_correct= false;   bool cfo_correct = false;
         bool     has_cfo_sign   = false;   int  cfo_sign = 0;
         bool     has_cfo_hz     = false;   double cfo_hz = 0;
+        bool     has_zcz_override = false;  int32_t zcz_override = -1;
         bool     has_tx_offset  = false;   double tx_offset_us = 0;
         bool     has_ssb_sym    = false;   int32_t ssb_first_symbol = 0;
         bool     has_freq_start = false;   int32_t msg1_freq_start = 0;
@@ -137,6 +139,7 @@ int main(int argc, char* argv[]) {
         {"no-cfo-correct",      no_argument,       0, 'F'},
         {"cfo-sign",            required_argument, 0, 'S'},
         {"cfo-hz",              required_argument, 0, 'Z'},
+        {"zcz-override",        required_argument, 0, 'z'},
         {"tx-offset-us",        required_argument, 0, 'U'},
         {"ssb-first-symbol",    required_argument, 0, 'L'},
         {"freq-start",          required_argument, 0, 'Q'},
@@ -158,7 +161,7 @@ int main(int argc, char* argv[]) {
     };
 
     int c;
-    while ((c = getopt_long(argc, argv, "c:hqr", long_opts, nullptr)) != -1) {
+    while ((c = getopt_long(argc, argv, "c:hqrz:", long_opts, nullptr)) != -1) {
         switch (c) {
             case 'c': config_path        = optarg; break;
             case 'H': icfg.host          = optarg; break;
@@ -176,6 +179,7 @@ int main(int argc, char* argv[]) {
             case 'F': cli.cfo_correct    = false; cli.has_cfo_correct = true; break;
             case 'S': cli.cfo_sign       = atoi(optarg); cli.has_cfo_sign = true; break;
             case 'Z': cli.cfo_hz         = atof(optarg); cli.has_cfo_hz = true; break;
+            case 'z': cli.zcz_override  = (int32_t)atoi(optarg); cli.has_zcz_override = true; break;
             case 'U': cli.tx_offset_us   = atof(optarg); cli.has_tx_offset = true; break;
             case 'L': cli.ssb_first_symbol = (int32_t)atoi(optarg); cli.has_ssb_sym = true; break;
             case 'Q': cli.msg1_freq_start = (int32_t)atoi(optarg); cli.has_freq_start = true; break;
@@ -209,6 +213,7 @@ int main(int argc, char* argv[]) {
     if (cli.has_cfo_correct) { tc.cfo.correct        = cli.cfo_correct;    tc.cfo.src_correct  = tool_config::SRC_CLI; }
     if (cli.has_cfo_sign)    { tc.cfo.sign           = cli.cfo_sign;       tc.cfo.src_sign     = tool_config::SRC_CLI; }
     if (cli.has_cfo_hz)      { tc.cfo.manual_hz      = cli.cfo_hz;         tc.cfo.src_manual_hz = tool_config::SRC_CLI; }
+    if (cli.has_zcz_override){ tc.cfo.zcz_override   = cli.zcz_override;   tc.cfo.src_zcz       = tool_config::SRC_CLI; }
     if (cli.has_tx_offset)   { tc.timing.tx_offset_us = cli.tx_offset_us;  tc.timing.src_tx_offset = tool_config::SRC_CLI; }
     if (cli.has_ssb_sym)     { tc.timing.ssb_first_symbol_override = cli.ssb_first_symbol; tc.timing.src_ssb_sym = tool_config::SRC_CLI; }
     if (cli.has_freq_start)  { tc.freq.msg1_freq_start_override = cli.msg1_freq_start; tc.freq.src_freq_start = tool_config::SRC_CLI; }
@@ -513,8 +518,6 @@ int main(int argc, char* argv[]) {
         ro::from_system_slot(tx_ro_sys_slot, tx_ro_sfn, tx_ro_slot);
         printf("[main] Next RO: SFN=%u slot=%u (system_slot=%u)\n",
                tx_ro_sfn, tx_ro_slot, tx_ro_sys_slot);
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     } while (g_running);
 

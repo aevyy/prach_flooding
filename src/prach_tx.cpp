@@ -134,6 +134,11 @@ bool prach_tx::init(const cell_config &cfg, const tool_config &tc,
   m_cfg.config_idx = cfg.prach_config_idx;
   m_cfg.root_seq = cfg.prach_root_seq_idx;
   m_cfg.zcz = cfg.prach_zcz;
+  if (tc.cfo.zcz_override >= 0) {
+    m_cfg.zcz = (uint32_t)tc.cfo.zcz_override;
+    printf("[prach_tx] zcz OVERRIDE: %u → %u (from yaml/CLI)\n",
+           cfg.prach_zcz, m_cfg.zcz);
+  }
   m_cfg.freq_offset = freq_offset_raw;
   m_cfg.tx_gain_db = tc.tx.gain_db;
   m_cfg.dry_run = dry_run;
@@ -173,7 +178,7 @@ bool prach_tx::init(const cell_config &cfg, const tool_config &tc,
   prach_cfg.is_nr = true;
   prach_cfg.config_idx = cfg.prach_config_idx;
   prach_cfg.root_seq_idx = cfg.prach_root_seq_idx;
-  prach_cfg.zero_corr_zone = cfg.prach_zcz;
+  prach_cfg.zero_corr_zone = m_cfg.zcz;
   prach_cfg.freq_offset = cfg.prach_freq_offset;
   prach_cfg.hs_flag = false;
   prach_cfg.enable_successive_cancellation = false;
@@ -1511,7 +1516,7 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn,
 
   int nsent = srsran_rf_send_timed_multi(
       &m_rf, buffers, m_preamble_len_samples, (time_t)dev_time,
-      dev_time - (time_t)dev_time, true, false, true);
+      dev_time - (time_t)dev_time, true, true, true);
 
   if (nsent < 0) {
     fprintf(stderr,

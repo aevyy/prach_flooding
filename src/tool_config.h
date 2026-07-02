@@ -25,9 +25,11 @@ struct tool_config {
         bool   correct    = false;
         int    sign       = 1;     // +1 or -1
         double manual_hz  = 0.0;   // if != 0, use this instead of SSB-measured CFO
+        int32_t zcz_override  = -1;  // -1=use InfluxDB value; >=0=override
         uint8_t src_correct   = SRC_DEFAULT;
         uint8_t src_sign      = SRC_DEFAULT;
         uint8_t src_manual_hz = SRC_DEFAULT;
+        uint8_t src_zcz       = SRC_DEFAULT;
     } cfo;
 
     // --- timing ---
