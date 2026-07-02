@@ -322,12 +322,13 @@ bool prach_tx::superimpose_preambles_at_offset(
     // Reset tmp before each gen call (srsran_prach_gen does overwrite it,
     // but be explicit for clarity)
     std::fill(tmp.begin(), tmp.end(), std::complex<float>(0.0f, 0.0f));
-    if (srsran_prach_gen(&m_prach, p, corrected_offset, raw) !=
+    uint32_t rapid = m_flood_enabled ? m_flood_indices[p] : m_cfg.rapid;
+    if (srsran_prach_gen(&m_prach, rapid, corrected_offset, raw) !=
         SRSRAN_SUCCESS) {
       fprintf(stderr,
               "[prach_tx] superimpose_preambles_at_offset: gen failed RAPID=%u "
               "offset=%u\n",
-              p, corrected_offset);
+              rapid, corrected_offset);
       return false;
     }
     
@@ -550,20 +551,34 @@ bool prach_tx::generate_flood_preambles() {
     }
   }
 
-  // 5. Normalize superimposed buffer (Peak Normalization)
+  // 5. Normalize superimposed buffer (CFR + Peak Normalization)
   {
-    float max_mag = 0.0f;
+    // 5a. Compute RMS before clipping
+    float power = 0.0f;
+    for (uint32_t i = 0; i < preamble_len; i++)
+      power += std::norm(m_flood_tx_buf[i]);
+    float rms = std::sqrt(power / preamble_len);
+
+    // 5b. Soft-clip at 1.5 × RMS to reduce PAPR (Crest Factor Reduction).
+    //     This causes slight EVM distortion but prevents catastrophic peak scaling,
+    //     restoring the average SNR for high N that was lost when CFR was removed
+    //     in the 'major additions' commit alongside SLM phase optimization.
+    float clip_level = rms * 1.5f;
+    float max_mag_after_clip = 0.0f;
     for (uint32_t i = 0; i < preamble_len; i++) {
       float mag = std::abs(m_flood_tx_buf[i]);
-      if (mag > max_mag) {
-        max_mag = mag;
+      if (mag > clip_level) {
+        m_flood_tx_buf[i] *= (clip_level / mag);
+        mag = clip_level;
       }
+      if (mag > max_mag_after_clip)
+        max_mag_after_clip = mag;
     }
 
     // 5c. Normalize peak to target (e.g., 0.95 * backoff)
     float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
     float target_peak = 0.95f * backoff_linear;
-    float scale = target_peak / (max_mag + 1e-12f);
+    float scale = target_peak / (max_mag_after_clip + 1e-12f);
 
     float final_power = 0.0f;
     float final_max_mag = 0.0f;
@@ -576,7 +591,7 @@ bool prach_tx::generate_flood_preambles() {
     float final_rms = std::sqrt(final_power / preamble_len);
     float final_papr = 20.0f * std::log10(final_max_mag / (final_rms + 1e-12f));
 
-    printf("[prach_tx] FLOOD superimposed: peak_target=%.2f, final_peak=%.4f, "
+    printf("[prach_tx] FLOOD superimposed (CFR): peak_target=%.2f, final_peak=%.4f, "
            "final_RMS=%.4f, PAPR=%.2f dB "
            "(scale=%.3f, backoff=%.1f dB)\n",
            target_peak, final_max_mag, final_rms, final_papr, scale, m_flood_power_backoff_db);
@@ -733,11 +748,21 @@ bool prach_tx::generate_multi_freq_preambles() {
            m_cfo_ul_hz);
   }
 
-  // Peak normalization without CFR
+  // CFR + Peak normalization
   {
+    float power = 0.0f;
+    for (uint32_t i = 0; i < preamble_len; i++)
+      power += std::norm(m_multi_freq_tx_buf[i]);
+    float rms = std::sqrt(power / preamble_len);
+    float clip_level = rms * 1.5f;
+
     float max_mag = 0.0f;
     for (uint32_t i = 0; i < preamble_len; i++) {
       float mag = std::abs(m_multi_freq_tx_buf[i]);
+      if (mag > clip_level) {
+        m_multi_freq_tx_buf[i] *= (clip_level / mag);
+        mag = clip_level;
+      }
       if (mag > max_mag)
         max_mag = mag;
     }
@@ -755,7 +780,7 @@ bool prach_tx::generate_multi_freq_preambles() {
     float final_rms = std::sqrt(final_power / preamble_len);
     float final_papr = 20.0f * std::log10(final_max_mag / (final_rms + 1e-12f));
     printf(
-        "[prach_tx] MULTI-FREQ-POS combined: peak_target=%.2f, final_peak=%.4f, RMS=%.4f, PAPR=%.2f dB, "
+        "[prach_tx] MULTI-FREQ-POS combined (CFR): peak_target=%.2f, final_peak=%.4f, RMS=%.4f, PAPR=%.2f dB, "
         "scale=%.3f (%u positions × %u preambles each)\n",
         target_peak, final_max_mag, final_rms, final_papr, scale, m_multi_freq_pos_count,
         m_flood_enabled ? m_flood_num_preambles : 1u);
