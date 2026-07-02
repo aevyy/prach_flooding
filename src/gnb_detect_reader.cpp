@@ -21,22 +21,19 @@ std::vector<gnb_detection_record> gnb_detect_reader::read_new_detections() {
     if (!m_log_stream.is_open()) {
         m_log_stream.open(m_log_path, std::ios::in);
         if (!m_log_stream.is_open()) return res;
-        m_log_stream.seekg(0, std::ios::end);
-        m_last_pos = m_log_stream.tellg();
-        return res;
+        m_last_pos = 0;
     }
-    
-    m_log_stream.clear(); // clear EOF flags
+    // rotation/truncation guard
+    m_log_stream.clear();
+    m_log_stream.seekg(0, std::ios::end);
+    std::streampos end_pos = m_log_stream.tellg();
+    if (end_pos < m_last_pos) m_last_pos = 0;   // file shrank -> gNB restarted/rotated
+
+    m_log_stream.clear();
     m_log_stream.seekg(m_last_pos);
-    
+
     std::string line;
-    // We want to match: PRACH: rssi=+0.5dB detected_preambles=[{idx=55 ta=-7.29us power=+85.8dB snr=0.0dB}] t=351.3us
-    // Frame and slot might not be consistently in the log format from srsRAN, but often there is a t=... or MAC prefix.
-    // However, the anchor line provided is just "PRACH: ...". We will extract all detected_preambles.
-    // If the line has [SFN.slot] we will try to extract it, else 0.
     std::regex rx_item(R"(\{idx=(\d+)\s+ta=([+-]?[0-9]*\.?[0-9]+)us\s+power=([+-]?[0-9]*\.?[0-9]+)dB\s+snr=([+-]?[0-9]*\.?[0-9]+)dB\})");
-    
-    // Some srsRAN builds put [ 123.4] before PRACH:
     std::regex rx_prefix(R"(\[\s*(\d+)\.(\d+)\])"); 
 
     while (std::getline(m_log_stream, line)) {
@@ -68,7 +65,8 @@ std::vector<gnb_detection_record> gnb_detect_reader::read_new_detections() {
                 currentMatch++;
             }
         }
+        m_last_pos = m_log_stream.tellg();      // capture WHILE the stream is good
     }
-    m_last_pos = m_log_stream.tellg();
+    // do NOT touch m_last_pos here; it already holds the last good line end
     return res;
 }

@@ -551,51 +551,34 @@ bool prach_tx::generate_flood_preambles() {
     }
   }
 
-  // 5. Normalize superimposed buffer (CFR + Peak Normalization)
+  // 5. Peak-normalize only. PAPR is controlled by the phase-opt in step 2;
+  //    do NOT clip here (raises the gNB noise floor -> fewer preambles/RO).
   {
-    // 5a. Compute RMS before clipping
-    float power = 0.0f;
+    float max_mag = 0.0f;
     for (uint32_t i = 0; i < preamble_len; i++)
-      power += std::norm(m_flood_tx_buf[i]);
-    float rms = std::sqrt(power / preamble_len);
+      max_mag = std::max(max_mag, std::abs(m_flood_tx_buf[i]));
 
-    // 5b. Soft-clip at 1.5 × RMS to reduce PAPR (Crest Factor Reduction).
-    //     This causes slight EVM distortion but prevents catastrophic peak scaling,
-    //     restoring the average SNR for high N that was lost when CFR was removed
-    //     in the 'major additions' commit alongside SLM phase optimization.
-    float clip_level = rms * 1.5f;
-    float max_mag_after_clip = 0.0f;
-    for (uint32_t i = 0; i < preamble_len; i++) {
-      float mag = std::abs(m_flood_tx_buf[i]);
-      if (mag > clip_level) {
-        m_flood_tx_buf[i] *= (clip_level / mag);
-        mag = clip_level;
-      }
-      if (mag > max_mag_after_clip)
-        max_mag_after_clip = mag;
-    }
-
-    // 5c. Normalize peak to target (e.g., 0.95 * backoff)
     float backoff_linear = std::pow(10.0f, m_flood_power_backoff_db / 20.0f);
+    if (backoff_linear > 1.0f) {  // backoff must attenuate, never amplify
+      fprintf(stderr, "[prach_tx] WARNING: power_backoff_db=%.1f > 0 dB would "
+              "exceed DAC full-scale; clamping to 0 dB\n", m_flood_power_backoff_db);
+      backoff_linear = 1.0f;
+    }
     float target_peak = 0.95f * backoff_linear;
-    float scale = target_peak / (max_mag_after_clip + 1e-12f);
+    float scale = target_peak / (max_mag + 1e-12f);
 
-    float final_power = 0.0f;
-    float final_max_mag = 0.0f;
+    float final_power = 0.0f, final_max_mag = 0.0f;
     for (uint32_t i = 0; i < preamble_len; i++) {
       m_flood_tx_buf[i] *= scale;
       final_power += std::norm(m_flood_tx_buf[i]);
-      float mag = std::abs(m_flood_tx_buf[i]);
-      if (mag > final_max_mag) final_max_mag = mag;
+      final_max_mag = std::max(final_max_mag, std::abs(m_flood_tx_buf[i]));
     }
-    float final_rms = std::sqrt(final_power / preamble_len);
+    float final_rms  = std::sqrt(final_power / preamble_len);
     float final_papr = 20.0f * std::log10(final_max_mag / (final_rms + 1e-12f));
-
-    printf("[prach_tx] FLOOD superimposed (CFR): peak_target=%.2f, final_peak=%.4f, "
-           "final_RMS=%.4f, PAPR=%.2f dB "
+    printf("[prach_tx] FLOOD superimposed: peak=%.4f RMS=%.4f PAPR=%.2f dB "
            "(scale=%.3f, backoff=%.1f dB)\n",
-           target_peak, final_max_mag, final_rms, final_papr, scale, m_flood_power_backoff_db);
-           
+           final_max_mag, final_rms, final_papr, scale, m_flood_power_backoff_db);
+            
     // Dry-run self-check: unit-phase vs phase-opt
     if (m_dry_run && m_flood_num_preambles >= 1) {
       std::vector<std::complex<float>> unit_buf(preamble_len, {0.0f, 0.0f});
@@ -1146,12 +1129,24 @@ bool prach_tx::sync_to_ssb() {
   printf("  Slot        = %u (from ssb_idx=%u, hrf=%d)\n", ssb_slot, ssb_idx,
          hrf);
 
-  // Regenerate preamble with measured CFO correction applied
+  // Regenerate ALL active TX buffers with the measured CFO applied.
+  // generate_* rebuild via srsran_prach_gen each call -> idempotent, no
+  // double-rotation. Without this, flood/multi-freq keep the init-time
+  // (CFO=0) buffers and transmit the full uncorrected offset, collapsing
+  // the gNB's ZC correlation.
   if (m_cfo_correct) {
-    printf("[prach_tx] Regenerating preamble with measured CFO (%.1f Hz UL)\n",
+    printf("[prach_tx] Regenerating TX buffers with measured CFO (%.1f Hz UL)\n",
            m_cfo_ul_hz);
     if (!generate_preamble()) {
       fprintf(stderr, "[prach_tx] FATAL: preamble regen after CFO failed\n");
+      return false;
+    }
+    if (m_flood_enabled && !generate_flood_preambles()) {
+      fprintf(stderr, "[prach_tx] FATAL: flood regen after CFO failed\n");
+      return false;
+    }
+    if (m_multi_freq_pos_count > 1 && !generate_multi_freq_preambles()) {
+      fprintf(stderr, "[prach_tx] FATAL: multi-freq regen after CFO failed\n");
       return false;
     }
   }
