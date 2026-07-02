@@ -64,6 +64,7 @@ bool prach_tx::init(const cell_config &cfg, const tool_config &tc,
   m_flood_power_backoff_db = tc.flood.power_backoff_db;
   m_flood_slm_candidates = tc.flood.slm_candidates;
   m_no_phase_opt = tc.flood.no_phase_opt;
+  m_raw_superimpose = tc.flood.raw_superimpose;
   m_flood_tx_count = 0;
   
   m_flood_indices.clear();
@@ -471,7 +472,51 @@ bool prach_tx::generate_flood_preambles() {
   //    Apply a per-preamble global phase to minimize PAPR of the superimposed buffer.
   m_flood_phases.assign(m_flood_num_preambles, 0.0f);
   
-  if (m_no_phase_opt) {
+  if (m_raw_superimpose) {
+    // Pure addition baseline: no phases, no weights, no CFR, RMS normalize to 0.7/sqrt(N)
+    printf("[prach_tx] FLOOD: RAW SUPERIMPOSE mode — unit phases, no weights, no CFR, RMS norm\n");
+    m_flood_tx_buf.assign(preamble_len, {0.0f, 0.0f});
+    for (uint32_t p = 0; p < m_flood_num_preambles; p++)
+      for (uint32_t n = 0; n < preamble_len; n++)
+        m_flood_tx_buf[n] += m_flood_bufs[p][n];
+    float power = 0.0f;
+    for (uint32_t n = 0; n < preamble_len; n++)
+      power += std::norm(m_flood_tx_buf[n]);
+    float rms = std::sqrt(power / preamble_len);
+    float target_rms = 0.7f / std::sqrt((float)m_flood_num_preambles);
+    float scale = target_rms / (rms + 1e-12f);
+    for (uint32_t n = 0; n < preamble_len; n++)
+      m_flood_tx_buf[n] *= scale;
+    // Find peak magnitude after normalization
+    float peak = 0.0f;
+    for (uint32_t n = 0; n < preamble_len; n++) {
+      float m = std::abs(m_flood_tx_buf[n]);
+      if (m > peak) peak = m;
+    }
+    printf("[prach_tx] FLOOD RAW: target_RMS=%.4f  final_peak=%.3f  scale=%.3f\n",
+           target_rms, peak, scale);
+    
+    // Self-check for raw mode
+    {
+      float corr_min = 1e9f, corr_max = 0.0f, corr_sum = 0.0f;
+      printf("[prach_tx] FLOOD RAW SELF-CHECK: per-preamble correlation (N=%u):\n",
+             m_flood_num_preambles);
+      for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+        std::complex<float> corr(0.0f, 0.0f);
+        for (uint32_t n = 0; n < preamble_len; n++)
+          corr += m_flood_tx_buf[n] * std::conj(m_flood_bufs[p][n]);
+        float mag = std::abs(corr);
+        if (mag < corr_min) corr_min = mag;
+        if (mag > corr_max) corr_max = mag;
+        corr_sum += mag;
+        printf("[prach_tx]   p=%-2u (rapid=%-2u): corr=%.3f\n",
+               p, m_flood_indices[p], mag);
+      }
+      printf("[prach_tx]   min=%.3f  max=%.3f  avg=%.3f  spread=%.1f dB\n",
+             corr_min, corr_max, corr_sum / (float)m_flood_num_preambles,
+             20.0f * log10f((corr_max + 1e-12f) / (corr_min + 1e-12f)));
+    }
+  } else if (m_no_phase_opt) {
     printf("[prach_tx] FLOOD: phase optimization DISABLED (no-phase-opt) — using unit phases\n");
   } else if (m_flood_slm_candidates == 0) {
     // Newman phases
@@ -484,6 +529,7 @@ bool prach_tx::generate_flood_preambles() {
     std::mt19937 rng(42); // fixed seed for reproducibility
     std::uniform_int_distribution<int> dist(0, 3);
     
+    float best_score = 1e9f;
     float best_papr = 1e9f;
     std::vector<std::complex<float>> temp_buf(preamble_len);
     std::vector<float> candidate_phases(m_flood_num_preambles, 0.0f);
@@ -512,21 +558,40 @@ bool prach_tx::generate_flood_preambles() {
       float rms = std::sqrt(power / preamble_len);
       float papr = (rms > 1e-12f) ? (peak_mag / rms) : 1e9f;
       
-      if (papr < best_papr) {
+      // Also measure per-preamble correlation balance for this candidate
+      float min_corr = 1e9f;
+      for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
+          std::complex<float> corr_c(0.0f, 0.0f);
+          for (uint32_t n = 0; n < preamble_len; n++)
+              corr_c += temp_buf[n] * std::conj(m_flood_bufs[p][n]);
+          float mc = std::abs(corr_c);
+          if (mc < min_corr) min_corr = mc;
+      }
+      // Score = PAPR / correlation-balance; lower is better
+      float corr_norm = min_corr / (rms * std::sqrt((float)m_flood_num_preambles) + 1e-12f);
+      float score = papr / (corr_norm + 1e-12f);
+      
+      if (score < best_score) {
+        best_score = score;
         best_papr = papr;
         m_flood_phases = candidate_phases;
       }
     }
-    printf("[prach_tx] FLOOD: SLM phase optimization applied (%u candidates), lowest PAPR=%.2f dB\n",
-           m_flood_slm_candidates, 20.0f * std::log10(best_papr));
+    printf("[prach_tx] FLOOD: SLM phase optimization applied (%u candidates), "
+           "lowest PAPR=%.2f dB, score=%.3f\n",
+             m_flood_slm_candidates, 20.0f * std::log10(best_papr), best_score);
   }
 
-  // 3. Superimpose: complex-add all N buffers sample-by-sample with best phase
+  if (!m_raw_superimpose) {
+  // 3. Superimpose: complex-add all N buffers sample-by-sample with best phase + weights
   m_flood_tx_buf.assign(preamble_len, {0.0f, 0.0f});
   for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
     std::complex<float> rot(std::cos(m_flood_phases[p]), std::sin(m_flood_phases[p]));
+    // Per-index amplitude taper (compensates for gNB correlator-order bias)
+    float normalized = (float)p / (float)(m_flood_num_preambles - 1);
+    float w = 1.0f + 0.15f * (0.5f - normalized);
     for (uint32_t n = 0; n < preamble_len; n++) {
-      m_flood_tx_buf[n] += m_flood_bufs[p][n] * rot;
+      m_flood_tx_buf[n] += w * m_flood_bufs[p][n] * rot;
     }
   }
 
@@ -599,40 +664,29 @@ bool prach_tx::generate_flood_preambles() {
            "(scale=%.3f, backoff=%.1f dB)\n",
            target_peak, final_max_mag, final_rms, final_papr, scale, m_flood_power_backoff_db);
            
-    // Dry-run self-check: unit-phase vs phase-opt
-    if (m_dry_run && m_flood_num_preambles >= 1) {
-      std::vector<std::complex<float>> unit_buf(preamble_len, {0.0f, 0.0f});
+    // Always-on self-check: per-preamble correlation with final buffer
+    {
+      float corr_min = 1e9f, corr_max = 0.0f, corr_sum = 0.0f;
+      printf("[prach_tx] FLOOD SELF-CHECK: per-preamble correlation (N=%u):\n",
+             m_flood_num_preambles);
       for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
-        for (uint32_t n = 0; n < preamble_len; n++) {
-          unit_buf[n] += m_flood_bufs[p][n];
-        }
+        std::complex<float> corr(0.0f, 0.0f);
+        for (uint32_t n = 0; n < preamble_len; n++)
+          corr += m_flood_tx_buf[n] * std::conj(m_flood_bufs[p][n]);
+        float mag = std::abs(corr);
+        if (mag < corr_min) corr_min = mag;
+        if (mag > corr_max) corr_max = mag;
+        corr_sum += mag;
+        printf("[prach_tx]   p=%-2u (rapid=%-2u): corr=%.3f\n",
+               p, m_flood_indices[p], mag);
       }
-      
-      float unit_max_mag = 0.0f;
-      for (uint32_t n = 0; n < preamble_len; n++) {
-        float mag = std::abs(unit_buf[n]);
-        if (mag > unit_max_mag) unit_max_mag = mag;
-      }
-      float unit_scale = target_peak / (unit_max_mag + 1e-12f);
-      for (uint32_t n = 0; n < preamble_len; n++) {
-        unit_buf[n] *= unit_scale;
-      }
-      
-      printf("[prach_tx] FLOOD DRY-RUN CHECK: Unit-phase vs Phase-opt correlation\n");
-      for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
-        std::complex<float> corr_opt(0.0f, 0.0f);
-        std::complex<float> corr_unit(0.0f, 0.0f);
-        for (uint32_t n = 0; n < preamble_len; n++) {
-          corr_opt += m_flood_tx_buf[n] * std::conj(m_flood_bufs[p][n]);
-          corr_unit += unit_buf[n] * std::conj(m_flood_bufs[p][n]);
-        }
-        float mag_opt = std::abs(corr_opt);
-        float mag_unit = std::abs(corr_unit);
-        printf("[prach_tx]   p=%u: opt_mag=%.2f, unit_mag=%.2f -> %s\n", 
-               p, mag_opt, mag_unit, (mag_opt >= mag_unit * 0.99f) ? "PASS" : "FAIL");
-      }
+      printf("[prach_tx]   min=%.3f  max=%.3f  avg=%.3f  spread=%.1f dB\n",
+             corr_min, corr_max, corr_sum / (float)m_flood_num_preambles,
+             20.0f * log10f((corr_max + 1e-12f) / (corr_min + 1e-12f)));
     }
   }
+
+  } // end if(!m_raw_superimpose)
 
   // 6. Normalize individual buffers (for cycle mode)
   for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
@@ -1430,11 +1484,13 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn,
   dev_time += m_tx_offset_us * 1e-6;
 
   // Advance if target is in the past (one RO period = prach_x frames)
+  double orig_dev_time = dev_time;
   double ro_period_dur = (double)m_cell_cfg.prach_x * 10e-3;
   if (dev_time <= t_now) {
     double periods_needed = std::ceil((t_now - dev_time) / ro_period_dur);
     dev_time += periods_needed * ro_period_dur;
   }
+  bool advanced = (dev_time > orig_dev_time + 1e-9);
 
   if (dev_time <= t_now) {
     fprintf(stderr,
@@ -1443,6 +1499,9 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn,
     return false;
   }
 
+  double lead_time = dev_time - t_now;
+  printf("[prach_tx] TIMING: sched=%.6fs  now=%.6fs  lead=%.3fms  advanced=%s\n",
+         dev_time, t_now, lead_time * 1e3, advanced ? "YES" : "NO");
   printf(
       "[prach_tx] Target RO: SFN=%u slot=%u → dev_time=%.6f s (Δ=%+.3f ms)\n",
       sfn, ro_slot, dev_time, (dev_time - t_now) * 1e3);

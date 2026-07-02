@@ -69,12 +69,14 @@ struct tool_config {
         float       power_backoff_db = 0.0f;
         uint32_t    slm_candidates   = 32;
         bool        no_phase_opt     = false;    // skip phase optimization, use unit phases
+        bool        raw_superimpose  = false;    // pure addition, RMS normalize, no optimization
         uint8_t     src_enabled      = SRC_DEFAULT;
         uint8_t     src_num          = SRC_DEFAULT;
         uint8_t     src_strategy     = SRC_DEFAULT;
         uint8_t     src_backoff      = SRC_DEFAULT;
         uint8_t     src_slm          = SRC_DEFAULT;
         uint8_t     src_no_phase_opt = SRC_DEFAULT;
+        uint8_t     src_raw_superimpose = SRC_DEFAULT;
     } flood;
 
     // --- multi_ro ---

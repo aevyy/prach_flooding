@@ -153,6 +153,7 @@ private:
     float          m_flood_power_backoff_db = 0.0f;
     uint32_t       m_flood_slm_candidates   = 32;
     bool           m_no_phase_opt            = false;  // skip SLM/Newman, use unit phases
+    bool           m_raw_superimpose         = false;  // pure addition, RMS normalize, no opts
     uint32_t       m_flood_tx_count       = 0;  // monotonic counter for cycle mode
 
     // Per-preamble buffers: m_flood_bufs[i] = baseband for RAPID=i
