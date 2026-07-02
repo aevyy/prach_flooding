@@ -20,6 +20,7 @@
 #include <string>
 #include <chrono>
 #include <thread>
+#include <cmath>
 
 static volatile bool g_running = true;
 
@@ -398,11 +399,14 @@ int main(int argc, char* argv[]) {
 
         bool tx_ok;
         if (tc.run.continuous && tx_count > 0 && last_tx_time > 0.0) {
-            // FIX (#3): Re-anchor from the hardware-timestamped last TX time instead of
-            // dead-reckoning with +=.  Accumulating += causes drift: each iteration adds
-            // floating-point error, and a single late send skews all future targets,
-            // eventually causing "target in past" fatal errors.
-            double next_tx_time = ptx.get_last_tx_time() + ro_interval_s;
+            // Scale ro_interval_s by the USRP oscillator ppm error derived from the
+            // measured DL CFO.  The USRP's reference clock runs at a slightly wrong
+            // rate; the same fractional error that causes CFO also stretches/compresses
+            // the device-time intervals.  Correcting the interval prevents the TX
+            // window from drifting across the gNB's RO boundary over many bursts.
+            // Safe at startup: get_clock_drift_ppm() returns 0 until sync_to_ssb() runs.
+            double drift_correction = 1.0 + ptx.get_clock_drift_ppm() / 1e6;
+            double next_tx_time = ptx.get_last_tx_time() + ro_interval_s * drift_correction;
             tx_ok = ptx.transmit_at_time(next_tx_time, tx_ro_sfn, tx_ro_slot);
             last_tx_time = next_tx_time;
         } else {
