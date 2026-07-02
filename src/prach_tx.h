@@ -80,6 +80,7 @@ public:
     const std::vector<uint32_t>& get_flood_indices() const { return m_flood_indices; }
     uint32_t    get_flood_num_preambles() const { return m_flood_num_preambles; }
     uint32_t    get_flood_tx_count()      const { return m_flood_tx_count; }
+    std::string get_flood_strategy()      const { return m_flood_strategy; }
 
     // Multi-RO accessors
     // Returns all RA-RNTIs that will be allocated by the gNB for this burst.
@@ -163,6 +164,8 @@ private:
     // --- Multi-frequency-position attack state (#1 + #2) ---
     // m_multi_freq_pos_count: number of freq-domain positions to superimpose.
     uint32_t       m_multi_freq_pos_count = 1;
+    // m_multi_sweep_fid: when true, each freq position gets distinct f_id (0..K-1)
+    bool           m_multi_sweep_fid = false;
     // Superimposed buffer combining multiple frequency shifts
     std::vector<std::complex<float>> m_multi_freq_tx_buf;
     std::vector<uint32_t> m_freq_offsets_used;   // per position
