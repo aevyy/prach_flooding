@@ -63,6 +63,7 @@ bool prach_tx::init(const cell_config &cfg, const tool_config &tc,
   m_flood_strategy = tc.flood.strategy;
   m_flood_power_backoff_db = tc.flood.power_backoff_db;
   m_flood_slm_candidates = tc.flood.slm_candidates;
+  m_no_phase_opt = tc.flood.no_phase_opt;
   m_flood_tx_count = 0;
   
   m_flood_indices.clear();
@@ -470,7 +471,9 @@ bool prach_tx::generate_flood_preambles() {
   //    Apply a per-preamble global phase to minimize PAPR of the superimposed buffer.
   m_flood_phases.assign(m_flood_num_preambles, 0.0f);
   
-  if (m_flood_slm_candidates == 0) {
+  if (m_no_phase_opt) {
+    printf("[prach_tx] FLOOD: phase optimization DISABLED (no-phase-opt) — using unit phases\n");
+  } else if (m_flood_slm_candidates == 0) {
     // Newman phases
     for (uint32_t p = 0; p < m_flood_num_preambles; p++) {
       m_flood_phases[p] = M_PI * (float)(p * p) / (float)m_flood_num_preambles;

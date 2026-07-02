@@ -59,6 +59,7 @@ static void print_usage(const char* prog) {
     printf("  --flood-strategy S         'superimpose' or 'cycle'\n");
     printf("  --flood-backoff DB         Amplitude reduction to prevent clipping\n");
     printf("  --slm-candidates N         SLM phase search count (0=Newman, default 32)\n");
+    printf("  --no-phase-opt             Disable phase optimization (use unit phases for superposition)\n");
     printf("  --freq-pos-count N         Superimpose N frequency positions per RO (1-16)\n");
     printf("  --gnb-log-path PATH        Path to gNB log for closed-loop reading\n");
     printf("  --autotune                 Enable experimental auto-tuning\n");
@@ -110,6 +111,7 @@ int main(int argc, char* argv[]) {
         bool     has_flood_strat= false;   std::string flood_strategy;
         bool     has_flood_back = false;   float flood_backoff = 0.0f;
         bool     has_slm_cand   = false;   uint32_t slm_candidates = 32;
+        bool     has_no_phase   = false;   bool no_phase_opt = false;
         bool     has_freq_pos   = false;   uint32_t freq_pos_count = 1;
         bool     has_log_path   = false;   std::string gnb_log_path;
         bool     has_autotune   = false;   bool autotune = false;
@@ -143,6 +145,7 @@ int main(int argc, char* argv[]) {
         {"flood-strategy",      required_argument, 0, 'x'},
         {"flood-backoff",       required_argument, 0, 'y'},
         {"slm-candidates",      required_argument, 0, 'p'},
+        {"no-phase-opt",        no_argument,       0, 'q'},
         {"freq-pos-count",      required_argument, 0, 'N'},
         {"gnb-log-path",        required_argument, 0, 'l'},
         {"autotune",            no_argument,       0, 'a'},
@@ -151,7 +154,7 @@ int main(int argc, char* argv[]) {
     };
 
     int c;
-    while ((c = getopt_long(argc, argv, "c:h", long_opts, nullptr)) != -1) {
+    while ((c = getopt_long(argc, argv, "c:hq", long_opts, nullptr)) != -1) {
         switch (c) {
             case 'c': config_path        = optarg; break;
             case 'H': icfg.host          = optarg; break;
@@ -180,6 +183,7 @@ int main(int argc, char* argv[]) {
             case 'x': cli.flood_strategy = optarg; cli.has_flood_strat = true; break;
             case 'y': cli.flood_backoff  = atof(optarg); cli.has_flood_back = true; break;
             case 'p': cli.slm_candidates = (uint32_t)atoi(optarg); cli.has_slm_cand = true; break;
+            case 'q': cli.no_phase_opt = true; cli.has_no_phase = true; break;
             case 'N': cli.freq_pos_count = (uint32_t)atoi(optarg); cli.has_freq_pos = true; break;
             case 'l': cli.gnb_log_path   = optarg; cli.has_log_path = true; break;
             case 'a': cli.autotune       = true; cli.has_autotune = true; break;
@@ -211,6 +215,7 @@ int main(int argc, char* argv[]) {
     if (cli.has_flood_strat) { tc.flood.strategy    = cli.flood_strategy;  tc.flood.src_strategy = tool_config::SRC_CLI; }
     if (cli.has_flood_back)  { tc.flood.power_backoff_db = cli.flood_backoff; tc.flood.src_backoff = tool_config::SRC_CLI; }
     if (cli.has_slm_cand)    { tc.flood.slm_candidates = cli.slm_candidates; tc.flood.src_slm = tool_config::SRC_CLI; }
+    if (cli.has_no_phase)    { tc.flood.no_phase_opt = cli.no_phase_opt; tc.flood.src_no_phase_opt = tool_config::SRC_CLI; }
     if (cli.has_freq_pos)    { tc.multi_ro.freq_pos_count = cli.freq_pos_count; tc.multi_ro.src_freq_pos = tool_config::SRC_CLI; }
     if (cli.has_log_path)    { tc.run.gnb_log_path = cli.gnb_log_path; tc.run.src_log_path = tool_config::SRC_CLI; }
     if (cli.has_autotune)    { tc.run.autotune = cli.autotune; tc.run.src_autotune = tool_config::SRC_CLI; }

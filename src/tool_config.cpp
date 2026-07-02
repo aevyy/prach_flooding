@@ -73,6 +73,7 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
             TRY_SCALAR(flood, "strategy",         tc.flood.strategy,         tc.flood.src_strategy);
             TRY_SCALAR(flood, "power_backoff_db", tc.flood.power_backoff_db, tc.flood.src_backoff);
             TRY_SCALAR(flood, "slm_candidates",   tc.flood.slm_candidates,   tc.flood.src_slm);
+            TRY_SCALAR(flood, "no_phase_opt",     tc.flood.no_phase_opt,     tc.flood.src_no_phase_opt);
         }
 
         // --- multi_ro ---
@@ -119,7 +120,8 @@ void print_tool_config(const tool_config& tc) {
     printf("  flood.preamble_list           = %s    (%s)\n", tc.flood.preamble_list.c_str(), src_str(tc.flood.src_num));
     printf("  flood.strategy                = %s    (%s)\n", tc.flood.strategy.c_str(), src_str(tc.flood.src_strategy));
     printf("  flood.power_backoff_db        = %.1f  (%s)\n", tc.flood.power_backoff_db, src_str(tc.flood.src_backoff));
-    printf("  flood.slm_candidates          = %u    (%s)\n", tc.flood.slm_candidates, src_str(tc.flood.src_slm));
-    printf("  multi_ro.freq_pos_count       = %u    (%s)\n", tc.multi_ro.freq_pos_count, src_str(tc.multi_ro.src_freq_pos));
+  printf("  flood.slm_candidates          = %u    (%s)\n", tc.flood.slm_candidates, src_str(tc.flood.src_slm));
+  printf("  flood.no_phase_opt            = %s     (%s)\n", tc.flood.no_phase_opt ? "true" : "false", src_str(tc.flood.src_no_phase_opt));
+  printf("  multi_ro.freq_pos_count       = %u    (%s)\n", tc.multi_ro.freq_pos_count, src_str(tc.multi_ro.src_freq_pos));
     printf("================================\n\n");
 }
