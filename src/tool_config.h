@@ -33,8 +33,10 @@ struct tool_config {
     // --- timing ---
     struct timing_t {
         double  tx_offset_us                = 0.0;   // manual nudge (sweep param)
+        double  rx_to_tx_cal_us             = 0.0;   // fixed RX-to-TX path delay (B2)
         int32_t ssb_first_symbol_override    = -1;    // -1 = spec value; >=0 = forced
         uint8_t src_tx_offset               = SRC_DEFAULT;
+        uint8_t src_rx_to_tx_cal            = SRC_DEFAULT;
         uint8_t src_ssb_sym                 = SRC_DEFAULT;
     } timing;
 

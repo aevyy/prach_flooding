@@ -139,6 +139,7 @@ bool prach_tx::init(const cell_config &cfg, const tool_config &tc,
   m_cfg.cfo_sign = tc.cfo.sign;
   m_ssb_first_symbol_override = tc.timing.ssb_first_symbol_override;
   m_tx_offset_us = tc.timing.tx_offset_us;
+  m_rx_to_tx_cal_s = tc.timing.rx_to_tx_cal_us * 1e-6;
 
   // Initialize srsRAN PRACH object
   uint32_t max_N_ifft_ul = srsran_min_symbol_sz_rb(cfg.nof_prb);
@@ -1115,6 +1116,76 @@ bool prach_tx::sync_to_ssb() {
   // with carrier)
   m_cfo_dl_hz = cfo_hz;
   m_cfo_ul_hz = m_cfo_dl_hz * (m_cfg.tx_freq_hz / m_cell_cfg.dl_freq_hz);
+
+  // ------------------------------------------------------------------
+  // B1: SSB anchor ring buffer — LS drift estimator
+  // Accumulate (device_time, gnb_frame) pairs and fit a line to estimate
+  // the true USRP-vs-gNB clock rate error.  gnb_frame is reconstructed
+  // monotonically from the 4-LSB SFN using the first-ever sync as a base.
+  // ------------------------------------------------------------------
+  {
+    // Reconstruct a monotonic frame index from the 4-LSB SFN.
+    // SFN range: 0..1023.  We track rollovers using m_anchor_sfn_base.
+    uint32_t sfn4 = sfn & 0xF; // 4-LSB SFN from PBCH (0..15)
+    double gnb_frame;
+    if (!m_anchor_sfn_base_set) {
+      m_anchor_sfn_base = sfn4;
+      m_anchor_sfn_base_set = true;
+      gnb_frame = 0.0;
+    } else {
+      // Compute delta in 4-LSB frames, handling 16-frame rollover.
+      int delta4 = (int)sfn4 - (int)m_anchor_sfn_base;
+      if (delta4 < 0) delta4 += 16; // rollover
+      // Accumulate into the last sample's frame + delta.
+      gnb_frame = m_anchor_samples.empty()
+                  ? (double)delta4
+                  : m_anchor_samples.back().gnb_frame + (double)delta4;
+    }
+
+    // Push new sample; evict oldest if window is full.
+    SsbAnchorSample samp;
+    samp.device_time = m_sync_device_time;
+    samp.gnb_frame   = gnb_frame;
+    m_anchor_samples.push_back(samp);
+    if (m_anchor_samples.size() > kAnchorWindowSize)
+      m_anchor_samples.pop_front();
+    m_anchor_sfn_base = sfn4; // update base for next delta
+
+    // LS fit: t_device = a + b * gnb_frame
+    // b = (N*sum(x*y) - sum(x)*sum(y)) / (N*sum(x^2) - sum(x)^2)
+    // Drift = (b - 10e-3) / 10e-3  [10 ms per frame is the nominal rate]
+    // ppm  = drift * 1e6
+    size_t N = m_anchor_samples.size();
+    if (N >= 2) {
+      double sum_x = 0, sum_y = 0, sum_xy = 0, sum_xx = 0;
+      for (const auto& s : m_anchor_samples) {
+        sum_x  += s.gnb_frame;
+        sum_y  += s.device_time;
+        sum_xy += s.gnb_frame * s.device_time;
+        sum_xx += s.gnb_frame * s.gnb_frame;
+      }
+      double denom = (double)N * sum_xx - sum_x * sum_x;
+      if (std::abs(denom) > 1e-12) {
+        double b = ((double)N * sum_xy - sum_x * sum_y) / denom;
+        // b is USRP device seconds per gNB frame.
+        // Nominal = 10e-3 s/frame.  Drift = (b - 10e-3) / 10e-3.
+        double nominal_spf = 10e-3;
+        m_ls_drift_ppm = (b - nominal_spf) / nominal_spf * 1e6;
+        printf("[prach_tx] LS drift estimate: %.3f ppm (N=%zu samples, b=%.9f s/frame)\n",
+               m_ls_drift_ppm, N, b);
+      }
+    }
+  }
+
+  // Update time-since-last-sync (used by B5 watchdog in main.cpp).
+  // We snapshot the current device time so main can compute elapsed time.
+  {
+    time_t ts = 0; double tf = 0.0;
+    srsran_rf_get_time(&m_rf, &ts, &tf);
+    // m_time_since_last_sync_s stores the device time of this sync;
+    // main.cpp reads the current time and subtracts to get elapsed.
+    m_time_since_last_sync_s = (double)ts + tf;
+  }
 
   printf("[prach_tx] SSB sync acquired:\n");
   printf("  PCI         = %u\n", pci);

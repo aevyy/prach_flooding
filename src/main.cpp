@@ -389,7 +389,32 @@ int main(int argc, char* argv[]) {
             printf("\n--- Transmission %u (loop) ---\n", tx_count + 1);
         }
 
-        // Optional re-sync every N TX
+        // B5: Drift guard — triggers re-anchor when accumulated timing error
+        // would exceed 30% of the Format-0 CP window (103 us), or when too much
+        // time has passed since the last sync.  Runs alongside the count-based
+        // resync_every mechanism; whichever fires first wins.
+        if (tc.run.continuous && tx_count > 0 && ptx.get_synced()) {
+            // Format 0 CP: N_CP = 3168 samples at Δf=15kHz, srate=30.72 MHz → 103.125 us
+            constexpr double cp_format0_s    = 103.125e-6;
+            constexpr double resync_fraction = 0.30;  // re-anchor at 30% CP drift
+            constexpr double max_sync_age_s  = 30.0;  // hard upper bound
+
+            double drift_ppm       = ptx.get_clock_drift_ppm();
+            double time_since_sync = ptx.get_time_since_last_sync_s();
+            double est_error_s     = std::abs(drift_ppm / 1e6) * time_since_sync;
+            bool   drift_guard_trip = (est_error_s > resync_fraction * cp_format0_s)
+                                   || (time_since_sync > max_sync_age_s && time_since_sync > 0.0);
+
+            if (drift_guard_trip) {
+                printf("[main] Drift guard: est_error=%.1f us (drift=%.3f ppm, age=%.1f s) — re-anchoring\n",
+                       est_error_s * 1e6, drift_ppm, time_since_sync);
+                if (!ptx.sync_to_ssb()) {
+                    fprintf(stderr, "[main] WARNING: drift guard re-anchor failed, continuing\n");
+                }
+            }
+        }
+
+        // Optional count-based re-sync (resync_every)
         if (tc.run.resync_every > 0 && tx_count > 0 && tx_count % tc.run.resync_every == 0) {
             printf("[main] Re-syncing to SSB (every %u TX)...\n", tc.run.resync_every);
             if (!ptx.sync_to_ssb()) {

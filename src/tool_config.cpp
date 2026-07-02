@@ -38,6 +38,7 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
         auto timing = root["timing"];
         if (timing) {
             TRY_SCALAR(timing, "tx_offset_us",                tc.timing.tx_offset_us,                tc.timing.src_tx_offset);
+            TRY_SCALAR(timing, "rx_to_tx_cal_us",            tc.timing.rx_to_tx_cal_us,             tc.timing.src_rx_to_tx_cal);
             TRY_SCALAR(timing, "ssb_first_symbol_override",    tc.timing.ssb_first_symbol_override,    tc.timing.src_ssb_sym);
         }
 
@@ -107,6 +108,7 @@ void print_tool_config(const tool_config& tc) {
     printf("  cfo.sign                      = %+d    (%s)\n", tc.cfo.sign,         src_str(tc.cfo.src_sign));
     printf("  cfo.manual_hz                 = %.1f  (%s)\n", tc.cfo.manual_hz,     src_str(tc.cfo.src_manual_hz));
     printf("  timing.tx_offset_us           = %+.1f (%s)\n", tc.timing.tx_offset_us, src_str(tc.timing.src_tx_offset));
+    printf("  timing.rx_to_tx_cal_us        = %+.1f (%s)\n", tc.timing.rx_to_tx_cal_us, src_str(tc.timing.src_rx_to_tx_cal));
     printf("  timing.ssb_first_symbol_ovrd  = %d    (%s)\n", tc.timing.ssb_first_symbol_override, src_str(tc.timing.src_ssb_sym));
     printf("  freq.msg1_freq_start_override = %d    (%s)\n", tc.freq.msg1_freq_start_override, src_str(tc.freq.src_freq_start));
     printf("  freq.msg1_fdm_override        = %d    (%s)\n", tc.freq.msg1_fdm_override, src_str(tc.freq.src_fdm));

@@ -19,6 +19,7 @@ extern "C" {
 #include <vector>
 #include <complex>
 #include <string>
+#include <deque>
 
 struct prach_tx_cfg {
     double   tx_gain_db  = 30.0;
@@ -74,14 +75,28 @@ public:
     uint32_t get_sync_sfn()            const { return m_sync_sfn; }
     uint32_t get_sync_slot()           const { return m_sync_slot; }
     double   get_last_tx_time()        const { return m_last_tx_time; }
-    // Returns the USRP oscillator fractional frequency error in ppm, derived from
-    // the DL CFO measured during SSB sync.  The same clock that offsets the carrier
-    // also stretches/compresses device-time intervals by the same ppm factor.
-    // Returns 0.0 safely before sync_to_ssb() runs (no CFO measured yet).
+    // Returns the USRP oscillator drift estimate in ppm.
+    // When >= 2 SSB anchor samples exist, returns a least-squares fit of
+    // (gNB frame index vs USRP device time) — more accurate than single CFO.
+    // Falls back to single CFO measurement before enough samples accumulate.
+    // Returns 0.0 safely before any sync_to_ssb() runs.
     double   get_clock_drift_ppm()     const {
+        if (m_anchor_samples.size() >= 2) {
+            return m_ls_drift_ppm;  // LS estimate updated in sync_to_ssb()
+        }
         return (m_cell_cfg.dl_freq_hz > 0.0)
-               ? (m_cfo_dl_hz / m_cell_cfg.dl_freq_hz) * 1e6
+               ? (double)(m_cfo_dl_hz / m_cell_cfg.dl_freq_hz) * 1e6
                : 0.0;
+    }
+    // Returns seconds elapsed since the last successful sync_to_ssb() call.
+    // Queries the hardware clock each time so the value is always fresh.
+    // Returns 0 before the first sync or in dry-run mode.
+    double   get_time_since_last_sync_s() const {
+        if (!m_rf_open || m_time_since_last_sync_s <= 0.0) return 0.0;
+        time_t ts = 0; double tf = 0.0;
+        srsran_rf_get_time(const_cast<srsran_rf_t*>(&m_rf), &ts, &tf);
+        double now = (double)ts + tf;
+        return now - m_time_since_last_sync_s;
     }
 
     // Flood mode accessors
@@ -140,7 +155,23 @@ private:
     // TX/RX timestamp offset calibration (B210-specific)
     // Positive value means TX arrives this many seconds AFTER the requested time
     double         m_tx_rx_offset_s   = 0.0;
+    double         m_rx_to_tx_cal_s   = 0.0;  // RX-to-TX path calibration (config)
     double         m_last_tx_time     = 0.0;  // device time of last TX
+    double         m_time_since_last_sync_s = 0.0; // updated in sync_to_ssb()
+
+    // --- B1: SSB anchor ring buffer for LS drift estimation ---
+    // Each entry records the USRP device time of an SSB observation and the
+    // corresponding absolute gNB frame index (reconstructed from SFN + anchor).
+    // A least-squares line fit gives the true USRP-vs-gNB clock rate error.
+    struct SsbAnchorSample {
+        double device_time;   // USRP device time of SSB slot start
+        double gnb_frame;     // absolute gNB frame (SFN * 1, monotonic across rollovers)
+    };
+    static constexpr size_t kAnchorWindowSize = 8;  // M from spec
+    std::deque<SsbAnchorSample> m_anchor_samples;   // ring buffer, max kAnchorWindowSize
+    double         m_ls_drift_ppm  = 0.0;  // LS-fitted USRP clock error in ppm
+    uint32_t       m_anchor_sfn_base = 0;  // SFN at first anchor — used for monotonic frame count
+    bool           m_anchor_sfn_base_set = false;
 
     // CFO correction (measured from DL SSB, scaled to UL)
     float          m_cfo_dl_hz        = 0.0f;  // DL CFO from SSB
