@@ -451,7 +451,6 @@ int main(int argc, char* argv[]) {
         
         // Item 3 & 6: Closed-loop reader & Optional Autotune
         if (tc.run.continuous && tx_ok) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Settle delay
             auto new_dets = reader.read_new_detections();
             
             struct timeval tv;
@@ -515,7 +514,7 @@ int main(int argc, char* argv[]) {
         printf("[main] Next RO: SFN=%u slot=%u (system_slot=%u)\n",
                tx_ro_sfn, tx_ro_slot, tx_ro_sys_slot);
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(2));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
 
     } while (g_running);
 

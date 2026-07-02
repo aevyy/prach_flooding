@@ -1511,7 +1511,7 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn,
 
   int nsent = srsran_rf_send_timed_multi(
       &m_rf, buffers, m_preamble_len_samples, (time_t)dev_time,
-      dev_time - (time_t)dev_time, true, true, true);
+      dev_time - (time_t)dev_time, true, false, true);
 
   if (nsent < 0) {
     fprintf(stderr,
