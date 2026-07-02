@@ -1401,6 +1401,13 @@ bool prach_tx::transmit_at_time(double dev_time, uint32_t sfn,
   // Manual timing nudge
   dev_time += m_tx_offset_us * 1e-6;
 
+  // Advance if target is in the past (one RO period = prach_x frames)
+  double ro_period_dur = (double)m_cell_cfg.prach_x * 10e-3;
+  if (dev_time <= t_now) {
+    double periods_needed = std::ceil((t_now - dev_time) / ro_period_dur);
+    dev_time += periods_needed * ro_period_dur;
+  }
+
   if (dev_time <= t_now) {
     fprintf(stderr,
             "[prach_tx] FATAL: target time %.6f s is in the past (now=%.6f)\n",
