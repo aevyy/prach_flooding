@@ -12,8 +12,11 @@ cfo:
   manual_hz: 0.0
 
 timing:
-  tx_offset_us: 0.0
-  ssb_first_symbol_override: -1
+  tx_offset_us: 0.0                    # manual timing nudge (sweep param)
+  ssb_first_symbol_override: -1        # -1 = spec value; >=0 = forced
+  rx_to_tx_cal_s: 0.0                  # fixed device RX->TX stream calibration offset
+  resync_cp_fraction: 0.3              # fraction of CP duration for re-anchor watchdog
+  max_time_since_sync_ms: 0.0          # hard re-anchor timeout (0 = disabled)
 
 freq:
   msg1_freq_start_override: -1
@@ -24,10 +27,17 @@ run:
   resync_every: 0
 
 flood:
-  enabled: true           # master switch; --flood on CLI
-  num_preambles: 8        # how many indices to transmit per occasion (1–64)
-  strategy: "superimpose"  # "superimpose" = all in one burst (coherent add)
-                           # "cycle" = one index per occasion, rotate 0..N-1
-  power_backoff_db: 0.0    # reduce per-preamble amplitude to avoid clipping
-                           #   when superimposing (try 0 first; if gNB sees
-                           #   fewer than expected, try -3 to -6)
+  enabled: true
+  num_preambles: 8
+  strategy: "superimpose"
+  power_backoff_db: 0.0
+  slm_candidates: 32                   # SLM phase search count (0 = Newman phases)
+  max_preambles_per_occasion: 16       # per-occasion subset cap
+  papr_backoff_db: 3.0                 # peak backoff below full-scale (dB)
+
+multi_ro:
+  freq_pos_count: 1
+
+ssb_fit:
+  fit_window_m: 8                      # number of SSB anchors for clock-drift LS fit
+  regen_period_occasions: 0            # 0 = only at init; N = regen every N occasions

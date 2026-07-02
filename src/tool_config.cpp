@@ -39,6 +39,9 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
         if (timing) {
             TRY_SCALAR(timing, "tx_offset_us",                tc.timing.tx_offset_us,                tc.timing.src_tx_offset);
             TRY_SCALAR(timing, "ssb_first_symbol_override",    tc.timing.ssb_first_symbol_override,    tc.timing.src_ssb_sym);
+            TRY_SCALAR(timing, "rx_to_tx_cal_s",              tc.timing.rx_to_tx_cal_s,              tc.timing.src_rx_to_tx_cal);
+            TRY_SCALAR(timing, "resync_cp_fraction",           tc.timing.resync_cp_fraction,           tc.timing.src_resync_cp_frac);
+            TRY_SCALAR(timing, "max_time_since_sync_ms",       tc.timing.max_time_since_sync_ms,       tc.timing.src_max_time_since_sync);
         }
 
         // --- freq ---
@@ -73,12 +76,21 @@ bool parse_tool_config(const std::string& path, tool_config& tc) {
             TRY_SCALAR(flood, "strategy",         tc.flood.strategy,         tc.flood.src_strategy);
             TRY_SCALAR(flood, "power_backoff_db", tc.flood.power_backoff_db, tc.flood.src_backoff);
             TRY_SCALAR(flood, "slm_candidates",   tc.flood.slm_candidates,   tc.flood.src_slm);
+            TRY_SCALAR(flood, "max_preambles_per_occasion", tc.flood.max_preambles_per_occasion, tc.flood.src_max_per_occ);
+            TRY_SCALAR(flood, "papr_backoff_db",  tc.flood.papr_backoff_db,  tc.flood.src_papr_backoff);
         }
 
         // --- multi_ro ---
         auto mro = root["multi_ro"];
         if (mro) {
             TRY_SCALAR(mro, "freq_pos_count", tc.multi_ro.freq_pos_count, tc.multi_ro.src_freq_pos);
+        }
+
+        // --- ssb_fit ---
+        auto sfit = root["ssb_fit"];
+        if (sfit) {
+            TRY_SCALAR(sfit, "fit_window_m",           tc.ssb_fit.fit_window_m,           tc.ssb_fit.src_fit_window);
+            TRY_SCALAR(sfit, "regen_period_occasions",  tc.ssb_fit.regen_period_occasions, tc.ssb_fit.src_regen_period);
         }
 
         printf("[tool_config] Loaded %s\n", path.c_str());
@@ -108,6 +120,9 @@ void print_tool_config(const tool_config& tc) {
     printf("  cfo.manual_hz                 = %.1f  (%s)\n", tc.cfo.manual_hz,     src_str(tc.cfo.src_manual_hz));
     printf("  timing.tx_offset_us           = %+.1f (%s)\n", tc.timing.tx_offset_us, src_str(tc.timing.src_tx_offset));
     printf("  timing.ssb_first_symbol_ovrd  = %d    (%s)\n", tc.timing.ssb_first_symbol_override, src_str(tc.timing.src_ssb_sym));
+    printf("  timing.rx_to_tx_cal_s         = %.6f (%s)\n", tc.timing.rx_to_tx_cal_s, src_str(tc.timing.src_rx_to_tx_cal));
+    printf("  timing.resync_cp_fraction     = %.2f  (%s)\n", tc.timing.resync_cp_fraction, src_str(tc.timing.src_resync_cp_frac));
+    printf("  timing.max_time_since_sync_ms = %.1f  (%s)\n", tc.timing.max_time_since_sync_ms, src_str(tc.timing.src_max_time_since_sync));
     printf("  freq.msg1_freq_start_override = %d    (%s)\n", tc.freq.msg1_freq_start_override, src_str(tc.freq.src_freq_start));
     printf("  freq.msg1_fdm_override        = %d    (%s)\n", tc.freq.msg1_fdm_override, src_str(tc.freq.src_fdm));
     printf("  run.continuous                = %s     (%s)\n", tc.run.continuous ? "true" : "false", src_str(tc.run.src_cont));
@@ -120,6 +135,10 @@ void print_tool_config(const tool_config& tc) {
     printf("  flood.strategy                = %s    (%s)\n", tc.flood.strategy.c_str(), src_str(tc.flood.src_strategy));
     printf("  flood.power_backoff_db        = %.1f  (%s)\n", tc.flood.power_backoff_db, src_str(tc.flood.src_backoff));
     printf("  flood.slm_candidates          = %u    (%s)\n", tc.flood.slm_candidates, src_str(tc.flood.src_slm));
+    printf("  flood.max_preambles_per_occ   = %u    (%s)\n", tc.flood.max_preambles_per_occasion, src_str(tc.flood.src_max_per_occ));
+    printf("  flood.papr_backoff_db         = %.1f  (%s)\n", tc.flood.papr_backoff_db, src_str(tc.flood.src_papr_backoff));
     printf("  multi_ro.freq_pos_count       = %u    (%s)\n", tc.multi_ro.freq_pos_count, src_str(tc.multi_ro.src_freq_pos));
+    printf("  ssb_fit.fit_window_m          = %u    (%s)\n", tc.ssb_fit.fit_window_m, src_str(tc.ssb_fit.src_fit_window));
+    printf("  ssb_fit.regen_period_occasions = %u   (%s)\n", tc.ssb_fit.regen_period_occasions, src_str(tc.ssb_fit.src_regen_period));
     printf("================================\n\n");
 }

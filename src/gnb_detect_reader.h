@@ -29,4 +29,5 @@ private:
     std::string m_log_path;
     std::ifstream m_log_stream;
     std::streampos m_last_pos = 0;
+    std::streampos m_last_valid_pos = 0;
 };

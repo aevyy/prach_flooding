@@ -34,8 +34,14 @@ struct tool_config {
     struct timing_t {
         double  tx_offset_us                = 0.0;   // manual nudge (sweep param)
         int32_t ssb_first_symbol_override    = -1;    // -1 = spec value; >=0 = forced
+        double  rx_to_tx_cal_s              = 0.0;   // fixed device RX->TX stream calibration offset
+        double  resync_cp_fraction           = 0.3;  // fraction of CP duration for re-anchor watchdog
+        double  max_time_since_sync_ms       = 0.0;  // hard re-anchor timeout (0 = disabled)
         uint8_t src_tx_offset               = SRC_DEFAULT;
         uint8_t src_ssb_sym                 = SRC_DEFAULT;
+        uint8_t src_rx_to_tx_cal            = SRC_DEFAULT;
+        uint8_t src_resync_cp_frac          = SRC_DEFAULT;
+        uint8_t src_max_time_since_sync     = SRC_DEFAULT;
     } timing;
 
     // --- freq ---
@@ -68,24 +74,30 @@ struct tool_config {
         std::string strategy         = "superimpose"; // "superimpose" or "cycle"
         float       power_backoff_db = 0.0f;
         uint32_t    slm_candidates   = 32;
+        uint32_t    max_preambles_per_occasion = 16;  // per-occasion subset cap
+        float       papr_backoff_db  = 3.0f;   // peak backoff below full-scale (dB)
         uint8_t     src_enabled      = SRC_DEFAULT;
         uint8_t     src_num          = SRC_DEFAULT;
         uint8_t     src_strategy     = SRC_DEFAULT;
         uint8_t     src_backoff      = SRC_DEFAULT;
         uint8_t     src_slm          = SRC_DEFAULT;
+        uint8_t     src_max_per_occ  = SRC_DEFAULT;
+        uint8_t     src_papr_backoff = SRC_DEFAULT;
     } flood;
 
     // --- multi_ro ---
-    // Multi-frequency-position attack: superimpose preambles across N frequency-domain
-    // positions per PRACH occasion.  Each position is spaced 7 PRBs apart (6 PRACH + 1
-    // guard band), and when sweep_fid=true each gets a distinct f_id (0,1,...,N-1),
-    // generating N distinct RA-RNTIs per burst — one per gNB RAR context.
-    //
-    //   freq_pos_count : 1 = legacy single-position; 2-16 = multi-position superimpose
     struct multi_ro_t {
         uint32_t freq_pos_count  = 1;     // number of freq-domain positions to superimpose
         uint8_t  src_freq_pos    = SRC_DEFAULT;
     } multi_ro;
+
+    // --- ssb_fit ---
+    struct ssb_fit_t {
+        uint32_t fit_window_m     = 8;    // number of SSB anchors for clock-drift LS fit
+        uint32_t regen_period_occasions = 0; // 0 = only at init; N = regen every N occasions
+        uint8_t  src_fit_window   = SRC_DEFAULT;
+        uint8_t  src_regen_period = SRC_DEFAULT;
+    } ssb_fit;
 };
 
 // Parse configs/ra-spoof.yaml.  Missing keys keep their defaults; never aborts on

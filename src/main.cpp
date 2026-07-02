@@ -1,6 +1,6 @@
 // ra-spoof main — Msg1 PRACH preamble injection
 //
-// Config: InfluxDB (live sniffer) → ra-spoof.yaml → CLI overrides
+// Config: InfluxDB (live sniffer) -> ra-spoof.yaml -> CLI overrides
 
 #include "cell_config.h"
 #include "influx_reader.h"
@@ -18,6 +18,7 @@
 #include <getopt.h>
 #include <cstdlib>
 #include <string>
+#include <set>
 #include <chrono>
 #include <thread>
 
@@ -221,8 +222,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
     if (!rf_isolated && !dry_run) {
-        fprintf(stderr, "FATAL: RF TX requires --confirm-rf-isolated flag.\n"
-                        "       Use --dry-run for offline testing.\n");
+        fprintf(stderr, "FATAL: RF TX requires --confirm-rf-isolated flag.\n");
         return 1;
     }
     if (tc.cfo.sign != +1 && tc.cfo.sign != -1) {
@@ -233,14 +233,13 @@ int main(int argc, char* argv[]) {
     signal(SIGINT, sig_handler);
     signal(SIGTERM, sig_handler);
 
-    // --- Dry-run: print resolved config and exit ---
     if (dry_run) {
         printf("[main] DRY RUN -- resolved configuration:\n");
         print_tool_config(tc);
     }
 
     // -----------------------------------------------------------------------
-    // Step 1: Load cell config from InfluxDB (sole config source)
+    // Step 1: Load cell config from InfluxDB
     // -----------------------------------------------------------------------
     cell_config cfg;
 
@@ -251,7 +250,6 @@ int main(int argc, char* argv[]) {
     }
     influx_sanity_check(cfg);
 
-    // Apply overrides
     if (tc.freq.msg1_freq_start_override >= 0) {
         cfg.prach_freq_offset = tc.freq.msg1_freq_start_override;
         printf("[main] OVERRIDE: msg1-FrequencyStart = %u\n", cfg.prach_freq_offset);
@@ -260,8 +258,7 @@ int main(int argc, char* argv[]) {
         cfg.msg1_fdm = tc.freq.msg1_fdm_override;
         printf("[main] OVERRIDE: msg1_fdm = %u\n", cfg.msg1_fdm);
     }
-    
-    // Populate prach_x/y/subframe/format from prach_config_idx
+
     cfg.resolve_prach_ro();
     print_cell_config(cfg);
 
@@ -281,7 +278,7 @@ int main(int argc, char* argv[]) {
     // Step 3: Find next PRACH occasion
     // -----------------------------------------------------------------------
     printf("\n[main] Step 3: RACH occasion timing:\n");
-    printf("  config_idx=%u → subframe %u, SFN %% %u == %u\n",
+    printf("  config_idx=%u -> subframe %u, SFN %% %u == %u\n",
            cfg.prach_config_idx, cfg.prach_subframe, cfg.prach_x, cfg.prach_y);
 
     ro::print_occasions_in_range(cfg, 0, 200);
@@ -293,7 +290,7 @@ int main(int argc, char* argv[]) {
            ro_sfn, ro_slot_in_frame, ro_sys_slot);
 
     // -----------------------------------------------------------------------
-    // Step 4: Initialize PRACH TX
+    // Step 4: Initialize PRACH TX (no buffer generation yet)
     // -----------------------------------------------------------------------
     printf("\n[main] Step 4: Initializing PRACH TX...\n");
     printf("[main] CFO correction: %s (sign=%+d manual_hz=%.0f)\n",
@@ -319,7 +316,7 @@ int main(int argc, char* argv[]) {
     log_csv::init("ra-spoof_msg1.csv");
 
     // -----------------------------------------------------------------------
-    // Step 6.5: SSB sync
+    // Step 6.5: SSB sync (this also calls regenerate_tx_buffers internally)
     // -----------------------------------------------------------------------
     printf("\n[main] Step 6.5: Synchronizing to gNB SSB (PCI=%u)...\n", cfg.pci);
 
@@ -347,20 +344,35 @@ int main(int argc, char* argv[]) {
     ro::from_system_slot(ro_sys_slot, ro_sfn, ro_slot_in_frame);
     printf("[main] Updated Target RO: SFN=%u, slot=%u (system_slot=%u)\n",
            ro_sfn, ro_slot_in_frame, ro_sys_slot);
-           
+
     // -----------------------------------------------------------------------
-    // Step 6.75: Initialize gNB Log Reader (Item 3)
+    // Step 6.75: Initialize gNB Log Reader + telemetry CSV
     // -----------------------------------------------------------------------
     gnb_detect_reader reader;
     std::ofstream det_csv;
+    std::ofstream telemetry_csv;
     if (tc.run.continuous) {
         if (!reader.init(tc.run.gnb_log_path)) {
-            fprintf(stderr, "[main] WARNING: Could not open gNB log '%s' for closed-loop reading\n", tc.run.gnb_log_path.c_str());
+            fprintf(stderr, "[main] WARNING: Could not open gNB log '%s'\n",
+                    tc.run.gnb_log_path.c_str());
         } else {
             det_csv.open("gnb_detections.csv", std::ios::out);
             if (det_csv.is_open()) {
-                det_csv << "tx_time,tx_sfn,tx_slot_in_frame,mode,flood_n,num_detected,detected_idx_list,ta_list,power_list,snr_list\n";
+                det_csv << "tx_time,tx_sfn,tx_slot_in_frame,mode,flood_n,"
+                        << "num_detected,matched_count,detected_idx_list,"
+                        << "detection_metric_list,ta_list,power_list,snr_list\n";
             }
+        }
+
+        // C1: Telemetry CSV
+        telemetry_csv.open("ra-spoof_telemetry.csv", std::ios::out);
+        if (telemetry_csv.is_open()) {
+            telemetry_csv << "wall_clock,gnb_sfn,gnb_subframe,"
+                         << "target_tx_device_time,actual_tx_device_time,delta_t_us,"
+                         << "est_cfo_hz,est_clock_drift_ppm,time_since_last_sync_ms,"
+                         << "n_preambles_tx,tx_gain,composite_papr_db,"
+                         << "n_underflow,n_overflow,n_late,n_seq_error,"
+                         << "num_detected,matched_count\n";
         }
     }
 
@@ -371,6 +383,7 @@ int main(int argc, char* argv[]) {
 
     if (tc.run.continuous) {
         printf("[main] Continuous mode: transmitting on every RO (Ctrl-C to stop).\n");
+        printf("[main] Telemetry CSV: ra-spoof_telemetry.csv\n");
     }
 
     uint32_t  tx_ro_sys_slot = ro_sys_slot;
@@ -379,13 +392,21 @@ int main(int argc, char* argv[]) {
     uint32_t  tx_count       = 0;
     uint32_t  tx_ok_count    = 0;
     double    last_tx_time    = 0.0;
-    // RO period = prach_x frames × 10 ms/frame
-    // (e.g. config_idx=13 → prach_x=2 → 20 ms; was incorrectly hardcoded to 160 ms)
     const double ro_interval_s = (double)cfg.prach_x * 10e-3;
 
     do {
         if (tc.run.continuous && tx_count > 0) {
             printf("\n--- Transmission %u (loop) ---\n", tx_count + 1);
+        }
+
+        // B4: Periodic regen every regen_period_occasions
+        if (tc.ssb_fit.regen_period_occasions > 0 && tx_count > 0 &&
+            tx_count % tc.ssb_fit.regen_period_occasions == 0) {
+            printf("[main] Periodic regen (every %u occasions)...\n",
+                   tc.ssb_fit.regen_period_occasions);
+            if (!ptx.regenerate_tx_buffers()) {
+                fprintf(stderr, "[main] WARNING: periodic regen failed\n");
+            }
         }
 
         // Optional re-sync every N TX
@@ -398,10 +419,6 @@ int main(int argc, char* argv[]) {
 
         bool tx_ok;
         if (tc.run.continuous && tx_count > 0 && last_tx_time > 0.0) {
-            // FIX (#3): Re-anchor from the hardware-timestamped last TX time instead of
-            // dead-reckoning with +=.  Accumulating += causes drift: each iteration adds
-            // floating-point error, and a single late send skews all future targets,
-            // eventually causing "target in past" fatal errors.
             double next_tx_time = ptx.get_last_tx_time() + ro_interval_s;
             tx_ok = ptx.transmit_at_time(next_tx_time, tx_ro_sfn, tx_ro_slot);
             last_tx_time = next_tx_time;
@@ -412,7 +429,6 @@ int main(int argc, char* argv[]) {
 
         if (tx_ok) {
             tx_ok_count++;
-            // Log using the primary (f_id=0) RA-RNTI for backward CSV compatibility
             auto all_rntis = ptx.get_multi_ro_ra_rntis(tx_ro_slot);
             if (all_rntis.size() > 1) {
                 printf("[main] Burst RA-RNTIs (%zu positions):", all_rntis.size());
@@ -437,33 +453,105 @@ int main(int argc, char* argv[]) {
                                ptx.get_flood_strategy().c_str(),
                                ptx.get_current_rapid_list().c_str());
         }
-        
-        // Item 3 & 6: Closed-loop reader & Optional Autotune
-        if (tc.run.continuous && tx_ok) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(50)); // Settle delay
+
+        // C1: Write telemetry record
+        if (telemetry_csv.is_open() && tx_ok) {
+            const TxOccasionRecord& rec = ptx.get_last_occasion_record();
+
+            telemetry_csv << std::fixed
+                         << rec.wall_clock << ","
+                         << rec.gnb_sfn << "," << rec.gnb_subframe << ","
+                         << rec.target_tx_device_time << ","
+                         << rec.actual_tx_device_time << ","
+                         << rec.delta_t_us << ","
+                         << rec.est_cfo_hz << ","
+                         << rec.est_clock_drift_ppm << ","
+                         << rec.time_since_last_resync_ms << ","
+                         << rec.n_preambles_tx << ","
+                         << rec.tx_gain << ","
+                         << rec.composite_papr_db << ","
+                         << rec.n_underflow << ","
+                         << rec.n_overflow << ","
+                         << rec.n_late << ","
+                         << rec.n_seq_error;
+
+            // C3: Transmitted-vs-detected alignment
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
             auto new_dets = reader.read_new_detections();
-            
-            struct timeval tv;
-            gettimeofday(&tv, NULL);
-            double tx_wall_time = tv.tv_sec + tv.tv_usec / 1e6;
-            
+
             std::vector<gnb_detection_record> matched_dets;
             for (const auto& d : new_dets) {
-                // Tolerant matching: slot matches, and time is recent. 
-                // We use wall_time logged in read_new_detections which is strictly >= tx_wall_time.
                 if (d.slot == tx_ro_slot) {
                     matched_dets.push_back(d);
                 }
             }
-            
+
+            telemetry_csv << "," << matched_dets.size() << ",";
+
+            // Match transmitted preambles against detected
+            int matched_count = 0;
+            std::set<uint32_t> tx_set;
+            const auto& tx_preamble_indices = ptx.get_flood_indices();
+            uint32_t n_tx = tc.flood.enabled ?
+                ptx.get_flood_num_preambles() : (uint32_t)1;
+            for (uint32_t i = 0; i < n_tx; i++) {
+                if (i < tx_preamble_indices.size())
+                    tx_set.insert(tx_preamble_indices[i]);
+            }
+            for (const auto& d : matched_dets) {
+                if (tx_set.count(d.idx)) matched_count++;
+            }
+            telemetry_csv << matched_count;
+            telemetry_csv << "\n";
+            telemetry_csv.flush();
+        }
+
+        // Closed-loop reader for gnb_detections.csv (existing)
+        if (tc.run.continuous && tx_ok) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+            auto new_dets = reader.read_new_detections();
+
+            struct timeval tv;
+            gettimeofday(&tv, NULL);
+            double tx_wall_time = tv.tv_sec + tv.tv_usec / 1e6;
+
+            std::vector<gnb_detection_record> matched_dets;
+            for (const auto& d : new_dets) {
+                if (d.slot == tx_ro_slot) {
+                    matched_dets.push_back(d);
+                }
+            }
+
             if (det_csv.is_open()) {
+                // Compute matched_count
+                std::set<uint32_t> tx_set;
+                const auto& tx_indices = ptx.get_flood_indices();
+                uint32_t n_tx = tc.flood.enabled ?
+                    ptx.get_flood_num_preambles() : (uint32_t)1;
+                for (uint32_t i = 0; i < n_tx; i++) {
+                    if (i < tx_indices.size())
+                        tx_set.insert(tx_indices[i]);
+                }
+                int matched_count = 0;
+                for (const auto& d : matched_dets) {
+                    if (tx_set.count(d.idx)) matched_count++;
+                }
+
                 det_csv << std::fixed << tx_wall_time << ","
                         << tx_ro_sfn << "," << tx_ro_slot << ","
                         << ptx.get_flood_strategy() << ","
                         << ptx.get_flood_num_preambles() << ","
-                        << matched_dets.size() << ",\"";
+                        << matched_dets.size() << ","
+                        << matched_count << ",\"";
                 for (size_t i=0; i<matched_dets.size(); i++) {
                     det_csv << matched_dets[i].idx;
+                    if (i < matched_dets.size()-1) det_csv << ";";
+                }
+                det_csv << "\",";
+                // detection_metric_list (use SNR as proxy)
+                det_csv << "\"";
+                for (size_t i=0; i<matched_dets.size(); i++) {
+                    det_csv << matched_dets[i].snr_db;
                     if (i < matched_dets.size()-1) det_csv << ";";
                 }
                 det_csv << "\",\"";
@@ -484,10 +572,10 @@ int main(int argc, char* argv[]) {
                 det_csv << "\"\n";
                 det_csv.flush();
             }
-            
+
             // Optional auto-tune
             if (tc.run.autotune && tx_count >= 10 && matched_dets.size() > 0) {
-                 printf("[main] AUTOTUNE: observed %zu detections. (Auto-tuning logic placeholder)\n", matched_dets.size());
+                printf("[main] AUTOTUNE: observed %zu detections.\n", matched_dets.size());
             }
         }
 
@@ -513,6 +601,9 @@ int main(int argc, char* argv[]) {
         printf("[main] Total transmissions: %u\n", tx_count);
         printf("[main] Successful:          %u\n", tx_ok_count);
         printf("[main] Failures:            %u\n", tx_count - tx_ok_count);
+        printf("[main] UHD async: underflow=%d overflow=%d late=%d seq_error=%d\n",
+               ptx.get_async_underflow(), ptx.get_async_overflow(),
+               ptx.get_async_late(), ptx.get_async_seq_error());
     }
 
     printf("[main] Expected gNB behavior:\n");
@@ -535,9 +626,9 @@ int main(int argc, char* argv[]) {
     log_csv::close();
     printf("\n[main] Done.\n\n");
 
-    int ret = (tx_ok_count > 0) ? 0 : 1;
-
     fflush(stdout);
     fflush(stderr);
+
+    int ret = (tx_ok_count > 0) ? 0 : 1;
     _exit(ret);
 }
