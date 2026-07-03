@@ -254,8 +254,10 @@ bool influx_pull_cell_config(const influx_cfg& icfg, cell_config& cfg) {
     // Optional PRACH fields for diagnostics (from newer sniffer versions)
     {
         auto it = prach_fields.find("msg1_fdm");
-        if (it != prach_fields.end())
-            printf("[influx_reader]   msg1_fdm = %s\n", it->second.c_str());
+        if (it != prach_fields.end()) {
+            cfg.msg1_fdm = std::stoul(it->second);
+            printf("[influx_reader]   msg1_fdm = %u\n", cfg.msg1_fdm);
+        }
     }
 
     // --- band_report ---

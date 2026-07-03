@@ -1,7 +1,0 @@
-/home/avi/wireless/ra-spoof/build/CMakeFiles/ra_spoof_lib.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/ra-spoof.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/test_ro.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/test_pbch.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/test_ra_rnti.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/edit_cache.dir
-/home/avi/wireless/ra-spoof/build/CMakeFiles/rebuild_cache.dir

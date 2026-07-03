@@ -19,6 +19,7 @@ extern "C" {
 #include <vector>
 #include <complex>
 #include <string>
+#include <deque>
 
 struct prach_tx_cfg {
     double   tx_gain_db  = 30.0;
@@ -74,6 +75,49 @@ public:
     uint32_t get_sync_sfn()            const { return m_sync_sfn; }
     uint32_t get_sync_slot()           const { return m_sync_slot; }
     double   get_last_tx_time()        const { return m_last_tx_time; }
+    // Returns the USRP oscillator drift estimate in ppm.
+    // When >= 2 SSB anchor samples exist, returns a least-squares fit of
+    // (gNB frame index vs USRP device time) — more accurate than single CFO.
+    // Falls back to single CFO measurement before enough samples accumulate.
+    // Returns 0.0 safely before any sync_to_ssb() runs.
+    double   get_clock_drift_ppm()     const {
+        if (m_anchor_samples.size() >= 2) {
+            return m_ls_drift_ppm;  // LS estimate updated in sync_to_ssb()
+        }
+        return (m_cell_cfg.dl_freq_hz > 0.0)
+               ? (double)(m_cfo_dl_hz / m_cell_cfg.dl_freq_hz) * 1e6
+               : 0.0;
+    }
+    // Returns seconds elapsed since the last successful sync_to_ssb() call.
+    // Queries the hardware clock each time so the value is always fresh.
+    // Returns 0 before the first sync or in dry-run mode.
+    double   get_time_since_last_sync_s() const {
+        if (!m_rf_open || m_time_since_last_sync_s <= 0.0) return 0.0;
+        time_t ts = 0; double tf = 0.0;
+        srsran_rf_get_time(const_cast<srsran_rf_t*>(&m_rf), &ts, &tf);
+        double now = (double)ts + tf;
+        return now - m_time_since_last_sync_s;
+    }
+
+    // Flood mode accessors
+    bool        is_flood_enabled()        const { return m_flood_enabled; }
+    const std::vector<uint32_t>& get_flood_indices() const { return m_flood_indices; }
+    uint32_t    get_flood_num_preambles() const { return m_flood_num_preambles; }
+    uint32_t    get_flood_tx_count()      const { return m_flood_tx_count; }
+    std::string get_flood_strategy()      const { return m_flood_strategy; }
+
+    // Multi-RO accessors
+    // Returns all RA-RNTIs that will be allocated by the gNB for this burst.
+    // In single-position mode: one entry (f_id=0).
+    // In multi-position + sweep_fid mode: one entry per freq position (f_id=0..K-1).
+    std::vector<uint16_t> get_multi_ro_ra_rntis(uint32_t ro_slot) const;
+    uint32_t get_freq_pos_count() const { return m_multi_freq_pos_count; }
+
+    // Get the effective RAPID(s) for the current TX (for logging)
+    // In superimpose mode: returns "0-63" style range
+    // In cycle mode: returns the current single index
+    // In single mode: returns the configured RAPID
+    std::string get_current_rapid_list() const;
 
 private:
     bool           m_initialized = false;
@@ -111,7 +155,23 @@ private:
     // TX/RX timestamp offset calibration (B210-specific)
     // Positive value means TX arrives this many seconds AFTER the requested time
     double         m_tx_rx_offset_s   = 0.0;
+    double         m_rx_to_tx_cal_s   = 0.0;  // RX-to-TX path calibration (config)
     double         m_last_tx_time     = 0.0;  // device time of last TX
+    double         m_time_since_last_sync_s = 0.0; // updated in sync_to_ssb()
+
+    // --- B1: SSB anchor ring buffer for LS drift estimation ---
+    // Each entry records the USRP device time of an SSB observation and the
+    // corresponding absolute gNB frame index (reconstructed from SFN + anchor).
+    // A least-squares line fit gives the true USRP-vs-gNB clock rate error.
+    struct SsbAnchorSample {
+        double device_time;   // USRP device time of SSB slot start
+        double gnb_frame;     // absolute gNB frame (SFN * 1, monotonic across rollovers)
+    };
+    static constexpr size_t kAnchorWindowSize = 8;  // M from spec
+    std::deque<SsbAnchorSample> m_anchor_samples;   // ring buffer, max kAnchorWindowSize
+    double         m_ls_drift_ppm  = 0.0;  // LS-fitted USRP clock error in ppm
+    uint32_t       m_anchor_sfn_base = 0;  // SFN at first anchor — used for monotonic frame count
+    bool           m_anchor_sfn_base_set = false;
 
     // CFO correction (measured from DL SSB, scaled to UL)
     float          m_cfo_dl_hz        = 0.0f;  // DL CFO from SSB
@@ -121,9 +181,52 @@ private:
     int32_t        m_ssb_first_symbol_override = -1;  // >=0 forces intra-slot symbol
     double         m_tx_offset_us     = 0.0;   // manual timing nudge
 
+    // Single-preamble TX buffer (original path)
     std::vector<std::complex<float>> m_tx_buf;
     std::vector<std::complex<float>> m_rx_buf;  // For SSB sync
 
+    // --- Flood mode state ---
+    bool           m_flood_enabled        = false;
+    uint32_t       m_flood_num_preambles  = 64; // Count of elements in m_flood_indices
+    std::vector<uint32_t> m_flood_indices;      // List of actual indices to spoof
+    std::string    m_flood_strategy       = "superimpose";
+    float          m_flood_power_backoff_db = 0.0f;
+    uint32_t       m_flood_slm_candidates   = 32;
+    uint32_t       m_flood_tx_count       = 0;  // monotonic counter for cycle mode
+
+    // Per-preamble buffers: m_flood_bufs[i] = baseband for RAPID=i
+    std::vector<std::vector<std::complex<float>>> m_flood_bufs;
+    // Superimposed TX buffer (complex sum of all m_flood_bufs)
+    std::vector<std::complex<float>> m_flood_tx_buf;
+    // SLM/Newman best phase vector for superposition
+    std::vector<float> m_flood_phases;
+
+    // --- Multi-frequency-position attack state (#1 + #2) ---
+    // m_multi_freq_pos_count: number of freq-domain positions to superimpose.
+    uint32_t       m_multi_freq_pos_count = 1;
+    // m_multi_sweep_fid: when true, each freq position gets distinct f_id (0..K-1)
+    bool           m_multi_sweep_fid = false;
+    // Superimposed buffer combining multiple frequency shifts
+    std::vector<std::complex<float>> m_multi_freq_tx_buf;
+    std::vector<uint32_t> m_freq_offsets_used;   // per position
+
     bool generate_preamble();
+    bool generate_flood_preambles();
+    // Generate multi-frequency-position superimposed buffer.
+    // Called after generate_flood_preambles() when freq_pos_count > 1.
+    // For single-preamble mode (flood disabled), also called when freq_pos_count > 1.
+    bool generate_multi_freq_preambles();
     bool attempt_sync_from_fallback();
+
+    // Helpers
+    // Compute corrected freq_offset for a given raw offset (accounts for srsran PRB mismatch).
+    uint32_t correct_freq_offset(uint32_t raw_offset) const;
+    // Generate and superimpose all RAPIDs into one buffer at the given corrected freq_offset.
+    // result must be pre-allocated to m_prach.N_cp + m_prach.N_seq samples.
+    bool superimpose_preambles_at_offset(uint32_t corrected_offset,
+                                         std::vector<std::complex<float>>& result,
+                                         float pos_target_amplitude);
+
+    // Get the TX buffer pointer and length for the current mode
+    void* get_tx_buffer();
 };

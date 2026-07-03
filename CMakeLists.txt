@@ -82,6 +82,7 @@ set(LIB_SOURCES
     src/influx_reader.cpp
     src/prach_tx.cpp
     src/tool_config.cpp
+    src/gnb_detect_reader.cpp
   # NOTE: rt-recon-sdk used header-only (influxdb.hpp flux_query + local parse logic)
 )
 

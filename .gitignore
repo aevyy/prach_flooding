@@ -1,0 +1,9 @@
+build/
+srsRAN_4G/build/
+*.csv
+*~
+*.log
+tests/
+*.json
+figures/
+scripts/
