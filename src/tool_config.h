@@ -1,5 +1,5 @@
 #pragma once
-// tool_config.h — operational tunables loaded from ra-spoof.yaml / overridden by CLI
+// tool_config.h — operational tunables loaded from prach-inject.yaml / overridden by CLI
 //
 // Precedence: built-in default  <  yaml  <  CLI
 
@@ -88,7 +88,7 @@ struct tool_config {
     } multi_ro;
 };
 
-// Parse configs/ra-spoof.yaml.  Missing keys keep their defaults; never aborts on
+// Parse configs/prach-inject.yaml.  Missing keys keep their defaults; never aborts on
 // a partial file.  Returns true iff the file exists and parsed without exceptions.
 bool parse_tool_config(const std::string& path, tool_config& tc);
 

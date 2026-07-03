@@ -1,5 +1,5 @@
 #pragma once
-// influx_reader.h — InfluxDB read path for ra-spoof using rt-recon-sdk
+// influx_reader.h — InfluxDB read path for prach-inject using rt-recon-sdk
 //
 // Uses rtrs::InfluxWorker from the rt-recon-sdk (git@github.com:cueltschey/rt-recon-sdk)
 // which shares the same influxdb.hpp and schema as sni5gect-compact.

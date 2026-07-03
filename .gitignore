@@ -1,9 +1,19 @@
+# build outputs
 build/
+
+# srsRAN_4G is kept outside the repo (see CMakeLists SRSRAN_ROOT)
+# if someone accidentally clones it in here, ignore the build dir
 srsRAN_4G/build/
+
+# data and result files
 *.csv
-*~
-*.log
-tests/
 *.json
+*.sqlite
+*.log
+*~
+
+# experiment output directories
 figures/
 scripts/
+tests/results/
+ult_results/

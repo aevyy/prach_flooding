@@ -1,4 +1,4 @@
-# ra-spoof operational and test knobs
+# prach-inject operational config
 # Precedence: built-in default < yaml < CLI flag
 
 tx:
@@ -24,10 +24,8 @@ run:
   resync_every: 0
 
 flood:
-  enabled: true           # master switch; --flood on CLI
-  num_preambles: 8        # how many indices to transmit per occasion (1–64)
-  strategy: "superimpose"  # "superimpose" = all in one burst (coherent add)
-                           # "cycle" = one index per occasion, rotate 0..N-1
-  power_backoff_db: 0.0    # reduce per-preamble amplitude to avoid clipping
-                           #   when superimposing (try 0 first; if gNB sees
-                           #   fewer than expected, try -3 to -6)
+  enabled: true           # enable multi-preamble flood mode
+  num_preambles: 8        # preambles per occasion (1–64); see tool_config.h for list syntax
+  strategy: "superimpose" # "superimpose" = coherent sum in one burst
+                          # "cycle" = one preamble per occasion, rotating 0..N-1
+  power_backoff_db: 0.0   # backoff from DAC full-scale (negative dB = attenuate)

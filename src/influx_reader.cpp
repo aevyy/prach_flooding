@@ -1,5 +1,5 @@
 //
-// influx_reader.cpp — InfluxDB read path for ra-spoof
+// influx_reader.cpp — InfluxDB read path for prach-inject
 //
 // Uses influxdb.hpp's flux_query() — the same header used by the sniffer
 // (sni5gect-compact) and by the rt-recon-sdk — so the query schema is

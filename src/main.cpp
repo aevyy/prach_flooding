@@ -1,6 +1,6 @@
-// ra-spoof main — Msg1 PRACH preamble injection
+// prach-inject — 5G NR Msg1 PRACH preamble injector
 //
-// Config: InfluxDB (live sniffer) → ra-spoof.yaml → CLI overrides
+// Config: InfluxDB (live sniffer) → prach-inject.yaml → CLI overrides
 
 #include "cell_config.h"
 #include "influx_reader.h"
@@ -34,7 +34,7 @@ static void sig_handler(int sig) {
 static void print_usage(const char* prog) {
     printf("Usage: %s [options]\n", prog);
     printf("Options:\n");
-    printf("  -c, --config PATH          ra-spoof.yaml path (default: configs/ra-spoof.yaml)\n");
+    printf("  -c, --config PATH          config path (default: configs/prach-inject.yaml)\n");
     printf("  --influx-host HOST         InfluxDB host (default: localhost)\n");
     printf("  --influx-port PORT         InfluxDB port (default: 8086)\n");
     printf("  --influx-org ORG           InfluxDB org (default: rtu)\n");
@@ -71,7 +71,7 @@ static void print_usage(const char* prog) {
 static void print_banner() {
     printf("\n");
     printf("  ================================================================\n");
-    printf("   5G NR Msg1 PRACH Preamble Injector — ra-spoof\n");
+    printf("   5G NR PRACH Msg1 Injector — prach-inject\n");
     printf("   WARNING: For authorized Faraday-cage security research only.\n");
     printf("  ================================================================\n\n");
 }
@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
     print_banner();
 
     // --- Defaults / CLI variables ---
-    std::string config_path     = "configs/ra-spoof.yaml";
+    std::string config_path     = "configs/prach-inject.yaml";
     bool        dry_run         = false;
     bool        rf_isolated     = false;
 
@@ -317,7 +317,7 @@ int main(int argc, char* argv[]) {
     // -----------------------------------------------------------------------
     // Step 6: Initialize logging
     // -----------------------------------------------------------------------
-    log_csv::init("ra-spoof_msg1.csv");
+    log_csv::init("prach-inject_msg1.csv");
 
     // -----------------------------------------------------------------------
     // Step 6.5: SSB sync
